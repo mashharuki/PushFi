@@ -1,0 +1,2 @@
+# WakuWakuOnchainGame
+WakuWakuOnchainGame用のリポジトリです。
