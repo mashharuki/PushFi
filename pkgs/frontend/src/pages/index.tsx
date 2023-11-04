@@ -41,6 +41,7 @@ export default function Home() {
         const newLitService = await lit.create();
         setLitService(newLitService);
 
+        await newLitService.registerWebAuthn();
         // authicate (SignInにあたる)
         const authMethod = await newLitService!.authenticateWithWebAuthn();
         // get PKPS 
@@ -48,6 +49,7 @@ export default function Home() {
         // get new pkpWallet
         newPkpWallet = await newLitService!.getPkpWallet(pkp[0].publicKey, authMethod!);
       } else {
+        await litService!.registerWebAuthn();
         // authicate (SignInにあたる)
         const authMethod = await litService!.authenticateWithWebAuthn();
         // get PKPS 
@@ -156,6 +158,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <h1>WakuWaku 早押しゲーム!!</h1>
+        <h3> 🚀🚀🚀🚀🚀  現在、開催中！！  🚀🚀🚀🚀🚀</h3>
         <h2>100回目のトランザクション送信者に 100USDCをプレゼント！</h2>
         <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
         <Image 

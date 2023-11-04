@@ -12,7 +12,9 @@ const nextConfig = {
     return config
   },
   images: {
-    domains: ['bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link'],
+    domains: [
+      'bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link'
+    ],
   },
 }
 

@@ -50,7 +50,7 @@ export class Lit {
     // Lit用のインスタンスを設定
     this.authClient = new LitAuthClient({
       litRelayConfig: {
-        relayApiKey: env.NEXT_PUBLIC_LIT_RELAY_API_KEY,
+        relayApiKey: env.LIT_RELAY_API_KEY,
       },
       litNodeClient,
     });

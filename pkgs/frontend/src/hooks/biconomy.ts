@@ -50,13 +50,13 @@ export class Biconomy {
     this.chainId = selectedChainId;
     // バンドラーやpaymasterの情報をセット
     this.bundler = new Bundler({
-      bundlerUrl: `https://bundler.biconomy.io/api/v2/${this.chainId.toString()}/${process.env.NEXT_PUBLIC_BICONOMY_BUNDLER_KEY!}`,    
+      bundlerUrl: `https://bundler.biconomy.io/api/v2/${this.chainId.toString()}/${env.NEXT_PUBLIC_BICONOMY_BUNDLER_KEY!}`,    
       chainId: selectedChainId,
       entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
     })
     
     this.paymaster = new BiconomyPaymaster({
-      paymasterUrl: `https://paymaster.biconomy.io/api/v1/${this.chainId.toString()}/${process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_KEY!}` 
+      paymasterUrl: `https://paymaster.biconomy.io/api/v1/${this.chainId.toString()}/${env.NEXT_PUBLIC_BICONOMY_PAYMASTER_KEY!}` 
     })
   }
 
