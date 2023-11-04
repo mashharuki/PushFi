@@ -1,6 +1,26 @@
 # WakuWakuOnchainGame
 WakuWakuOnchainGame用のリポジトリです。
 
+## 動かし方
+
+- インストール
+
+  ```bash
+  yarn
+  ```
+
+- フロントの起動
+
+  ```bash
+  yarn frontend:dev
+  ```
+
+- メタデータ類のアップロード
+
+  ```bash
+  yarn upload
+  ```
+
 ## メタデータ関連
 
 1. NFT用のメタデータ
