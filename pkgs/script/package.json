@@ -3,5 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "private": "true"
+  "private": "true",
+  "dependencies": {
+    "@types/node": "^20.8.6",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "web3.storage": "^4.5.5"
+  },
+  "scripts": {
+    "upload": "ts-node index.ts"
+  }
 }

@@ -10,6 +10,6 @@
     "pkgs/*"
   ],
   "scripts": {
-    
+    "upload": "yarn workspace script upload"
   }
 }
