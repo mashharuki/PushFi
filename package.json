@@ -10,6 +10,8 @@
     "pkgs/*"
   ],
   "scripts": {
-    "upload": "yarn workspace script upload"
+    "upload": "yarn workspace script upload",
+    "frontend:dev": "yarn workspace frontend dev",
+    "frontend:build": "yarn workspace frontend build"
   }
 }
