@@ -7,13 +7,21 @@ async function main() {
 
   // get signer
   const signer = (await ethers.getSigners())[0];
+  // NFTContract address
+  const nftAddress = "";
 
+  // create NFT & game contract
+  const nft = await ethers.getContractAt('WakuWakuNFT', nftAddress);
   const game = await ethers.deployContract('WakuWakuGame', [await signer.getAddress()])
 
   console.log(` ======================= start ========================= `)
   await game.deployed()
 
   console.log(` WakuWakuGame deployed to ${game.address}`)
+
+  console.log(` NFT's ownership transfering from ${await signer.getAddress()} to ${game.address}`)
+  await nft.transferOwnership(game.address);
+  console.log(` NFT's ownership transfered from ${await signer.getAddress()} to ${game.address}`)
   console.log(` ======================== end  ======================== `)
 }
 

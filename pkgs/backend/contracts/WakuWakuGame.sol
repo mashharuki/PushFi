@@ -35,6 +35,7 @@ contract WakuWakuGame is Ownable {
   event PrizeSent(uint256 gameId, address erc20TokenAddress, address receiver, uint256 value);
   event NftMinted(uint256 gameId, address nftAddress, address[] paticipants);
   event Withdrawn(address indexed payee, uint256 weiAmount);
+  event WithdrawnToken(address indexed payee, address prizeToken, uint256 weiAmount);
   event Deposited(address indexed payee, uint256 weiAmount);
 
   /**
@@ -62,13 +63,16 @@ contract WakuWakuGame is Ownable {
       _gameName,
       0,
       _goalCount,
-      false,
+      true,
       _prizeToken,
       _prizeValue,
       _nftAddress,
       0x0000000000000000000000000000000000000000,
       initParticipants
     );
+
+    games[currentGameIdCounter] = newGame;
+    gameIdCounter++;
 
     emit GameCreated(currentGameIdCounter, _gameName, _goalCount, _prizeToken, _prizeValue, _nftAddress);
   }
@@ -81,14 +85,16 @@ contract WakuWakuGame is Ownable {
   function playGame(uint256 _gameId, address _player) public {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
-    require(!wakuWakuGame.openingStatus, "This game is already finished!!");
+    require(wakuWakuGame.openingStatus, "This game is already finished!!");
 
     // increment currentCount
-    wakuWakuGame.currentCount += 1;
+    games[_gameId].currentCount += 1;
+    uint256 currentCount = games[_gameId].currentCount;
 
     // insert player address if not yet
     address[] memory participants = wakuWakuGame.paticipants;
-    bool alreadyInsertedFlg;
+    
+    bool alreadyInsertedFlg = false;
     // check registered status
     for(uint256 i = 0; i < participants.length; i++) {
       if(participants[i] == _player) {
@@ -104,13 +110,13 @@ contract WakuWakuGame is Ownable {
       }
       // push
       newParticipants[participants.length] = _player;
-      wakuWakuGame.paticipants = newParticipants;
+      games[_gameId].paticipants = newParticipants;
     }
 
     // check goalCounter & currentCount
-    if(wakuWakuGame.currentCount == wakuWakuGame.goalCount) {
-      wakuWakuGame.openingStatus = true;
-      wakuWakuGame.winner = _player;
+    if(currentCount >= wakuWakuGame.goalCount) {
+      games[_gameId].openingStatus = false;
+      games[_gameId].winner = _player;
       emit GameFinished(_gameId, _player);
       // send token to winner & mint nft to paticipants
       sendPrize(_gameId);
@@ -122,10 +128,10 @@ contract WakuWakuGame is Ownable {
    * sendPrize method
    * @param _gameId gameID
    */
-  function sendPrize(uint256 _gameId) onlyOwner internal {
+  function sendPrize(uint256 _gameId) internal {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
-    require(wakuWakuGame.openingStatus, "This game is not already finished!!");
+    require(!wakuWakuGame.openingStatus, "This game is not already finished!!");
 
     // create ERC20 contract instance
     IERC20 prizeToken = IERC20(wakuWakuGame.prizeToken);
@@ -138,10 +144,10 @@ contract WakuWakuGame is Ownable {
    * mintNfts method
    * @param _gameId gameID
    */
-  function mintNfts(uint256 _gameId) onlyOwner internal {
+  function mintNfts(uint256 _gameId) internal {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
-    require(wakuWakuGame.openingStatus, "This game is not already finished!!");
+    require(!wakuWakuGame.openingStatus, "This game is not already finished!!");
 
     // create WakuWakuNFT contract instance
     WakuWakuNFT nft = WakuWakuNFT(wakuWakuGame.nftAddress);
@@ -162,6 +168,23 @@ contract WakuWakuGame is Ownable {
     uint256 balance = address(this).balance;
     _to.transfer(balance);
     emit Withdrawn(_to, balance);
+  }
+
+  /**
+   * withdrawToken
+   */
+  function withdrawToken(
+    uint256 _gameId, 
+    address payable _to
+  ) onlyOwner public {
+    // get game info
+    WakuWakuGame memory wakuWakuGame = games[_gameId];
+    // create ERC20 contract instance
+    IERC20 prizeToken = IERC20(wakuWakuGame.prizeToken);
+    // get balance of this contract
+    uint256 balance = prizeToken.balanceOf(address(this));
+    prizeToken.transfer(_to, balance);
+    emit WithdrawnToken(_to, address(prizeToken), balance);
   }
 
   // Function to receive Ether. msg.data must be empty
