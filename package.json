@@ -12,6 +12,10 @@
   "scripts": {
     "upload": "yarn workspace script upload",
     "frontend:dev": "yarn workspace frontend dev",
-    "frontend:build": "yarn workspace frontend build"
+    "frontend:build": "yarn workspace frontend build",
+    "backend:compile": "yarn workspace backend compile",
+    "backend:clean": "yarn workspace backend clean",
+    "backend:test": "yarn workspace backend test",
+    "backend:deploy:fuji": "yarn workspace backend deploy:fuji"
   }
 }
