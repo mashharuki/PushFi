@@ -1,4 +1,5 @@
 import { RPC_URL } from "@/utils/constants";
+import { getEnv } from "@/utils/getEnv";
 import { LitAbility, LitActionResource } from '@lit-protocol/auth-helpers';
 import { AuthMethodType, ProviderType } from "@lit-protocol/constants";
 import {
@@ -13,7 +14,6 @@ import {
   IRelayPKP,
   SessionSigs
 } from '@lit-protocol/types';
-import { getEnv } from "@/utils/getEnv";
 
 /**
  * Lit用のクラスファイルです。
@@ -148,29 +148,6 @@ export class Lit {
     console.log("pkpInfo:", pkpInfo);
 
     return pkpInfo;
-  }
-
-  /**
-   * Mint a new PKP for current auth method
-   */
-  async mintPKP(): Promise<any> {
-    await this.connect();
-    const provider = this.authClient!.initProvider<WebAuthnProvider>(
-      ProviderType.WebAuthn
-    );
-
-    const authMethod = await provider.authenticate();
-    // get public key
-    const publicKey = await provider.computePublicKeyFromAuthMethod(authMethod);
-    console.log("local public key computed: ", publicKey);
-
-    let claimResp = await provider.claimKeyId({
-      authMethod,
-    });
-    console.log("claim response public key: ", claimResp.pubkey);  
-    console.log("claim : ", claimResp);  
-    
-    return claimResp.pubkey;
   }
 
   /**
