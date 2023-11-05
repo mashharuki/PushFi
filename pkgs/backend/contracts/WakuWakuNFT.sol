@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
  */
 contract WakuWakuNFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     constructor(address initialOwner)
-        ERC1155("https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/img/nftImg.gif")
+        ERC1155("https://bafybeihd5jasbp6spqqapd6jzy7zfosiukwqbx4capmhayjt3yxagudwma.ipfs.dweb.link/json/metadata")
         Ownable(initialOwner)
     {}
 

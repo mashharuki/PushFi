@@ -11,3 +11,10 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+
+
+## テストでデプロイしたNFT
+
+[0x36C1b81EB093aEdc6fF4288E7f8b12C400E97820](https://testnet.snowtrace.io/address/0x36C1b81EB093aEdc6fF4288E7f8b12C400E97820#code)  
+
+[OpenSea WakuWakuNFT](https://testnets.opensea.io/ja/collection/unidentified-contract-c02934ff-4b59-4d06-ab9e-5f53)
