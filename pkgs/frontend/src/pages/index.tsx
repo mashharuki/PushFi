@@ -1,15 +1,15 @@
+import Game from '@/components/Game';
 import Loading from '@/components/Loading';
-import Minter from '@/components/Minter';
 import { Biconomy } from '@/hooks/biconomy';
 import styles from '@/styles/Home.module.css';
 import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { ChainId } from '@biconomy/core-types';
 import { ethers } from 'ethers';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useState } from "react";
 import { Lit } from './../hooks/lit';
 import { RPC_URL, SAMPLE_ADVERTISEMENT_URL } from './../utils/constants';
-import Image from 'next/image';
 
 // base Avalanche RPC
 const rpc_url = RPC_URL;
@@ -186,7 +186,7 @@ export default function Home() {
         )}
         {loading && <p><Loading/></p>}
         {smartAccount && provider && (
-          <Minter 
+          <Game 
             biconomyService={biconomyService!}
             smartAccount={smartAccount} 
             address={address} 

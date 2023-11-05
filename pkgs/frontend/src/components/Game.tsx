@@ -1,11 +1,12 @@
 import { Biconomy } from '@/hooks/biconomy';
+import { GAMECONTRACT_ADDRESS } from '@/utils/constants';
 import { BiconomySmartAccountV2 } from "@biconomy/account";
-import styles from './../styles/Home.module.css';
 import { ethers } from "ethers";
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { GAMECONTRACT_ADDRESS } from '@/utils/constants';
+import styles from './../styles/Home.module.css';
+import Loading from './Loading';
 
 interface Props {
   biconomyService: Biconomy,
@@ -15,11 +16,11 @@ interface Props {
 }
 
 /**
- * Minter Component
+ * Game Component
  * @param param0 
  * @returns 
  */
-const Minter: React.FC<Props> = ({ 
+const Game: React.FC<Props> = ({ 
   biconomyService, 
   smartAccount, 
   address, 
@@ -68,14 +69,18 @@ const Minter: React.FC<Props> = ({
   return(
     <>
       {address && (
-        <div>
-          <button 
-            onClick={handleMint} 
-            className={styles.connect}
-          >
-            Let`s Try
-          </button>
-        </div>
+        <>
+          { loading ? 
+            <Loading/>
+          : (
+            <button 
+              onClick={handleMint} 
+              className={styles.connect}
+            >
+              Let`s Try
+            </button>
+          )}
+        </>
       )}
       <ToastContainer
         position="top-right"
@@ -93,4 +98,4 @@ const Minter: React.FC<Props> = ({
   )
 }
 
-export default Minter;
+export default Game;
