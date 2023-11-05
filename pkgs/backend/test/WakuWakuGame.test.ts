@@ -3,7 +3,14 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-import { USDCToken, USDCToken__factory, WakuWakuGame, WakuWakuGame__factory, WakuWakuNFT__factory } from "../typechain-types";
+import {
+  USDCToken,
+  USDCToken__factory,
+  WakuWakuGame,
+  WakuWakuGame__factory,
+  WakuWakuNFT,
+  WakuWakuNFT__factory
+} from "../typechain-types";
 
 
 describe("WakuWakuGame", function () {
@@ -22,7 +29,7 @@ describe("WakuWakuGame", function () {
 
     // deploy NFT contract
     const WakuWakuNFT: WakuWakuNFT__factory = await ethers.getContractFactory("WakuWakuNFT");
-    const nft = await WakuWakuNFT.deploy(await owner.getAddress());
+    const nft: WakuWakuNFT = await WakuWakuNFT.deploy(await owner.getAddress());
     // deploy game contract
     const WakuWakuGame: WakuWakuGame__factory = await ethers.getContractFactory("WakuWakuGame");
     const game: WakuWakuGame = await WakuWakuGame.deploy(await owner.getAddress());
