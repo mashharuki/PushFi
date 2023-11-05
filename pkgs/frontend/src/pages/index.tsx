@@ -12,8 +12,7 @@ import { Lit } from './../hooks/lit';
 import { RPC_URL, SAMPLE_ADVERTISEMENT_URL } from './../utils/constants';
 
 // base Avalanche RPC
-const rpc_url = RPC_URL;
-const provider = new ethers.providers.JsonRpcProvider(rpc_url);
+const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
 
 /**
  * Home Component
@@ -26,6 +25,7 @@ export default function Home() {
   const [biconomyService, setbiconomyService] = useState<Biconomy | null>(null);
   const [litService, setLitService] = useState<Lit | null>(null);
   const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET)
+  const [opening, setOpening] = useState<boolean>(true);
 
   /**
    * signUp
@@ -158,7 +158,13 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <h1>WakuWaku 早押しゲーム!!</h1>
-        <h3> 🚀🚀🚀🚀🚀  現在、開催中！！  🚀🚀🚀🚀🚀</h3>
+        <h3> 
+          { opening ? 
+            <>🚀🚀🚀🚀🚀  現在、開催中！！  🚀🚀🚀🚀🚀</>
+          : 
+            <>✨✨✨✨✨ 終了しました！ご参加ありがとうございました! ✨✨✨✨✨</>
+          } 
+        </h3>
         <h2>100回目のトランザクション送信者に 100USDCをプレゼント！</h2>
         <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
         <Image 
