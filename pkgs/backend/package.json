@@ -10,10 +10,13 @@
     "compile": "npx hardhat compile",
     "deploy:fuji": "yarn deploy:nft:fuji",
       "deploy:nft:fuji": "npx hardhat run scripts/nft/deploy-nft.ts --network fuji",
+      "deploy:game:fuji": "npx hardhat run scripts/wakuwakuGame/deploy.ts --network fuji",
     "verify:fuji": "yarn verify:nft:fuji",
       "verify:nft:fuji": "hardhat verify --network fuji 0x36C1b81EB093aEdc6fF4288E7f8b12C400E97820 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072",
+      "verify:game:fuji": "hardhat verify --network fuji  0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072",
     "scripts:fuji": "yarn scripts:mint-nft:fuji",
-      "scripts:mint-nft:fuji": "npx hardhat run scripts/nft/mint-nft.ts --network fuji"
+      "scripts:mint-nft:fuji": "npx hardhat run scripts/nft/mint-nft.ts --network fuji",
+      "scripts:create-game:fuji": "npx hardhat run scripts/wakuwakuGame/create-game.ts.ts --network fuji"
   },
   "keywords": [],
   "author": "",
