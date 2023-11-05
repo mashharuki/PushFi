@@ -8,7 +8,7 @@ async function main() {
   // get signer
   const signer = (await ethers.getSigners())[0];
   // NFTContract address
-  const nftAddress = "";
+  const nftAddress = "0x36C1b81EB093aEdc6fF4288E7f8b12C400E97820";
 
   // create NFT & game contract
   const nft = await ethers.getContractAt('WakuWakuNFT', nftAddress);
