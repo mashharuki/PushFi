@@ -1,4 +1,3 @@
-import { Biconomy } from '@/hooks/biconomy';
 import { GAME_ID } from '@/utils/constants';
 import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { useState } from 'react';
@@ -6,11 +5,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './../styles/Home.module.css';
 import Loading from './Loading';
-import { TxData, UseContract } from '@/hooks/useContract';
+import { TxData, createPlayGameTxData, getGameStatus, } from '@/hooks/useContract';
+import { sendUserOp } from '@/hooks/biconomy';
 
 interface Props {
-  biconomyService: Biconomy,
-  contractService: UseContract,
   smartAccount: BiconomySmartAccountV2,
   address: string,
   opening: boolean,
@@ -23,8 +21,6 @@ interface Props {
  * @returns 
  */
 const Game: React.FC<Props> = ({ 
-  biconomyService, 
-  contractService, 
   smartAccount,
   address, 
   opening,
@@ -38,6 +34,7 @@ const Game: React.FC<Props> = ({
   const handleMint = async () => {
     try {
       setLoading(true)
+      console.log("==================== start ====================")
 
       toast.info('Minting your NFT...', {
         position: "top-right",
@@ -51,11 +48,11 @@ const Game: React.FC<Props> = ({
       });
 
       // create txData
-      const txData:TxData = await contractService.createPlayGameTxData(GAME_ID, address)
+      const txData:TxData = await createPlayGameTxData(GAME_ID, address)
       // call mintNFT method
-      const transactionHash = await biconomyService.sendUserOp(smartAccount, txData);
+      const transactionHash = await sendUserOp(smartAccount, txData);
       // get Status
-      const gameStatus = await contractService.getGameStatus(GAME_ID);
+      const gameStatus = await getGameStatus(GAME_ID);
       // set Status
       setOpening(gameStatus);
 
@@ -73,6 +70,7 @@ const Game: React.FC<Props> = ({
     } catch(err: any) {
       console.error("error occurred while playing game.. :", err)
     } finally {
+      console.log("====================  end ====================")
       setLoading(false)
     }
   }

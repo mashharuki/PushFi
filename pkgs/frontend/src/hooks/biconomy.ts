@@ -14,135 +14,108 @@ import {
 import 'react-toastify/dist/ReactToastify.css';
 import { getEnv } from "@/utils/getEnv";
 import { TxData } from "./useContract";
-
+import { ResponseData } from "@/pages/api/env";
 
 /**
- * Biconomy用のクラスファイルです。
+ * createSmartWallet method
+ * @param signer 
  */
-export class Biconomy { 
+export const createSmartWallet = async(
+  chainId: number, 
+  signer: Signer
+) => {
+  // getEnv info
+  const env: ResponseData = await getEnv();
+  // eslint-disable-next-line @next/next/no-assign-module-variable
+  const module = await ECDSAOwnershipValidationModule.create({
+    signer: signer, 
+    moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
+  });
 
-  private chainId: number = 0;
-  private bundler: IBundler | null = null;
-  private paymaster: IPaymaster | null = null;
+  // バンドラーやpaymasterの情報をセット
+  const bundler = new Bundler({
+    bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId.toString()}/${env.BICONOMY_BUNDLER_KEY}`,    
+    chainId: chainId,
+    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+  })
+  
+  const paymaster = new BiconomyPaymaster({
+    paymasterUrl: `https://paymaster.biconomy.io/api/v1/${chainId.toString()}/${env.BICONOMY_PAYMASTER_KEY}` 
+  })
+  
+  let biconomySmartAccount = await BiconomySmartAccountV2.create({
+    chainId: chainId,
+    bundler: bundler!, 
+    paymaster: paymaster!,
+    entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+    defaultValidationModule: module,
+    activeValidationModule: module
+  })
 
-  /**
-   * クラスインスタンスを新しく生成するためのメソッド
-   * @param selectedChainId 
-   * @returns 
-   */
-  async create(selectedChainId: number) {
-    const biconomyService = new Biconomy();
-    await biconomyService.init(selectedChainId);
+  const smartContractAddress = await biconomySmartAccount.getAccountAddress();
 
-    return biconomyService;
-  }
-
-  /**
-   * 初期化メソッド
-   */
-  init = async (selectedChainId: number) => {
-    // 環境変数の値を取得
-    const env = await getEnv();
-
-    // chainIDをセット
-    this.chainId = selectedChainId;
-    // バンドラーやpaymasterの情報をセット
-    this.bundler = new Bundler({
-      bundlerUrl: `https://bundler.biconomy.io/api/v2/${this.chainId.toString()}/${env.NEXT_PUBLIC_BICONOMY_BUNDLER_KEY!}`,    
-      chainId: selectedChainId,
-      entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-    })
-    
-    this.paymaster = new BiconomyPaymaster({
-      paymasterUrl: `https://paymaster.biconomy.io/api/v1/${this.chainId.toString()}/${env.NEXT_PUBLIC_BICONOMY_PAYMASTER_KEY!}` 
-    })
-  }
-
-  /**
-   * createSmartWallet method
-   * @param signer 
-   */
-  createSmartWallet = async(signer: Signer) => {
-    // eslint-disable-next-line @next/next/no-assign-module-variable
-    const module = await ECDSAOwnershipValidationModule.create({
-      signer: signer, 
-      moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE
-    });
-
-    let biconomySmartAccount = await BiconomySmartAccountV2.create({
-      chainId: this.chainId,
-      bundler: this.bundler!, 
-      paymaster: this.paymaster!,
-      entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-      defaultValidationModule: module,
-      activeValidationModule: module
-    })
-
-    const smartContractAddress = await biconomySmartAccount.getAccountAddress();
-
-    return {
-      smartContractAddress,
-      biconomySmartAccount
-    };
-  }
-
-  /**
-   * sendUserOp method
-   * @param smartAccount 
-   * @param txData 
-   * @returns 
-   */
-  sendUserOp = async (
-    smartAccount: BiconomySmartAccountV2, 
-    txData: TxData
-  ) => {
-    try {
-      let userOp = await smartAccount.buildUserOp([txData]);
-      console.log({ userOp })
-      
-      const biconomyPaymaster = smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
-      
-      let paymasterServiceData: SponsorUserOperationDto = {
-        mode: PaymasterMode.SPONSORED,
-        smartAccountInfo: {
-          name: 'BICONOMY',
-          version: '2.0.0'
-        },
-        calculateGasLimits: true
-      };
-
-      const paymasterAndDataResponse =
-        await biconomyPaymaster.getPaymasterAndData(
-          userOp,
-          paymasterServiceData
-        );
-
-      userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData;
-
-      if (
-        paymasterAndDataResponse.callGasLimit &&
-        paymasterAndDataResponse.verificationGasLimit &&
-        paymasterAndDataResponse.preVerificationGas
-      ) {
-        userOp.callGasLimit = paymasterAndDataResponse.callGasLimit;
-        userOp.verificationGasLimit =
-        paymasterAndDataResponse.verificationGasLimit;
-        userOp.preVerificationGas =
-        paymasterAndDataResponse.preVerificationGas;
-      }
-        
-      const userOpResponse = await smartAccount.sendUserOp(userOp);
-      console.log("userOpHash", userOpResponse);
-      
-      const { receipt } = await userOpResponse.wait(1);
-      console.log("txHash", receipt.transactionHash);
-
-      return receipt.transactionHash;
-    } catch (err: any) {
-      console.error("err", err);
-      console.log("err:", err)
-      return;
-    }
-  }   
+  return {
+    smartContractAddress,
+    biconomySmartAccount
+  };
 }
+
+/**
+ * sendUserOp method
+ * @param smartAccount 
+ * @param txData 
+ * @returns 
+ */
+export const sendUserOp = async (
+  smartAccount: BiconomySmartAccountV2, 
+  txData: TxData
+) => {
+  try {
+    let userOp = await smartAccount.buildUserOp([txData]);
+    console.log({ userOp })
+    
+    const biconomyPaymaster = smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
+    
+    let paymasterServiceData: SponsorUserOperationDto = {
+      mode: PaymasterMode.SPONSORED,
+      smartAccountInfo: {
+        name: 'BICONOMY',
+        version: '2.0.0'
+      },
+      calculateGasLimits: true
+    };
+
+    const paymasterAndDataResponse =
+      await biconomyPaymaster.getPaymasterAndData(
+        userOp,
+        paymasterServiceData
+      );
+
+    userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData;
+
+    if (
+      paymasterAndDataResponse.callGasLimit &&
+      paymasterAndDataResponse.verificationGasLimit &&
+      paymasterAndDataResponse.preVerificationGas
+    ) {
+      userOp.callGasLimit = paymasterAndDataResponse.callGasLimit;
+      userOp.verificationGasLimit =
+      paymasterAndDataResponse.verificationGasLimit;
+      userOp.preVerificationGas =
+      paymasterAndDataResponse.preVerificationGas;
+    }
+      
+    const userOpResponse = await smartAccount.sendUserOp(userOp);
+    console.log("userOpHash", userOpResponse);
+    
+    const { receipt } = await userOpResponse.wait(1);
+    console.log("txHash", receipt.transactionHash);
+
+    return receipt.transactionHash;
+  } catch (err: any) {
+    console.error("sending UserOp err... :", err);
+    return;
+  }
+}   
+
 

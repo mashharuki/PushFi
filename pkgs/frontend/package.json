@@ -22,6 +22,7 @@
     "@lit-protocol/lit-node-client": "^3.0.16",
     "@lit-protocol/pkp-ethers": "^3.0.16",
     "@lit-protocol/types": "3.0.5",
+    "@walletconnect/client": "^1.8.0",
     "@web3auth/base": "5.2.0",
     "@web3auth/ethereum-provider": "5.2.0",
     "@web3auth/modal": "5.2.1",

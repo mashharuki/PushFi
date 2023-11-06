@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
  
-type ResponseData = {
+export type ResponseData = {
   LIT_RELAY_API_KEY: string;
   BICONOMY_BUNDLER_KEY: string;
   BICONOMY_PAYMASTER_KEY: string;

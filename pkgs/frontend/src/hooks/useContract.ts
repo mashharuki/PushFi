@@ -5,73 +5,54 @@ export type TxData = {
   data: any;
 }
 
+var contractAddress: string;
+var contract: Contract;
+
 /**
- * useContract用のクラスファイルです。
+ * 初期化メソッド
  */
-export class UseContract {
+export const createContract = (
+  address: string,
+  abi: ContractInterface,
+  rpcUrl: string
+) => {
+  // create provider
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  // コントラクトのインスタンスを生成
+  contract = new ethers.Contract(
+    address,
+    abi,
+    provider,
+  );
 
-  private contractAddress: string | null = null;
-  private contract: Contract | null = null;
+  contractAddress = address;
+}
 
-  /**
-   * UseContract用のインスタンスを作成するメソッド
-   */
-  async create(
-    contractAddress: string,
-    abi: ContractInterface,
-    rpcUrl: string
-  ) {
-    const contractService = new UseContract();
-    this.init(contractAddress, abi, rpcUrl);
-    return contractService;
-  }
+/**
+ * createPlayGameTxData method
+ */
+export const createPlayGameTxData = async (
+  gameId: number,
+  playerAddress: string  
+): Promise<TxData> => {
+  // create NFT Cotntract's method call data
+  const minTx = await contract.populateTransaction.playGame(gameId, playerAddress);
+  console.log("txData :", minTx.data);
 
-  /**
-   * 初期化メソッド
-   */
-  init(
-    contractAddress: string,
-    abi: ContractInterface,
-    rpcUrl: string
-  ) {
-    // create provider
-    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
-    // コントラクトのインスタンスを生成
-    const contract = new ethers.Contract(
-      contractAddress,
-      abi,
-      provider,
-    );
+  const txData: TxData = {
+    to: contractAddress,
+    data: minTx.data,
+  };
 
-    this.contract = contract;
-    this.contractAddress = contractAddress;
-  }
+  return txData;
+}
 
-  /**
-   * createPlayGameTxData method
-   */
-  async createPlayGameTxData(
-    gameId: number,
-    playerAddress: string  
-  ): Promise<TxData> {
-    // create NFT Cotntract's method call data
-    const minTx = await this.contract!.populateTransaction.playGame(gameId, playerAddress);
-    console.log(minTx.data);
-
-    const txData: TxData = {
-      to: this.contractAddress!,
-      data: minTx.data,
-    };
-
-    return txData;
-  }
-
-  /**
-   * getGameStatus method
-   */
-  async getGameStatus(gameId: number): Promise<boolean> {
-    // get gameStatus
-    const result = await this.contract!.getOpeningStatus(gameId);
-    return result;
-  }
+/**
+ * getGameStatus method
+ */
+export const getGameStatus = async(gameId: number): Promise<boolean> => {
+  console.log("contract:", contract)
+  // get gameStatus
+  const result = await contract.getOpeningStatus(gameId);
+  return result;
 }
