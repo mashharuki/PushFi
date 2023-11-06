@@ -1,17 +1,15 @@
 import Game from '@/components/Game';
 import Loading from '@/components/Loading';
-import { Biconomy, createSmartWallet } from '@/hooks/biconomy';
+import { createSmartWallet } from '@/hooks/biconomy';
+import { createContract, getGameStatus } from '@/hooks/useContract';
 import styles from '@/styles/Home.module.css';
-import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { ChainId } from '@biconomy/core-types';
-import { ethers } from 'ethers';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect, useState } from "react";
-import { Web3auth, login, logout } from './../hooks/web3auth';
-import { RPC_URL, SAMPLE_ADVERTISEMENT_URL, GAMECONTRACT_ADDRESS, GAME_ID } from './../utils/constants';
-import { UseContract, createContract, getGameStatus } from '@/hooks/useContract';
-import gameContractAbi  from './../utils/abi.json';
+import { useState } from "react";
+import { login, logout } from './../hooks/web3auth';
+import gameContractAbi from './../utils/abi.json';
+import { GAMECONTRACT_ADDRESS, GAME_ID, RPC_URL, SAMPLE_ADVERTISEMENT_URL } from './../utils/constants';
 
 /**
  * Home Component
@@ -20,7 +18,6 @@ import gameContractAbi  from './../utils/abi.json';
 export default function Home() { 
   const [address, setAddress] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false);
-  const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
   const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET)
   const [opening, setOpening] = useState<boolean>(true);
 
@@ -39,17 +36,18 @@ export default function Home() {
 
       // login & create signer
       const signer = await login(chainId, RPC_URL);
+
+      console.log("signer:", signer)
      
       // create smartWallet
       const {
         smartContractAddress: smartWalletAddress,
-        biconomySmartAccount: smartAccount
       } = await createSmartWallet(chainId, signer);
+
+      console.log("smartWalletAddress:", smartWalletAddress)
 
       setOpening(gameStatus);
       setAddress(smartWalletAddress)
-      setSmartAccount(smartAccount)
-
     } catch (error) {
       console.error(error);
     } finally {
@@ -62,6 +60,7 @@ export default function Home() {
    */
   const logOut = async() => {
     await logout();
+    setAddress("");
   }
 
   return (
@@ -94,9 +93,8 @@ export default function Home() {
         <div></div>
         {loading && <p><Loading/></p>}
         <div></div>
-        {smartAccount && (
+        {address && (
           <Game 
-            smartAccount={smartAccount} 
             address={address} 
             opening={opening}
             setOpening={setOpening}

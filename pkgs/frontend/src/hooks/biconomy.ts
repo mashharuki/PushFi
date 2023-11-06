@@ -1,20 +1,19 @@
+import { ResponseData } from "@/pages/api/env";
+import { getEnv } from "@/utils/getEnv";
 import { BiconomySmartAccountV2, DEFAULT_ENTRYPOINT_ADDRESS } from "@biconomy/account";
-import { Bundler, IBundler } from '@biconomy/bundler';
+import { Bundler } from '@biconomy/bundler';
 import { DEFAULT_ECDSA_OWNERSHIP_MODULE, ECDSAOwnershipValidationModule } from "@biconomy/modules";
 import {
   BiconomyPaymaster,
-  IPaymaster,
-} from '@biconomy/paymaster';
-import { Signer } from "ethers";
-import {
   IHybridPaymaster,
   PaymasterMode,
   SponsorUserOperationDto
 } from '@biconomy/paymaster';
+import { Signer } from "ethers";
 import 'react-toastify/dist/ReactToastify.css';
-import { getEnv } from "@/utils/getEnv";
 import { TxData } from "./useContract";
-import { ResponseData } from "@/pages/api/env";
+
+var smartAccount: BiconomySmartAccountV2;
 
 /**
  * createSmartWallet method
@@ -54,20 +53,19 @@ export const createSmartWallet = async(
 
   const smartContractAddress = await biconomySmartAccount.getAccountAddress();
 
+  smartAccount = biconomySmartAccount;
+
   return {
     smartContractAddress,
-    biconomySmartAccount
   };
 }
 
 /**
  * sendUserOp method
- * @param smartAccount 
  * @param txData 
  * @returns 
  */
 export const sendUserOp = async (
-  smartAccount: BiconomySmartAccountV2, 
   txData: TxData
 ) => {
   try {

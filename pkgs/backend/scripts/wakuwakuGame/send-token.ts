@@ -1,25 +1,23 @@
 import { ethers } from 'hardhat';
 
 /**
- * 新しくゲームを作成するためのスクリプト
+ * Gameに賞金を送金するためのスクリプト
  */
 async function main() {
 
   // Deployed Contract address
   const contractAddress = "0x985e632298882212d91AB2C9c0d00D80b82880b7"
   // Game用の変数
-  const gameName = "SampleGame";
-  const goalCount = 10;
   const prizeToken = "0x045aa885e04dab32316eA0B39Cda9c966A5d9845"; // test USDC
-  const prizeValue = ethers.utils.parseEther("100");
-  const nftAddress = "0x36C1b81EB093aEdc6fF4288E7f8b12C400E97820"
+  const prizeValue = 100;
+ 
 
-  const game = await ethers.getContractAt('WakuWakuGame', contractAddress);
+  const token = await ethers.getContractAt('USDCToken', prizeToken);
 
   console.log(` ======================= start ========================= `)
-  const tx = await game.createGame(gameName, goalCount, prizeToken, prizeValue, nftAddress);
+  const tx = await token.transfer(contractAddress, prizeValue);
 
-  console.log(` WakuWakuGame created newGame at ${tx.hash}`)
+  console.log(` send to Game Contract at ${tx.hash}`)
   console.log(` ======================== end  ======================== `)
 }
 

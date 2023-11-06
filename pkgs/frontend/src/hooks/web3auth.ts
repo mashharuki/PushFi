@@ -1,8 +1,9 @@
+import { ResponseData } from "@/pages/api/env";
+import { HEX_CHAIN_ID } from "@/utils/constants";
 import { getEnv } from "@/utils/getEnv";
 import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import { Web3Auth } from "@web3auth/modal";
 import { Wallet, ethers } from "ethers";
-import { ResponseData } from "@/pages/api/env";
 
 // 変数
 var web3auth: Web3Auth;
@@ -23,7 +24,7 @@ export const login = async(
     web3AuthNetwork: "testnet",
     chainConfig: {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0xA869", // hexにする必要あり(現在アバランチのものを指定)
+      chainId: HEX_CHAIN_ID, 
       rpcTarget: rpcUrl
     },
   });

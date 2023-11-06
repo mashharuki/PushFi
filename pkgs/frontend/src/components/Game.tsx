@@ -1,15 +1,13 @@
+import { sendUserOp } from '@/hooks/biconomy';
+import { TxData, createPlayGameTxData, getGameStatus, } from '@/hooks/useContract';
 import { GAME_ID } from '@/utils/constants';
-import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './../styles/Home.module.css';
 import Loading from './Loading';
-import { TxData, createPlayGameTxData, getGameStatus, } from '@/hooks/useContract';
-import { sendUserOp } from '@/hooks/biconomy';
 
 interface Props {
-  smartAccount: BiconomySmartAccountV2,
   address: string,
   opening: boolean,
   setOpening: any,
@@ -21,7 +19,6 @@ interface Props {
  * @returns 
  */
 const Game: React.FC<Props> = ({ 
-  smartAccount,
   address, 
   opening,
   setOpening
@@ -36,7 +33,7 @@ const Game: React.FC<Props> = ({
       setLoading(true)
       console.log("==================== start ====================")
 
-      toast.info('Minting your NFT...', {
+      toast.info('Playing Game...', {
         position: "top-right",
         autoClose: 15000,
         hideProgressBar: false,
@@ -48,9 +45,10 @@ const Game: React.FC<Props> = ({
       });
 
       // create txData
-      const txData:TxData = await createPlayGameTxData(GAME_ID, address)
+      const txData: TxData = await createPlayGameTxData(GAME_ID, address)
+      console.log("txData:", txData)
       // call mintNFT method
-      const transactionHash = await sendUserOp(smartAccount, txData);
+      const transactionHash = await sendUserOp(txData);
       // get Status
       const gameStatus = await getGameStatus(GAME_ID);
       // set Status
@@ -84,7 +82,7 @@ const Game: React.FC<Props> = ({
             <Loading/>
           : (
             <button 
-              disabled={opening}
+              disabled={!opening}
               onClick={handleMint} 
               className={styles.connect}
             >
