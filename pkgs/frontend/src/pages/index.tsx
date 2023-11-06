@@ -7,12 +7,11 @@ import { ChainId } from '@biconomy/core-types';
 import { ethers } from 'ethers';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useState } from "react";
-import { Lit } from './../hooks/lit';
-import { RPC_URL, SAMPLE_ADVERTISEMENT_URL } from './../utils/constants';
-
-// base Avalanche RPC
-const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+import { useEffect, useState } from "react";
+import { Web3auth } from './../hooks/web3auth';
+import { RPC_URL, SAMPLE_ADVERTISEMENT_URL, GAMECONTRACT_ADDRESS, GAME_ID } from './../utils/constants';
+import { UseContract } from '@/hooks/useContract';
+import gameContractAbi  from './../utils/abi.json';
 
 /**
  * Home Component
@@ -23,124 +22,30 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2 | null>(null);
   const [biconomyService, setbiconomyService] = useState<Biconomy | null>(null);
-  const [litService, setLitService] = useState<Lit | null>(null);
+  const [web3AuthService, setWeb3AuthService] = useState<Web3auth | null>(null);
+  const [contractService, setContracthService] = useState<UseContract | null>(null);
   const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET)
   const [opening, setOpening] = useState<boolean>(true);
 
   /**
-   * signUp
+   * logIn method
    */
-  const signUp = async () => {
-    setLoading(true);
-    var newPkpWallet;
-      
-    try {
-      if(litService == null || litService == undefined) {
-        // init lit isntance
-        const lit = new Lit();
-        const newLitService = await lit.create();
-        setLitService(newLitService);
-
-        await newLitService.registerWebAuthn();
-        // authicate (SignInにあたる)
-        const authMethod = await newLitService!.authenticateWithWebAuthn();
-        // get PKPS 
-        const pkp = await newLitService!.getPKPs(authMethod!);
-        // get new pkpWallet
-        newPkpWallet = await newLitService!.getPkpWallet(pkp[0].publicKey, authMethod!);
-      } else {
-        await litService!.registerWebAuthn();
-        // authicate (SignInにあたる)
-        const authMethod = await litService!.authenticateWithWebAuthn();
-        // get PKPS 
-        const pkp = await litService!.getPKPs(authMethod!);
-        // get new pkpWallet
-        newPkpWallet = await litService!.getPkpWallet(pkp[0].publicKey, authMethod!);
-      }
-
-      if(biconomyService == null || biconomyService == undefined) {
-        // init Bicnomy isntance
-        const biconomy = new Biconomy();
-        const newBicocomyService = await biconomy.create(chainId);
-        setbiconomyService(newBicocomyService);
-        // create smartWallet
-        const {
-          smartContractAddress: smartWalletAddress,
-          biconomySmartAccount: smartAccount
-        } = await newBicocomyService!.createSmartWallet(newPkpWallet);
-        
-        setAddress(smartWalletAddress)
-        setSmartAccount(smartAccount)
-      } else {
-        // create smartWallet
-        const {
-          smartContractAddress: smartWalletAddress,
-          biconomySmartAccount: smartAccount
-        } = await biconomyService!.createSmartWallet(newPkpWallet);
-        
-        setAddress(smartWalletAddress)
-        setSmartAccount(smartAccount)
-      }   
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  /**
-   * signIn method
-   */
-  const signIn = async () => {
+  const logIn = async () => {
     try {
       setLoading(true);
-      var newPkpWallet;
 
-      if(litService == null || litService == undefined) {
-        // init lit isntance
-        const lit = new Lit();
-        const newLitService = await lit.create();
-        setLitService(newLitService);
-
-        // authicate (SignInにあたる)
-        const authMethod = await newLitService!.authenticateWithWebAuthn();
-        // get PKPS 
-        const pkp = await newLitService!.getPKPs(authMethod!);
-        // get new pkpWallet
-        newPkpWallet = await newLitService!.getPkpWallet(pkp[0].publicKey, authMethod!);
-      } else {
-        // authicate (SignInにあたる)
-        const authMethod = await litService!.authenticateWithWebAuthn();
-        // get PKPS 
-        const pkp = await litService!.getPKPs(authMethod!);
-        // get new pkpWallet
-        newPkpWallet = await litService!.getPkpWallet(pkp[0].publicKey, authMethod!);
-      }
-
-      if(biconomyService == null || biconomyService == undefined) {
-        // init Bicnomy isntance
-        const biconomy = new Biconomy();
-        const newBicocomyService = await biconomy.create(chainId);
-        setbiconomyService(newBicocomyService);
-
-        // create smartWallet
-        const {
-          smartContractAddress: smartWalletAddress,
-          biconomySmartAccount: smartAccount
-        } = await newBicocomyService!.createSmartWallet(newPkpWallet);
-        
-        setAddress(smartWalletAddress)
-        setSmartAccount(smartAccount)
-      } else {
-        // create smartWallet
-        const {
-          smartContractAddress: smartWalletAddress,
-          biconomySmartAccount: smartAccount
-        } = await biconomyService!.createSmartWallet(newPkpWallet);
-        
-        setAddress(smartWalletAddress)
-        setSmartAccount(smartAccount)
-      }   
+      // login & create signer
+      const signer = await web3AuthService?.login();
+     
+      // create smartWallet
+      const {
+        smartContractAddress: smartWalletAddress,
+        biconomySmartAccount: smartAccount
+      } = await biconomyService!.createSmartWallet(signer);
+      
+      setAddress(smartWalletAddress)
+      setSmartAccount(smartAccount)
+      
 
     } catch (error) {
       console.error(error);
@@ -149,6 +54,37 @@ export default function Home() {
     }
   };
 
+  /**
+   * logout
+   */
+  const logOut = async() => {
+    await web3AuthService?.logout();
+  }
+
+  /**
+   * 副作用フック
+   */
+  useEffect(() => {
+    const init = async() =>{
+      // init Bicnomy isntance
+      const biconomy = new Biconomy();
+      const newBicocomyService = await biconomy.create(chainId);
+      // init Web3Auth instance
+      const web3auth = new Web3auth();
+      const newWeb3AuthService = await web3auth.create(chainId, RPC_URL);
+      // init UseContract instance
+      const contract = new UseContract();
+      const newContractService = await contract.create(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
+      // get Status
+      const gameStatus = await newContractService.getGameStatus(GAME_ID);
+
+      setbiconomyService(newBicocomyService);
+      setWeb3AuthService(newWeb3AuthService);
+      setContracthService(newContractService);
+      setOpening(gameStatus);
+    }
+    init();
+  }, [])
 
   return (
     <>
@@ -174,30 +110,32 @@ export default function Home() {
           width={600}
         />
         <div></div>
-        {!loading && !address && (
-          <button 
-            onClick={signUp} 
-            className={styles.connect}
-          >
-            Sign Up
-          </button>
-        )}
-        {!loading && !address && (
-          <button 
-            onClick={signIn} 
-            className={styles.connect}
-          >
-            Sign In
-          </button>
-        )}
         {loading && <p><Loading/></p>}
-        {smartAccount && provider && (
+        <div></div>
+        {smartAccount && (
           <Game 
             biconomyService={biconomyService!}
+            contractService={contractService!}
             smartAccount={smartAccount} 
             address={address} 
-            provider={provider} 
+            opening={opening}
+            setOpening={setOpening}
           />
+        )}
+        {!loading && address ? (
+          <button 
+            onClick={logOut} 
+            className={styles.connect}
+          >
+            LogOut
+          </button>       
+        ) : (
+          <button 
+            onClick={logIn} 
+            className={styles.connect}
+          >
+            Let`s Start
+          </button>
         )}
       </main>
     </>

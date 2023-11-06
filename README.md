@@ -28,6 +28,18 @@ WakuWakuOnchainGame 用のリポジトリです。
   yarn backend:compile
   ```
 
+- スマートコントラクトのデプロイ
+
+  ```bash
+  backend:deploy:fuji
+  ```
+
+- スマートコントラクトの検証
+
+  ```bash
+  yarn backend:verify:fuji
+  ```
+
 - スマートコントラクトのテスト
 
   ```bash
@@ -77,18 +89,6 @@ WakuWakuOnchainGame 用のリポジトリです。
     6 passing (993ms)
 
   ✨  Done in 2.50s.
-  ```
-
-- スマートコントラクトのデプロイ
-
-  ```bash
-  backend:deploy:fuji
-  ```
-
-- スマートコントラクトの検証
-
-  ```bash
-  yarn backend:verify:fuji
   ```
 
 ## メタデータ関連

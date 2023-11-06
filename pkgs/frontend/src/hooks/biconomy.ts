@@ -11,11 +11,9 @@ import {
   PaymasterMode,
   SponsorUserOperationDto
 } from '@biconomy/paymaster';
-import { ethers } from "ethers";
 import 'react-toastify/dist/ReactToastify.css';
-import abi from "../utils/abi.json";
-import { NFT_ADDRESS } from "./../utils/constants";
 import { getEnv } from "@/utils/getEnv";
+import { TxData } from "./useContract";
 
 
 /**
@@ -89,37 +87,17 @@ export class Biconomy {
   }
 
   /**
-   * mint NFT method
+   * sendUserOp method
    * @param smartAccount 
-   * @param address 
-   * @param provider 
-   * @param to 
+   * @param txData 
    * @returns 
    */
-  mintNft = async (
+  sendUserOp = async (
     smartAccount: BiconomySmartAccountV2, 
-    address: string, 
-    provider: any, 
-    to: string
+    txData: TxData
   ) => {
-    // NFTコントラクトのインスタンスを生成
-    const contract = new ethers.Contract(
-      NFT_ADDRESS,
-      abi,
-      provider,
-    )
-
     try {
-      // create NFT Cotntract's method call data
-      const minTx = await contract.populateTransaction.safeMint(address);
-      console.log(minTx.data);
-
-      const tx1 = {
-        to: to,
-        data: minTx.data,
-      };
-
-      let userOp = await smartAccount.buildUserOp([tx1]);
+      let userOp = await smartAccount.buildUserOp([txData]);
       console.log({ userOp })
       
       const biconomyPaymaster = smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
@@ -165,8 +143,6 @@ export class Biconomy {
       console.log("err:", err)
       return;
     }
-  } 
-
-  
+  }   
 }
 
