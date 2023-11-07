@@ -2,6 +2,10 @@
 
 WakuWakuOnchainGame 用のリポジトリです。
 
+## Live demo
+
+[https://wakuwakuonchaingame.netlify.app/](https://wakuwakuonchaingame.netlify.app/)
+
 ## 動かし方
 
 - インストール
