@@ -1,5 +1,5 @@
 import { sendUserOp } from '@/hooks/biconomy';
-import { TxData, createPlayGameTxData, getGameStatus, } from '@/hooks/useContract';
+import { GameInfo, TxData, createPlayGameTxData, getGameInfo } from '@/hooks/useContract';
 import { GAME_ID } from '@/utils/constants';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -49,10 +49,10 @@ const Game: React.FC<Props> = ({
       console.log("txData:", txData)
       // call mintNFT method
       const transactionHash = await sendUserOp(txData);
-      // get Status
-      const gameStatus = await getGameStatus(GAME_ID);
+      // get GameInfo
+      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
       // set Status
-      setOpening(gameStatus);
+      setOpening(gameInfo.openingStatus);
 
       toast.success(`Success! Here is your transaction:${transactionHash} `, {
         position: "top-right",

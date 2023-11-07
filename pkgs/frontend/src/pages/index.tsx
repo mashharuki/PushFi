@@ -1,7 +1,7 @@
 import Game from '@/components/Game';
 import Loading from '@/components/Loading';
 import { createSmartWallet } from '@/hooks/biconomy';
-import { createContract, getGameStatus } from '@/hooks/useContract';
+import { GameInfo, createContract, getGameInfo } from '@/hooks/useContract';
 import styles from '@/styles/Home.module.css';
 import { ChainId } from '@biconomy/core-types';
 import Head from 'next/head';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useState } from "react";
 import { login, logout } from './../hooks/web3auth';
 import gameContractAbi from './../utils/abi.json';
-import { GAMECONTRACT_ADDRESS, GAME_ID, RPC_URL, SAMPLE_ADVERTISEMENT_URL } from './../utils/constants';
+import { GAMECONTRACT_ADDRESS, GAME_ID, RPC_URL, SAMPLE_ADVERTISEMENT_URL, TESTNET_OPENSEA_BASE_URL } from './../utils/constants';
 
 /**
  * Home Component
@@ -20,6 +20,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET)
   const [opening, setOpening] = useState<boolean>(true);
+  const [game, setGame] = useState<GameInfo>()
 
   /**
    * logIn method
@@ -31,8 +32,9 @@ export default function Home() {
       // init UseContract instance
       createContract(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
       // get Status
-      const gameStatus = await getGameStatus(GAME_ID);
-      console.log("gameStatus:", gameStatus)
+      // get GameInfo
+      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
+      console.log("gameInfo:", gameInfo)
 
       // login & create signer
       const signer = await login(chainId, RPC_URL);
@@ -46,7 +48,8 @@ export default function Home() {
 
       console.log("smartWalletAddress:", smartWalletAddress)
 
-      setOpening(gameStatus);
+      setGame(gameInfo);
+      setOpening(gameInfo.openingStatus);
       setAddress(smartWalletAddress)
     } catch (error) {
       console.error(error);
@@ -77,12 +80,39 @@ export default function Home() {
               { opening ? 
                 <>🚀🚀🚀🚀🚀  現在、開催中！！  🚀🚀🚀🚀🚀</>
               : 
-                <>✨✨✨✨✨ 終了しました！ご参加ありがとうございました! ✨✨✨✨✨</>
+                <>
+                  ✨✨✨✨✨ 終了しました！ご参加ありがとうございました! ✨✨✨✨✨
+                  {address == game?.winner ? (
+                    <h3>
+                      おめでとうございます！！
+                      <br/>
+                      あなたは{(game?.goalCount)?.toString()}回目の挑戦者です！
+                    </h3>
+                  ) : (
+                    <h3>
+                      残念・・・、今回は外れてしまったようです。
+                      <br/> 
+                      でも記念バッジはお送りしました！
+                    </h3>
+                  )}
+                  <div>
+                    記念バッジは
+                    <a href={TESTNET_OPENSEA_BASE_URL + address}>
+                      ここ
+                    </a>
+                    でみれるよ！！
+                  </div>
+                </>
               } 
             </> 
           )}
         </h3>
-        <h2>100回目の挑戦者には 100USDCをプレゼント！</h2>
+        <h2>
+          {(game?.goalCount)?.toString()}
+          回目の挑戦者には 
+          {(game?.prizeValue)?.toString()}
+          USDCをプレゼント！
+        </h2>
         <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
         <Image 
           src={SAMPLE_ADVERTISEMENT_URL} 
