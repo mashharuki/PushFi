@@ -9,7 +9,13 @@ import Image from 'next/image';
 import { useState } from "react";
 import { login, logout } from './../hooks/web3auth';
 import gameContractAbi from './../utils/abi.json';
-import { GAMECONTRACT_ADDRESS, GAME_ID, RPC_URL, SAMPLE_ADVERTISEMENT_URL, TESTNET_OPENSEA_BASE_URL } from './../utils/constants';
+import { 
+  GAMECONTRACT_ADDRESS, 
+  GAME_ID, 
+  RPC_URL, 
+  SAMPLE_ADVERTISEMENT_URL, 
+  TESTNET_OPENSEA_BASE_URL 
+} from './../utils/constants';
 
 /**
  * Home Component
@@ -107,13 +113,17 @@ export default function Home() {
             </> 
           )}
         </h3>
-        <h2>
-          {(game?.goalCount)?.toString()}
-          回目の挑戦者には 
-          {(game?.prizeValue)?.toString()}
-          USDCをプレゼント！
-        </h2>
-        <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
+        { opening && (
+          <>
+            <h2>
+              {(game?.goalCount)?.toString()}
+              回目の挑戦者には 
+              {(game?.prizeValue)?.toString()}
+              USDCをプレゼント！
+            </h2>
+            <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
+          </>
+        )}
         <Image 
           src={SAMPLE_ADVERTISEMENT_URL} 
           alt="sampleImg" 

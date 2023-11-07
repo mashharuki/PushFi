@@ -93,11 +93,28 @@ WakuWakuOnchainGame 用のリポジトリです。
 
 ## メタデータ関連
 
-1. NFT 用のメタデータ
+1. NFT 用のメタデータ(サンプル)
 
 - [gif](https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/img/nftImg.gif)
 - [json](https://bafybeihd5jasbp6spqqapd6jzy7zfosiukwqbx4capmhayjt3yxagudwma.ipfs.dweb.link/json/metadata)
 
-2. 広告用の画像データ
+2. 広告用の画像データ(サンプル)
 
 - [sampleGif.gif](https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif)
+
+## アプリのスクリーンショット
+
+![](./pkgs/docs/img/mock.png)
+![](./pkgs/docs/img/mock2.png)
+![](./pkgs/docs/img/mock3.png)
+![](./pkgs/docs/img/mock4.png)
+![](./pkgs/docs/img/mock5.png)
+![](./pkgs/docs/img/mock6.png)
+![](./pkgs/docs/img/mock7.png)
+![](./pkgs/docs/img/mock8.png)
+![](./pkgs/docs/img/mock9.png)
+![](./pkgs/docs/img/mock10.png)
+![](./pkgs/docs/img/mock11.png)
+![](./pkgs/docs/img/mock12.png)
+![](./pkgs/docs/img/mock13.png)
+![](./pkgs/docs/img/mock14.png)
