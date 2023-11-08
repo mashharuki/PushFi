@@ -16,6 +16,7 @@ import {
   SAMPLE_ADVERTISEMENT_URL, 
   TESTNET_OPENSEA_BASE_URL 
 } from './../utils/constants';
+import { ethers } from 'ethers';
 
 /**
  * Home Component
@@ -115,13 +116,22 @@ export default function Home() {
         </h3>
         { opening && (
           <>
-            <h2>
-              {(game?.goalCount)?.toString()}
-              回目の挑戦者には 
-              {(game?.prizeValue)?.toString()}
-              USDCをプレゼント！
-            </h2>
-            <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
+            {address && (
+              <>
+                <h2>
+                  {(game?.goalCount)?.toString()}
+                  回目の挑戦者には 
+                  {ethers.utils.formatEther(game?.prizeValue!).toString()}
+                  USDCをプレゼント！
+                </h2>
+                <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
+              </>
+            )}
+            { !address && (
+              <>
+                <h2>下のボタンを押して早押しゲームに参加しよう！！</h2>
+              </>
+            )}
           </>
         )}
         <Image 
