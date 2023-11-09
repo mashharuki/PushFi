@@ -8,7 +8,7 @@ async function main() {
   // Deployed Contract address
   const contractAddress = "0x985e632298882212d91AB2C9c0d00D80b82880b7"
   // Game用の変数
-  const gameName = "SampleGame2";
+  const gameName = "SampleGame3";
   const goalCount = 5;
   const prizeToken = "0x045aa885e04dab32316eA0B39Cda9c966A5d9845"; // test USDC
   const prizeValue = ethers.utils.parseEther("10");
