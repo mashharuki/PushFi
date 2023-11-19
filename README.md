@@ -102,7 +102,12 @@ WakuWakuOnchainGame 用のリポジトリです。
 - [gif](https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/img/nftImg.gif)
 - [json](https://bafybeihd5jasbp6spqqapd6jzy7zfosiukwqbx4capmhayjt3yxagudwma.ipfs.dweb.link/json/metadata)
 
-2. 広告用の画像データ(サンプル)
+2. Super NFT 用のメタデータ
+
+- [git](https://bafkreigk4b5bdrl6i7aleiolfhngc3b5cgl3altssjzqt3qoc2b26ibzcm.ipfs.w3s.link/)
+- [json](https://bafkreib4c2d7kp4xspm42cxw32m4ilvbzuj4prbimwejkvjammpqo2mqym.ipfs.w3s.link/)
+
+3. 広告用の画像データ
 
 - [sampleGif.gif](https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif)
 

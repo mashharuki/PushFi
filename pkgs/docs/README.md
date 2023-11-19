@@ -9,7 +9,7 @@
 
 - スマートコントラクト
 
-  - NFT(ERC1155)
+  - NFT(ERC1155) - (ノーマル NFT と スーパー NFT)
   - Game コントラクト
     - Game 名
     - GameID
@@ -32,5 +32,6 @@
 沼崎さんとKudasaiチームに聞くのが良さそう
 
 ### 参考資料
+
 1. [プレゼン資料](https://docs.google.com/presentation/d/1Lgr0_aH9DENWWBIPr9TsNFT4-mXaUWQ04ITi_onRJBQ/edit#slide=id.p)
-2. [Canva資料](https://www.canva.com/design/DAFypSIRgJM/HLmWVcJrgiJkWTQ1jXQpBQ/edit?utm_content=DAFypSIRgJM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+2. [Canva 資料](https://www.canva.com/design/DAFypSIRgJM/HLmWVcJrgiJkWTQ1jXQpBQ/edit?utm_content=DAFypSIRgJM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
