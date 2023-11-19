@@ -78,7 +78,7 @@ export default function Home() {
         <meta name="description" content="Based Account Abstraction" />
       </Head>
       <main className={styles.main}>
-        <h1>
+        <h1 className={styles.title}>
           WakuWaku
           <br/>
           当てろ！スーパーNFT！！

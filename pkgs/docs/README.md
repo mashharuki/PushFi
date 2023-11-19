@@ -44,3 +44,4 @@
 3. [参考になりそうなエフェクト集](https://photoshopvip.net/90427/2)
 4. [サンプル付コピペ OK！すごい CSS アニメーションライブラリ 30 選【2022 年版】](https://photoshopvip.net/133747)
 5. [参考になりそうなアニメーション CSS](https://deshinon.com/2019/03/04/pop-midashi-title-css/)
+6. [【Next.js】個人開発で背景に悩んだら試しておきたいツール](https://zenn.dev/masa5714/articles/1d4796b096223f)

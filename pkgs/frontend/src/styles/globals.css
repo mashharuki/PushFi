@@ -29,7 +29,23 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(-45deg, #6440c1, #1f1f1f);
+  animation: gradientBG 15s ease infinite;
+  background-size: 400% 400%;
 }
+
+@keyframes gradientBG {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  1000% {
+      background-position: 0% 50%;
+  }
+}
+
 
 h1 {
   font-size: 3.2em;
