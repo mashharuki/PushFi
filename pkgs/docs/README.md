@@ -29,9 +29,17 @@
 ターゲットを広告主とユーザーを集めるのが大変そう。  
 マルジェラに似てそう。優位性をどこに持っていく。  
 ターゲットをどこに持っていくのか？  
-沼崎さんとKudasaiチームに聞くのが良さそう
+沼崎さんと Kudasai チームに聞くのが良さそう
+
+### メモ 2
+
+- スーパー NFT が当たる条件も一定時間経ったら変化するようになったら面白いかも
+- 広告主に期間限定で権限を渡す。
+- 広告主を変えること
 
 ### 参考資料
 
 1. [プレゼン資料](https://docs.google.com/presentation/d/1Lgr0_aH9DENWWBIPr9TsNFT4-mXaUWQ04ITi_onRJBQ/edit#slide=id.p)
 2. [Canva 資料](https://www.canva.com/design/DAFypSIRgJM/HLmWVcJrgiJkWTQ1jXQpBQ/edit?utm_content=DAFypSIRgJM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+3. [参考になりそうなエフェクト集](https://photoshopvip.net/90427/2)
+4. [サンプル付コピペ OK！すごい CSS アニメーションライブラリ 30 選【2022 年版】](https://photoshopvip.net/133747)

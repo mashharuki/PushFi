@@ -84,7 +84,7 @@ const Game: React.FC<Props> = ({
             <button 
               disabled={!opening}
               onClick={handlePlay} 
-              className={styles.connect}
+              className={`${styles.connect} ${styles.playButton}`}
             >
               Let`s Play
             </button>

@@ -132,7 +132,6 @@ export default function Home() {
             width={600}
           />
         )}
-        <div></div>
         {loading && <p><Loading/></p>}
         <div></div>
         {address && (
@@ -145,14 +144,14 @@ export default function Home() {
         {!loading && address ? (
           <button 
             onClick={logOut} 
-            className={styles.connect}
+            className={styles.authButton}
           >
             LogOut
           </button>       
         ) : (
           <button 
             onClick={logIn} 
-            className={styles.connect}
+            className={styles.authButton}
           >
             Let`s Start
           </button>

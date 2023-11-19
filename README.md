@@ -110,6 +110,7 @@ WakuWakuOnchainGame 用のリポジトリです。
 3. 広告用の画像データ
 
 - [sampleGif.gif](https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif)
+- [sampleImg2](https://bafkreihnwh275aqcc6sjo2f37yaphhh2rp44tsmdrsv25k72iiozybzluy.ipfs.w3s.link/)
 
 ## アプリのスクリーンショット
 

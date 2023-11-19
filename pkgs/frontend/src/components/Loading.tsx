@@ -1,3 +1,4 @@
+import styles from '@/styles/Home.module.css';
 import { CircularProgress } from "react-loading-indicators";
 
 /**
@@ -7,7 +8,7 @@ import { CircularProgress } from "react-loading-indicators";
 const Loading = () => {
     
   return (
-    <div className="text-center">
+    <div className={styles.loading}>
       <CircularProgress 
         variant="dotted" 
         color="#316acc" 
