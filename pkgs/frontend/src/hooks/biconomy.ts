@@ -17,6 +17,7 @@ var smartAccount: BiconomySmartAccountV2;
 
 /**
  * createSmartWallet method
+ * @param chainId
  * @param signer 
  */
 export const createSmartWallet = async(

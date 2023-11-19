@@ -26,9 +26,9 @@ const Game: React.FC<Props> = ({
   const [loading, setLoading] = useState<boolean>(false)
 
   /**
-   * handleMint
+   * handlePlay method
    */
-  const handleMint = async () => {
+  const handlePlay = async () => {
     try {
       setLoading(true)
       console.log("==================== start ====================")
@@ -83,7 +83,7 @@ const Game: React.FC<Props> = ({
           : (
             <button 
               disabled={!opening}
-              onClick={handleMint} 
+              onClick={handlePlay} 
               className={styles.connect}
             >
               Let`s Play
