@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat'
+import { ethers } from 'hardhat';
 
 /**
  * NFTコントラクトデプロイスクリプト
@@ -9,11 +9,14 @@ async function main() {
   const signer = (await ethers.getSigners())[0];
 
   const nft = await ethers.deployContract('WakuWakuNFT', [await signer.getAddress()])
+  const superNft = await ethers.deployContract('WakuWakuSuperNFT', [await signer.getAddress()])
 
   console.log(` ======================= start ========================= `)
   await nft.deployed()
+  await superNft.deployed()
 
   console.log(` WakuWakuNFT deployed to ${nft.address}`)
+  console.log(` WakuWakuSuperNFT deployed to ${superNft.address}`)
   console.log(` ======================== end  ======================== `)
 }
 

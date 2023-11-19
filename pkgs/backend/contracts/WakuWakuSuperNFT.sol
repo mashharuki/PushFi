@@ -7,9 +7,9 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
 /**
- * WakuWakuNFT Contract
+ * WakuWakuSuperNFT Contract
  */
-contract WakuWakuNFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
+contract WakuWakuSuperNFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     constructor(address initialOwner)
         ERC1155("https://bafkreib4c2d7kp4xspm42cxw32m4ilvbzuj4prbimwejkvjammpqo2mqym.ipfs.w3s.link/")
         Ownable(initialOwner)

@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./../WakuWakuNFT.sol";
+import "./../WakuWakuSuperNFT.sol";
 
 /**
  * WakuWakuGameV2 Contract
@@ -16,27 +17,30 @@ contract WakuWakuGameV2 is Ownable {
     uint256 currentCount;
     uint256 goalCount;
     bool openingStatus;
-    address prizeToken;
-    uint256 prizeValue;
+    address supserNftToken;
     address nftAddress;
     address winner;
     address[] paticipants;
+    string adverUrl;
   }
 
   // gameID
   uint256 private gameIdCounter = 0;
+  // Advertizement URL
+  string public adverUrl = "";
 
   // mapping
   mapping(uint256 => WakuWakuGame) public games;
 
   // Event
-  event GameCreated(uint256 gameId, string gameName, uint256 goalCount, address prizeToken, uint256 prizeValue, address nftAddress);
+  event GameCreated(uint256 gameId, string gameName, uint256 goalCount, address superNftAddress, address nftAddress, string adverUrl);
   event GameFinished(uint256 gameId, address winner);
   event PrizeSent(uint256 gameId, address erc20TokenAddress, address receiver, uint256 value);
-  event NftMinted(uint256 gameId, address nftAddress, address[] paticipants);
+  event NftMinted(uint256 gameId, address nftAddress, address player);
   event Withdrawn(address indexed payee, uint256 weiAmount);
   event WithdrawnToken(address indexed payee, address prizeToken, uint256 weiAmount);
   event Deposited(address indexed payee, uint256 weiAmount);
+  event ChangeAdverUrl(string oldAdverUrl, string newAdverUrl);
 
   /**
    * Constructor
@@ -49,9 +53,9 @@ contract WakuWakuGameV2 is Ownable {
   function createGame(
     string memory _gameName,
     uint256 _goalCount,
-    address _prizeToken,
-    uint256 _prizeValue,
-    address _nftAddress
+    address _superNftAddress,
+    address _nftAddress,
+    string memory _adverUrl
   ) onlyOwner public {
     // get current gameId
     uint256 currentGameIdCounter = gameIdCounter;
@@ -64,17 +68,17 @@ contract WakuWakuGameV2 is Ownable {
       0,
       _goalCount,
       true,
-      _prizeToken,
-      _prizeValue,
+      _superNftAddress,
       _nftAddress,
       0x0000000000000000000000000000000000000000,
-      initParticipants
+      initParticipants,
+      _adverUrl
     );
 
     games[currentGameIdCounter] = newGame;
     gameIdCounter++;
 
-    emit GameCreated(currentGameIdCounter, _gameName, _goalCount, _prizeToken, _prizeValue, _nftAddress);
+    emit GameCreated(currentGameIdCounter, _gameName, _goalCount, _superNftAddress, _nftAddress, _adverUrl);
   }
 
   /**
@@ -113,53 +117,44 @@ contract WakuWakuGameV2 is Ownable {
       games[_gameId].paticipants = newParticipants;
     }
 
-    // check goalCounter & currentCount
+    // goalCountに設定された倍数回目かをチェックする。
     if(currentCount >= wakuWakuGame.goalCount) {
-     
       // send Super NFT
-      sendPrize(_gameId);
-      mintNfts(_gameId);
+      mintNft(wakuWakuGame.supserNftToken, _gameId, _player);
     } else {
-      // send Super NFT
-      sendPrize(_gameId);
-      mintNfts(_gameId);
+      // send Normal NFT
+      mintNft(wakuWakuGame.nftAddress, _gameId, _player);
     }
-  }
-
-  /**
-   * sendPrize method
-   * @param _gameId gameID
-   */
-  function sendPrize(uint256 _gameId) internal {
-    // get game info
-    WakuWakuGame memory wakuWakuGame = games[_gameId];
-    require(!wakuWakuGame.openingStatus, "This game is not already finished!!");
-
-    // create ERC20 contract instance
-    IERC20 prizeToken = IERC20(wakuWakuGame.prizeToken);
-    // send
-    prizeToken.transfer(wakuWakuGame.winner, wakuWakuGame.prizeValue);
-    emit PrizeSent(_gameId, wakuWakuGame.prizeToken, wakuWakuGame.winner, wakuWakuGame.prizeValue);
   }
 
   /**
    * mintNfts method
+   * @param _nftAddress NFT Contract Address
    * @param _gameId gameID
+   * @param _player palyer's address
    */
-  function mintNfts(uint256 _gameId) internal {
+  function mintNft(
+    address _nftAddress,
+    uint256 _gameId, 
+    address _player
+  ) internal {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
     require(!wakuWakuGame.openingStatus, "This game is not already finished!!");
 
-    // create WakuWakuNFT contract instance
-    WakuWakuNFT nft = WakuWakuNFT(wakuWakuGame.nftAddress);
-    // get participants address
-    address[] memory participants = wakuWakuGame.paticipants;
-    // mint NFT to all participant
-    for(uint256 i = 0; i < participants.length; i++) {
-      nft.mint(participants[i], _gameId, 1, '0x');
+    if(wakuWakuGame.nftAddress == _nftAddress) {
+      // create WakuWakuNFT contract instance
+      WakuWakuNFT nft = WakuWakuNFT(wakuWakuGame.nftAddress);
+      // mint 
+      nft.mint(_player, _gameId, 1, '0x');
+    } else {
+      // create WakuWakuSuperNFT contract instance
+      WakuWakuSuperNFT nft = WakuWakuSuperNFT(wakuWakuGame.nftAddress);
+      // mint 
+      nft.mint(_player, _gameId, 1, '0x');
     }
-    emit NftMinted(_gameId, wakuWakuGame.nftAddress, participants);
+
+    emit NftMinted(_gameId, wakuWakuGame.nftAddress, _player);
   }
 
   /**
@@ -170,23 +165,6 @@ contract WakuWakuGameV2 is Ownable {
     uint256 balance = address(this).balance;
     _to.transfer(balance);
     emit Withdrawn(_to, balance);
-  }
-
-  /**
-   * withdrawToken
-   */
-  function withdrawToken(
-    uint256 _gameId, 
-    address payable _to
-  ) onlyOwner public {
-    // get game info
-    WakuWakuGame memory wakuWakuGame = games[_gameId];
-    // create ERC20 contract instance
-    IERC20 prizeToken = IERC20(wakuWakuGame.prizeToken);
-    // get balance of this contract
-    uint256 balance = prizeToken.balanceOf(address(this));
-    prizeToken.transfer(_to, balance);
-    emit WithdrawnToken(_to, address(prizeToken), balance);
   }
 
   // Function to receive Ether. msg.data must be empty
@@ -205,5 +183,32 @@ contract WakuWakuGameV2 is Ownable {
   function getOpeningStatus(uint256 _gameId) public view returns (bool result) {
     result = games[_gameId].openingStatus;
     return result;
+  }
+
+  /**
+   * Pause Game
+   */
+  function pauseGame(uint256 _gameId) public onlyOwner {
+    games[_gameId].openingStatus = false;
+  }
+
+  /**
+   * change Adver URL method
+   */
+  function changeAdverUrl(uint256 _gameId, string memory _newAdverUrl) public onlyOwner {
+    string memory oldAdverUrl = games[_gameId].adverUrl;
+    games[_gameId].adverUrl = _newAdverUrl;
+    // emit
+    emit ChangeAdverUrl(oldAdverUrl, _newAdverUrl);
+  }
+
+  /**
+   * goalCountに設定された倍数回目かをチェックするメソッド
+   */
+  function isMultipleOfGoalCount(
+    uint256 _currentCount,
+    uint256 _goalCount
+  ) external pure returns (bool) {
+    return (_currentCount % _goalCount == 0);
   }
 }
