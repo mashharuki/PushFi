@@ -9,14 +9,12 @@ import Image from 'next/image';
 import { useState } from "react";
 import { login, logout } from './../hooks/web3auth';
 import gameContractAbi from './../utils/abi.json';
-import { 
-  GAMECONTRACT_ADDRESS, 
-  GAME_ID, 
-  RPC_URL, 
-  SAMPLE_ADVERTISEMENT_URL, 
-  TESTNET_OPENSEA_BASE_URL 
+import {
+  GAMECONTRACT_ADDRESS,
+  GAME_ID,
+  RPC_URL,
+  TESTNET_OPENSEA_BASE_URL
 } from './../utils/constants';
-import { ethers } from 'ethers';
 
 /**
  * Home Component
@@ -80,37 +78,26 @@ export default function Home() {
         <meta name="description" content="Based Account Abstraction" />
       </Head>
       <main className={styles.main}>
-        <h1>WakuWaku 早押しゲーム!!</h1>
+        <h1>
+          WakuWaku
+          <br/>
+          当てろ！スーパーNFT！！
+        </h1>
         <h3> 
           { address && ( 
             <>
               { opening ? 
                 <>🚀🚀🚀🚀🚀  現在、開催中！！  🚀🚀🚀🚀🚀</>
               : 
-                <>
-                  ✨✨✨✨✨ 終了しました！ご参加ありがとうございました! ✨✨✨✨✨
-                  {address == game?.winner ? (
-                    <h3>
-                      おめでとうございます！！
-                      <br/>
-                      あなたは{(game?.goalCount)?.toString()}回目の挑戦者です！
-                    </h3>
-                  ) : (
-                    <h3>
-                      残念・・・、今回は外れてしまったようです。
-                      <br/> 
-                      でも記念バッジはお送りしました！
-                    </h3>
-                  )}
-                  <div>
-                    記念バッジは
-                    <a href={TESTNET_OPENSEA_BASE_URL + address}>
-                      ここ
-                    </a>
-                    でみれるよ！！
-                  </div>
-                </>
+                <>✨✨✨✨✨ 終了しました！ご参加ありがとうございました! ✨✨✨✨✨ </>
               } 
+              <div>
+                GetしたNFTは、
+                <a href={TESTNET_OPENSEA_BASE_URL + address}>
+                  ここ
+                </a>
+                でみれるよ！！
+              </div>
             </> 
           )}
         </h3>
@@ -120,11 +107,11 @@ export default function Home() {
               <>
                 <h2>
                   {(game?.goalCount)?.toString()}
-                  回目の挑戦者には 
-                  {ethers.utils.formatEther(game?.prizeValue!).toString()}
-                  USDCをプレゼント！
+                  の倍数回目にトランザクションを送信した人には
+                  <br/>
+                  スーパーNFTをプレゼント！！
                 </h2>
-                <h3>※ ゲームに参加してくれた人には 記念バッジをプレゼント！</h3>
+                <h3>※ ゲームに参加してくれた人には 記念NFTをプレゼント！</h3>
               </>
             )}
             { !address && (
@@ -134,12 +121,14 @@ export default function Home() {
             )}
           </>
         )}
-        <Image 
-          src={SAMPLE_ADVERTISEMENT_URL} 
-          alt="sampleImg" 
-          height={400}
-          width={600}
-        />
+        {game && (
+          <Image 
+            src={game.adverUrl} 
+            alt="sampleImg" 
+            height={400}
+            width={600}
+          />
+        )}
         <div></div>
         {loading && <p><Loading/></p>}
         <div></div>

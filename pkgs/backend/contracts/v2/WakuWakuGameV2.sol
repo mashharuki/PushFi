@@ -17,7 +17,7 @@ contract WakuWakuGameV2 is Ownable {
     uint256 currentCount;
     uint256 goalCount;
     bool openingStatus;
-    address supserNftToken;
+    address supserNftAddress;
     address nftAddress;
     address winner;
     address[] paticipants;
@@ -26,8 +26,6 @@ contract WakuWakuGameV2 is Ownable {
 
   // gameID
   uint256 private gameIdCounter = 0;
-  // Advertizement URL
-  string public adverUrl = "";
 
   // mapping
   mapping(uint256 => WakuWakuGame) public games;
@@ -118,9 +116,9 @@ contract WakuWakuGameV2 is Ownable {
     }
 
     // goalCountに設定された倍数回目かをチェックする。
-    if(currentCount >= wakuWakuGame.goalCount) {
+    if(isMultipleOfGoalCount(currentCount, wakuWakuGame.goalCount)) {
       // send Super NFT
-      mintNft(wakuWakuGame.supserNftToken, _gameId, _player);
+      mintNft(wakuWakuGame.supserNftAddress, _gameId, _player);
     } else {
       // send Normal NFT
       mintNft(wakuWakuGame.nftAddress, _gameId, _player);
@@ -140,8 +138,7 @@ contract WakuWakuGameV2 is Ownable {
   ) internal {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
-    require(!wakuWakuGame.openingStatus, "This game is not already finished!!");
-
+    
     if(wakuWakuGame.nftAddress == _nftAddress) {
       // create WakuWakuNFT contract instance
       WakuWakuNFT nft = WakuWakuNFT(wakuWakuGame.nftAddress);
@@ -149,7 +146,7 @@ contract WakuWakuGameV2 is Ownable {
       nft.mint(_player, _gameId, 1, '0x');
     } else {
       // create WakuWakuSuperNFT contract instance
-      WakuWakuSuperNFT nft = WakuWakuSuperNFT(wakuWakuGame.nftAddress);
+      WakuWakuSuperNFT nft = WakuWakuSuperNFT(wakuWakuGame.supserNftAddress);
       // mint 
       nft.mint(_player, _gameId, 1, '0x');
     }
@@ -208,7 +205,7 @@ contract WakuWakuGameV2 is Ownable {
   function isMultipleOfGoalCount(
     uint256 _currentCount,
     uint256 _goalCount
-  ) external pure returns (bool) {
+  ) internal pure returns (bool) {
     return (_currentCount % _goalCount == 0);
   }
 }

@@ -36,6 +36,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "string",
+        "name": "oldAdverUrl",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "newAdverUrl",
+        "type": "string"
+      }
+    ],
+    "name": "ChangeAdverUrl",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "payee",
@@ -75,20 +94,20 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "prizeToken",
+        "name": "superNftAddress",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "prizeValue",
-        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "address",
         "name": "nftAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "adverUrl",
+        "type": "string"
       }
     ],
     "name": "GameCreated",
@@ -130,9 +149,9 @@
       },
       {
         "indexed": false,
-        "internalType": "address[]",
-        "name": "paticipants",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
       }
     ],
     "name": "NftMinted",
@@ -239,6 +258,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_newAdverUrl",
+        "type": "string"
+      }
+    ],
+    "name": "changeAdverUrl",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "_gameName",
         "type": "string"
@@ -250,18 +287,18 @@
       },
       {
         "internalType": "address",
-        "name": "_prizeToken",
+        "name": "_superNftAddress",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_prizeValue",
-        "type": "uint256"
       },
       {
         "internalType": "address",
         "name": "_nftAddress",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_adverUrl",
+        "type": "string"
       }
     ],
     "name": "createGame",
@@ -301,13 +338,8 @@
       },
       {
         "internalType": "address",
-        "name": "prizeToken",
+        "name": "supserNftAddress",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "prizeValue",
-        "type": "uint256"
       },
       {
         "internalType": "address",
@@ -318,6 +350,11 @@
         "internalType": "address",
         "name": "winner",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "adverUrl",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -353,6 +390,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      }
+    ],
+    "name": "pauseGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -402,24 +452,6 @@
       }
     ],
     "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_gameId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address payable",
-        "name": "_to",
-        "type": "address"
-      }
-    ],
-    "name": "withdrawToken",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

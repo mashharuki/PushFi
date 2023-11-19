@@ -10,10 +10,10 @@ export type GameInfo = {
   currentCount: number;
   goalCount: number;
   openingStatus: boolean;
-  prizeToken: string;
-  prizeValue: number;
+  superNftAddress: string;
   nftAddress: string;
   winner: string;
+  adverUrl: string;
 }
 
 var contractAddress: string;
