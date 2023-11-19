@@ -93,7 +93,10 @@ export default function Home() {
               } 
               <div>
                 GetしたNFTは、
-                <a href={TESTNET_OPENSEA_BASE_URL + address}>
+                <a 
+                  href={TESTNET_OPENSEA_BASE_URL + address} 
+                  target="_blank"
+                >
                   ここ
                 </a>
                 でみれるよ！！

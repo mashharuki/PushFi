@@ -8,8 +8,8 @@ async function main() {
   // get signer
   const signer = (await ethers.getSigners())[0];
   // Deployed Contract address
-  const contractAddress = "0x36C1b81EB093aEdc6fF4288E7f8b12C400E97820"
-  const superNftcontractAddress = ""
+  const contractAddress = "0x7518C6Ca099673C41890f0f2dAd7a6797e201bA4"
+  const superNftcontractAddress = "0x96cf27b3EfA3DbE9890b0a299A072F7Ff8adf0Ab"
 
   const nft = await ethers.getContractAt('WakuWakuNFT', contractAddress);
   const superNft = await ethers.getContractAt('WakuWakuSuperNFT', superNftcontractAddress);
