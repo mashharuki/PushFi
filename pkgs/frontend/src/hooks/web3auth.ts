@@ -1,5 +1,5 @@
 import { ResponseData } from "@/pages/api/env";
-import { HEX_CHAIN_ID } from "@/utils/constants";
+import { decimalToHex } from "@/utils/constants";
 import { getEnv } from "@/utils/getEnv";
 import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import { Web3Auth } from "@web3auth/modal";
@@ -24,7 +24,7 @@ export const login = async(
     web3AuthNetwork: "testnet",
     chainConfig: {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: HEX_CHAIN_ID, 
+      chainId: await decimalToHex(chainId), 
       rpcTarget: rpcUrl
     },
   });
