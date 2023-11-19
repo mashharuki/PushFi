@@ -6,6 +6,12 @@ WakuWakuOnchainGame 用のリポジトリです。
 
 [https://wakuwakuonchaingame.netlify.app/](https://wakuwakuonchaingame.netlify.app/)
 
+## サイトへの QR コード
+
+<div align="center">
+  <img width="200px" src="./pkgs/docs/img/QR_code.png" /> 
+</div>
+
 ## 動かし方
 
 - インストール
