@@ -78,10 +78,10 @@ export default function Home() {
         <meta name="description" content="Based Account Abstraction" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <h1 className={styles.neonText}>
           WakuWaku
           <br/>
-          当てろ！スーパーNFT！！
+          当てろ！スーパーNFT！
         </h1>
         <h3> 
           { address && ( 
@@ -119,7 +119,7 @@ export default function Home() {
             )}
             { !address && (
               <>
-                <h2>下のボタンを押して早押しゲームに参加しよう！！</h2>
+                <h2>下のボタンを押して連打ゲームに参加しよう！！</h2>
               </>
             )}
           </>
