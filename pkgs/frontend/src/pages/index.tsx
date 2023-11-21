@@ -1,7 +1,6 @@
-import Game from '@/components/Game';
 import Loading from '@/components/Loading';
-import { createSmartWallet } from '@/hooks/biconomy';
-import { GameInfo, createContract, getGameInfo } from '@/hooks/useContract';
+import { createSmartWallet, sendUserOp } from '@/hooks/biconomy';
+import { GameInfo, TxData, createContract, createPlayGameTxData, getGameInfo } from '@/hooks/useContract';
 import styles from '@/styles/Home.module.css';
 import { ChainId } from '@biconomy/core-types';
 import Head from 'next/head';
@@ -17,6 +16,18 @@ import {
 } from './../utils/constants';
 
 /**
+ * ゲームのステータスを管理する独自の型
+ */
+enum GameStatus {
+  NOT_START = 'not_start',
+  PRE_START = 'pre_start',
+  START = 'start',
+  PLAYING = 'playing',
+  END = 'end',
+  PROCESSING = 'processing'
+} 
+
+/**
  * Home Component
  * @returns 
  */
@@ -26,6 +37,8 @@ export default function Home() {
   const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET)
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>()
+  const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
+  const [count, setCount] = useState<number>(0)
 
   /**
    * logIn method
@@ -71,6 +84,59 @@ export default function Home() {
     setAddress("");
   }
 
+  /**
+   * Countを1増やすメソッド
+   */
+  const incrementCount = () => {
+    setCount(prevCount => prevCount + 1);
+  };
+
+  /**
+   * handlePlay
+   */
+  const handlePlay = () => {
+    setGameStatus(GameStatus.PRE_START);
+    setTimeout(() => {
+      setGameStatus(GameStatus.START);
+    }, 1000)
+    setTimeout(() => {
+      setGameStatus(GameStatus.PLAYING);
+    }, 2000)
+    setTimeout(async() => {
+      setGameStatus(GameStatus.END);
+      await sendTransaction();
+    }, 15000)
+  }
+
+  /**
+   * sendTransaction method
+   */
+  const sendTransaction = async () => {
+    try {
+      setLoading(true)
+      console.log("==================== start ====================")
+
+      // create txData
+      const txDatas: TxData[] = await createPlayGameTxData(GAME_ID, address, count)
+      console.log("txDatas:", txDatas)
+      // call mintNFT method
+      const transactionHash = await sendUserOp(txDatas);
+      console.error("tx Hash:", transactionHash)
+      // get GameInfo
+      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
+      // set Status
+      setOpening(gameInfo.openingStatus);
+      setCount(0);
+      setGameStatus(GameStatus.NOT_START);
+
+    } catch(err: any) {
+      console.error("error occurred while playing game.. :", err)
+    } finally {
+      console.log("====================  end ====================")
+      setLoading(false)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -79,17 +145,17 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.neonText}>
-          WakuWaku
+          ゴリ押しで当てろ！
           <br/>
-          当てろ！スーパーNFT！
+          Super NFT！
         </h1>
         <h3> 
           { address && ( 
             <>
               { opening ? 
-                <>🚀🚀🚀🚀🚀  現在、開催中！！  🚀🚀🚀🚀🚀</>
+                <>🚀🚀🚀  現在、開催中！  🚀🚀🚀</>
               : 
-                <>✨✨✨✨✨ 終了しました！ご参加ありがとうございました! ✨✨✨✨✨ </>
+                <>✨✨ 終了しました！ご参加ありがとうございました! ✨✨</>
               } 
               <div>
                 GetしたNFTは、
@@ -109,17 +175,16 @@ export default function Home() {
             {address && (
               <>
                 <h2>
-                  {(game?.goalCount)?.toString()}
-                  の倍数回目にトランザクションを送信した人には
+                  運が良ければ
                   <br/>
-                  スーパーNFTをプレゼント！！
+                  スーパーNFTをゲット！
                 </h2>
-                <h3>※ ゲームに参加してくれた人には 記念NFTをプレゼント！</h3>
+                <h3>15秒間とにかく押して押しまくれ！</h3>
               </>
             )}
             { !address && (
               <>
-                <h2>下のボタンを押して連打ゲームに参加しよう！！</h2>
+                <h2>ボタンをクリック！</h2>
               </>
             )}
           </>
@@ -132,29 +197,61 @@ export default function Home() {
             width={600}
           />
         )}
-        {loading && <p><Loading/></p>}
-        <div></div>
-        {address && (
-          <Game 
-            address={address} 
-            opening={opening}
-            setOpening={setOpening}
-          />
-        )}
-        {!loading && address ? (
-          <button 
-            onClick={logOut} 
-            className={styles.authButton}
-          >
-            LogOut
-          </button>       
+        {loading ? (
+          <p><Loading/></p>
         ) : (
-          <button 
-            onClick={logIn} 
-            className={styles.authButton}
-          >
-            Let`s Start
-          </button>
+          <>
+            <div></div>
+            {address ? (
+              <>
+                { gameStatus == GameStatus.NOT_START && (
+                  <>
+                    <button 
+                      disabled={!opening}
+                      onClick={handlePlay} 
+                      className={`${styles.connect} ${styles.playButton}`}
+                    >
+                      Let`s Play
+                    </button>
+                    <br />
+                    <button 
+                      onClick={logOut} 
+                      className={styles.authButton}
+                    >
+                      LogOut
+                    </button>  
+                  </>
+                )}
+                { gameStatus == GameStatus.PRE_START && (
+                  <h2> Are you ready...?? </h2>
+                )}
+                { gameStatus == GameStatus.START && (
+                  <h2> Go!! </h2>
+                )}
+                { gameStatus == GameStatus.PLAYING && (
+                  <button 
+                    disabled={!opening}
+                    onClick={incrementCount} 
+                    className={`${styles.connect} ${styles.playButton}`}
+                  >
+                    Push!!
+                  </button>
+                )}
+                { gameStatus == GameStatus.END && (
+                  <>
+                    <h2>It`s over!!</h2>
+                  </>
+                )}
+              </>      
+            ) : (
+              <button 
+                onClick={logIn} 
+                className={styles.authButton}
+              >
+                Let`s Start
+              </button>
+            )}
+          </>
         )}
       </main>
     </>
