@@ -29,3 +29,6 @@
 - Game Contract(v2)
 
   [WakuWakuGameV2](https://testnet.snowtrace.io/address/0xF0611189992Fb2d5487BdBFCb076194fE372c992#code)
+
+- Game Contract(v3)
+  [WakuWakuGameV3](https://testnet.snowtrace.io/address/0x587E68B8b22d803Ac0aAF568e87c6fE12DA103E7#code)

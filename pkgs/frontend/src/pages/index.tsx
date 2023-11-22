@@ -38,7 +38,7 @@ export default function Home() {
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>()
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
-  const [count, setCount] = useState<number>(0)
+  const [count, setCount] = useState<number>(50);
 
   /**
    * logIn method
@@ -88,7 +88,8 @@ export default function Home() {
    * Countを1増やすメソッド
    */
   const incrementCount = () => {
-    setCount(prevCount => prevCount + 1);
+    setCount(preCount => preCount + 1);
+    console.log("count:", count)
   };
 
   /**
@@ -98,14 +99,19 @@ export default function Home() {
     setGameStatus(GameStatus.PRE_START);
     setTimeout(() => {
       setGameStatus(GameStatus.START);
-    }, 1000)
+    }, 1000) // 1秒後
     setTimeout(() => {
       setGameStatus(GameStatus.PLAYING);
-    }, 2000)
-    setTimeout(async() => {
+      console.log("count:", count)
+    }, 2000) // 2秒後
+    console.log("count:", count)
+    setTimeout(() => {
       setGameStatus(GameStatus.END);
+    }, 15000) // 15秒後
+    console.log("count:", count)
+    setTimeout(async() => {
       await sendTransaction();
-    }, 15000)
+    }, 18000) // 18秒後
   }
 
   /**
@@ -116,9 +122,10 @@ export default function Home() {
       setLoading(true)
       console.log("==================== start ====================")
 
+      console.log("count:", count)
       // create txData
       const txDatas: TxData[] = await createPlayGameTxData(GAME_ID, address, count)
-      console.log("txDatas:", txDatas)
+      
       // call mintNFT method
       const transactionHash = await sendUserOp(txDatas);
       console.error("tx Hash:", transactionHash)
@@ -126,7 +133,7 @@ export default function Home() {
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
       // set Status
       setOpening(gameInfo.openingStatus);
-      setCount(0);
+      //setCount(0);
       setGameStatus(GameStatus.NOT_START);
 
     } catch(err: any) {
@@ -140,14 +147,12 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>WakuWaku 早押しゲーム!!</title>
+        <title>Push Fi</title>
         <meta name="description" content="Based Account Abstraction" />
       </Head>
       <main className={styles.main}>
         <h1 className={styles.neonText}>
-          ゴリ押しで当てろ！
-          <br/>
-          Super NFT！
+          Push Fi
         </h1>
         <h3> 
           { address && ( 
@@ -179,7 +184,7 @@ export default function Home() {
                   <br/>
                   スーパーNFTをゲット！
                 </h2>
-                <h3>15秒間とにかく押して押しまくれ！</h3>
+                <h2>15秒間とにかく押して押しまくれ！</h2>
               </>
             )}
             { !address && (
@@ -193,8 +198,8 @@ export default function Home() {
           <Image 
             src={game.adverUrl} 
             alt="sampleImg" 
-            height={400}
-            width={600}
+            height={300}
+            width={300}
           />
         )}
         {loading ? (
