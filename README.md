@@ -4,7 +4,7 @@
 
 ## Live demo
 
-[https://pushfi.vercel.app/](https://pushfi.vercel.app/)
+[https://push-fi-frontend.vercel.app/](https://push-fi-frontend.vercel.app/)
 
 ## サイトへの QR コード
 
