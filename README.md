@@ -4,7 +4,7 @@
 
 ## Live demo
 
-[https://wakuwakuonchaingame.netlify.app/](https://wakuwakuonchaingame.netlify.app/)
+[https://pushfi.vercel.app/](https://pushfi.vercel.app/)
 
 ## サイトへの QR コード
 
