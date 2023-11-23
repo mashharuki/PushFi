@@ -2,10 +2,12 @@ import Loading from '@/components/Loading';
 import { createSmartWallet, sendUserOp } from '@/hooks/biconomy';
 import { GameInfo, TxData, createContract, createPlayGameTxData, getGameInfo } from '@/hooks/useContract';
 import styles from '@/styles/Home.module.css';
+import { verifyRecaptcha } from '@/utils/verifyRecaptcha';
 import { ChainId } from '@biconomy/core-types';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useState } from "react";
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { login, logout } from './../hooks/web3auth';
 import gameContractAbi from './../utils/abi.json';
 import {
@@ -39,6 +41,9 @@ export default function Home() {
   const [game, setGame] = useState<GameInfo>()
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
   const [count, setCount] = useState<number>(0);
+  const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
+  // reCAPTCHAからtokenを取得する No.2の処理
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   /**
    * logIn method
@@ -81,6 +86,7 @@ export default function Home() {
    */
   const logOut = async() => {
     await logout();
+    setVerifyFlg(false);
     setAddress("");
   }
 
@@ -107,6 +113,26 @@ export default function Home() {
     setTimeout(() => {
       setGameStatus(GameStatus.END);
     }, 15000) // 15秒後
+  }
+
+  /**
+   * reCAPTCHA method
+   */
+  const reCaptcha = async() => {
+    if(executeRecaptcha) { 
+      try {
+        setLoading(true);
+        const token: string = await executeRecaptcha('login');
+        // ReCaptchaによる検証を実施
+        const responceJson_recaptcha = await verifyRecaptcha(token);
+        console.log("responce_server:", responceJson_recaptcha);
+        setVerifyFlg(responceJson_recaptcha.success);
+      } catch(err) {
+        console.error("error:", err);
+      } finally {
+        setLoading(false)
+      }
+    } 
   }
 
   /**
@@ -209,20 +235,32 @@ export default function Home() {
               <>
                 { gameStatus == GameStatus.NOT_START && (
                   <>
-                    <button 
-                      disabled={!opening}
-                      onClick={handlePlay} 
-                      className={`${styles.connect} ${styles.playButton}`}
-                    >
-                      Let`s Play
-                    </button>
-                    <br />
-                    <button 
-                      onClick={logOut} 
-                      className={styles.authButton}
-                    >
-                      LogOut
-                    </button>  
+                    {!verifyFlg ? (
+                      <button 
+                        disabled={!opening}
+                        onClick={reCaptcha} 
+                        className={`${styles.connect} ${styles.playButton}`}
+                      >
+                        Verify I`m not a bot
+                      </button>
+                    ) : (
+                      <>
+                        <button 
+                          disabled={!opening}
+                          onClick={handlePlay} 
+                          className={`${styles.connect} ${styles.playButton}`}
+                        >
+                          Let`s Play
+                        </button>
+                        <br />
+                        <button 
+                          onClick={logOut} 
+                          className={styles.authButton}
+                        >
+                          LogOut
+                        </button>  
+                      </>
+                    )}  
                   </>
                 )}
                 { gameStatus == GameStatus.PRE_START && (
