@@ -38,7 +38,7 @@ export default function Home() {
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>()
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
-  const [count, setCount] = useState<number>(50);
+  const [count, setCount] = useState<number>(0);
 
   /**
    * logIn method
@@ -88,8 +88,9 @@ export default function Home() {
    * Countを1増やすメソッド
    */
   const incrementCount = () => {
-    setCount(preCount => preCount + 1);
-    console.log("count:", count)
+    const new_count = count + 1;
+    setCount(new_count);
+    console.log(`count：${new_count}`);
   };
 
   /**
@@ -102,16 +103,10 @@ export default function Home() {
     }, 1000) // 1秒後
     setTimeout(() => {
       setGameStatus(GameStatus.PLAYING);
-      console.log("count:", count)
     }, 2000) // 2秒後
-    console.log("count:", count)
     setTimeout(() => {
       setGameStatus(GameStatus.END);
     }, 15000) // 15秒後
-    console.log("count:", count)
-    setTimeout(async() => {
-      await sendTransaction();
-    }, 18000) // 18秒後
   }
 
   /**
@@ -133,13 +128,16 @@ export default function Home() {
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
       // set Status
       setOpening(gameInfo.openingStatus);
-      //setCount(0);
       setGameStatus(GameStatus.NOT_START);
 
     } catch(err: any) {
       console.error("error occurred while playing game.. :", err)
     } finally {
       console.log("====================  end ====================")
+      setCount((pre_count) => pre_count)  
+      setCount(() => {              
+        return 0
+      })
       setLoading(false)
     }
   }
@@ -184,7 +182,7 @@ export default function Home() {
                   <br/>
                   スーパーNFTをゲット！
                 </h2>
-                <h2>15秒間とにかく押して押しまくれ！</h2>
+                <h2>15秒間とにかく押しまくれ！</h2>
               </>
             )}
             { !address && (
@@ -245,6 +243,13 @@ export default function Home() {
                 { gameStatus == GameStatus.END && (
                   <>
                     <h2>It`s over!!</h2>
+                    <button 
+                      disabled={!opening}
+                      onClick={sendTransaction} 
+                      className={`${styles.connect} ${styles.playButton}`}
+                    >
+                      Submit your result
+                    </button>
                   </>
                 )}
               </>      
