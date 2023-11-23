@@ -8,6 +8,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
  * @returns 
  */
 export default function App({ Component, pageProps }: AppProps) {
+  console.log("process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY!:", process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY!)
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY!}
