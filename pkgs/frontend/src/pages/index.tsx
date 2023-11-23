@@ -204,11 +204,10 @@ export default function Home() {
             {address && (
               <>
                 <h2>
-                  運が良ければ
+                  15秒間押して押して
                   <br/>
-                  スーパーNFTをゲット！
+                  Super NFTをゲットせよ！
                 </h2>
-                <h2>15秒間とにかく押しまくれ！</h2>
               </>
             )}
             { !address && (
