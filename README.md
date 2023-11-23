@@ -135,3 +135,8 @@ WakuWakuOnchainGame 用のリポジトリです。
 ![](./pkgs/docs/img/mock12.png)
 ![](./pkgs/docs/img/mock13.png)
 ![](./pkgs/docs/img/mock14.png)
+![](./pkgs/docs/img/mock15.png)
+![](./pkgs/docs/img/mock16.png)
+![](./pkgs/docs/img/mock17.png)
+![](./pkgs/docs/img/mock18.png)
+![](./pkgs/docs/img/mock19.png)
