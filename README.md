@@ -2,7 +2,9 @@
 
 <strong>トランザクションの嵐を巻き起こせ!!</strong>
 
-## Live demo
+## Live demo on Netlify
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0611b302-c1db-452c-80f0-cc338ee6b12e/deploy-status)](https://app.netlify.com/sites/pushfi/deploys)
 
 [https://pushfi.netlify.app/](https://pushfi.netlify.app/)
 
@@ -226,3 +228,4 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 3. [Remix - VRFv2DirectFundingConsumer.sol](https://remix.ethereum.org/#url=https://docs.chain.link/samples/VRF/VRFv2DirectFundingConsumer.sol&lang=en&optimize=false&runs=200&evmVersion=null&version=soljson-v0.8.24+commit.e11b9ed9.js)
 4. [Sample Randamness Contract](https://vrf.chain.link/fuji/1434)
 5. [Sample Randamness Contract - Snowtrace](https://testnet.snowtrace.io/address/0x2A2f5591FaF06EAC30Cf46A78D16Cce2d97B4dD7)
+6. [Privy & Biconomy](https://docs.privy.io/guide/frontend/account-abstraction/biconomy)
