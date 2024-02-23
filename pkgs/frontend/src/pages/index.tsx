@@ -145,10 +145,10 @@ export default function Home() {
 
       console.log("count:", count)
       // create txData
-      const txDatas: TxData[] = await createPlayGameTxData(GAME_ID, address, count)
+      const txData: TxData = await createPlayGameTxData(GAME_ID, address, count)
       
       // call mintNFT method
-      const transactionHash = await sendUserOp(txDatas);
+      const transactionHash = await sendUserOp(txData);
       console.error("tx Hash:", transactionHash)
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);

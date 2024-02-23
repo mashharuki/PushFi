@@ -17,7 +17,11 @@
     "backend:clean": "yarn workspace backend clean",
     "backend:test": "yarn workspace backend test",
     "backend:deploy:fuji": "yarn workspace backend deploy:fuji",
+    "backend:deploy:nft:fuji": "yarn workspace backend deploy:nft:fuji",
+    "backend:deploy:game:fuji": "yarn workspace backend deploy:game:fuji",
+    "backend:deploy:mock:sampleVRF:fuji": "yarn workspace backend deploy:mock:sampleVRF:fuji",
     "backend:verify:fuji": "yarn workspace backend verify:fuji",
+    "backend:verify:game:fuji": "yarn workspace backend verify:game:fuji",
     "backend:create-game:fuji": "yarn workspace backend scripts:create-game:fuji"
   }
 }

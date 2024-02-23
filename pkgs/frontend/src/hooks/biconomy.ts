@@ -67,10 +67,10 @@ export const createSmartWallet = async(
  * @returns 
  */
 export const sendUserOp = async (
-  txDatas: TxData[]
+  txData: TxData
 ) => {
   try {
-    let userOp = await smartAccount.buildUserOp(txDatas);
+    let userOp = await smartAccount.buildUserOp([txData]);
     console.log({ userOp })
     
     const biconomyPaymaster = smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;

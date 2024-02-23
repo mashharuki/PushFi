@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "initialOwner",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_sampleVRFAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -33,6 +38,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -49,6 +59,44 @@
       }
     ],
     "name": "ChangeAdverUrl",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "oldNormalNftAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newNormalNftAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ChangeNormalNftAddress",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "oldSuperNftAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newSuperNftAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ChangeSuperNftAddress",
     "type": "event"
   },
   {
@@ -276,6 +324,42 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_newNormalNftAddress",
+        "type": "address"
+      }
+    ],
+    "name": "changeNormalNft",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_newSuperNftAddress",
+        "type": "address"
+      }
+    ],
+    "name": "changeSuperNft",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "_gameName",
         "type": "string"
@@ -381,6 +465,19 @@
   },
   {
     "inputs": [],
+    "name": "mintProbability",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -416,6 +513,11 @@
         "internalType": "address",
         "name": "_player",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "pushCount",
+        "type": "uint256"
       }
     ],
     "name": "playGame",
@@ -426,6 +528,32 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sampleVRFAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newProbability",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMintProbability",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
