@@ -112,6 +112,22 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
   yarn backend:verify:fuji
   ```
 
+- モック用の VRF コントラクトを使って乱数を生成する
+
+  ```bash
+  yarn workspace backend scripts:mock:getRandamNumber:fuji
+  ```
+
+  実行例
+
+  ```bash
+  ======================= start =========================
+  randamNumber: 10602206972064053867483789272536493107592815164562923766237165007315967766038
+  ======================== end  ========================
+  ✨  Done in 1.43s.
+  ✨  Done in 1.57s.
+  ```
+
 - スマートコントラクトのテスト
 
   ```bash
@@ -202,3 +218,11 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 ![](./pkgs/docs/img/mock17.png)
 ![](./pkgs/docs/img/mock18.png)
 ![](./pkgs/docs/img/mock19.png)
+
+### 参考文献
+
+1. [Chainlink Verifiable Randomness Function](https://vrf.chain.link/)
+2. [Chainlink Verifiable Randomness Function - Avalanche Fuji testnet](https://docs.chain.link/vrf/v2/subscription/supported-networks#avalanche-fuji-testnet)
+3. [Remix - VRFv2DirectFundingConsumer.sol](https://remix.ethereum.org/#url=https://docs.chain.link/samples/VRF/VRFv2DirectFundingConsumer.sol&lang=en&optimize=false&runs=200&evmVersion=null&version=soljson-v0.8.24+commit.e11b9ed9.js)
+4. [Sample Randamness Contract](https://vrf.chain.link/fuji/1434)
+5. [Sample Randamness Contract - Snowtrace](https://testnet.snowtrace.io/address/0x2A2f5591FaF06EAC30Cf46A78D16Cce2d97B4dD7)

@@ -46,9 +46,9 @@ export const createPlayGameTxData = async (
   gameId: number,
   playerAddress: string,
   count: number
-): Promise<TxData[]> => {
+): Promise<TxData> => {
   // create NFT Cotntract's method call data
-  const minTx = await contract.populateTransaction.playGame(gameId, playerAddress);
+  const minTx = await contract.populateTransaction.playGame(gameId, playerAddress, count);
   console.log("txData :", minTx.data);
 
   const txData: TxData = {
@@ -57,10 +57,9 @@ export const createPlayGameTxData = async (
   };
 
   // create newArray
-  const txDatas: TxData[] = new Array(count).fill(txData);
-  console.log("txDatas :", txDatas);
+  console.log("txData :", txData);
 
-  return txDatas;
+  return txData;
 }
 
 /**

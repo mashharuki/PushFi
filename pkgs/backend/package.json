@@ -9,14 +9,17 @@
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
     "deploy:fuji": "yarn deploy:nft:fuji",
-      "deploy:nft:fuji": "npx hardhat run scripts/nft/deploy-nft.ts --network fuji",
-      "deploy:game:fuji": "npx hardhat run scripts/wakuwakuGame/v3/deployV3.ts --network fuji",
+    "deploy:nft:fuji": "npx hardhat run scripts/nft/deploy-nft.ts --network fuji",
+    "deploy:game:fuji": "npx hardhat run scripts/wakuwakuGame/v4/deployV4.ts --network fuji",
+    "deploy:mock:sampleVRF:fuji": "npx hardhat run scripts/mock/deploy-SampleVRF.ts --network fuji",
     "verify:fuji": "yarn verify:nft:fuji",
-      "verify:nft:fuji": "hardhat verify --network fuji --contract contracts/WakuWakuNFT.sol:WakuWakuNFT 0x5344EA80F5e23d06412Aa83CDE85344A6AF7256D 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072 && hardhat verify --network fuji --contract contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT 0x3e39DaaC436990E8eCb72849D43f81F3b9E7E610 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072",
-      "verify:game:fuji": "hardhat verify --network fuji --contract contracts/v3/WakuWakuGameV3.sol:WakuWakuGameV3 0x587E68B8b22d803Ac0aAF568e87c6fE12DA103E7 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072",
+    "verify:mock:sampleVRF:fuji": "hardhat verify --network fuji --contract contracts/mock/SampleVRF.sol:SampleVRF 0xaB2191d3A9546EEEf994823eDb0aeCA772042e20 1434 0x2eD832Ba664535e5886b75D64C46EB9a228C2610 0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61",
+    "verify:nft:fuji": "hardhat verify --network fuji --contract contracts/WakuWakuNFT.sol:WakuWakuNFT 0x5344EA80F5e23d06412Aa83CDE85344A6AF7256D 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072 && hardhat verify --network fuji --contract contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT 0x3e39DaaC436990E8eCb72849D43f81F3b9E7E610 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072",
+    "verify:game:fuji": "hardhat verify --network fuji --contract contracts/v4/WakuWakuGameV4.sol:WakuWakuGameV4 0x8AEE6a26FE5B7321a0bC2c5DEf357b9be4869ebD 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072 0xaB2191d3A9546EEEf994823eDb0aeCA772042e20",
     "scripts:fuji": "yarn scripts:mint-nft:fuji",
-      "scripts:mint-nft:fuji": "npx hardhat run scripts/nft/mint-nft.ts --network fuji",
-      "scripts:create-game:fuji": "npx hardhat run scripts/wakuwakuGame/v3/create-gameV3.ts --network fuji"
+    "scripts:mint-nft:fuji": "npx hardhat run scripts/nft/mint-nft.ts --network fuji",
+    "scripts:create-game:fuji": "npx hardhat run scripts/wakuwakuGame/v4/create-gameV4.ts --network fuji",
+    "scripts:mock:getRandamNumber:fuji": "npx hardhat run scripts/mock/getRandamNumber.ts --network fuji"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +30,7 @@
     "hardhat": "^2.12.2"
   },
   "dependencies": {
+    "@chainlink/contracts": "^0.8.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomiclabs/hardhat-ethers": "^2.0.0",
