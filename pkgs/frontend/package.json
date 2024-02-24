@@ -15,6 +15,7 @@
     "@biconomy/core-types": "^3.1.0",
     "@biconomy/particle-auth": "^3.1.0",
     "@biconomy/paymaster": "^3.1.0",
+    "@privy-io/react-auth": "^1.57.0",
     "@walletconnect/client": "^1.8.0",
     "@web3auth/base": "5.2.0",
     "@web3auth/ethereum-provider": "5.2.0",

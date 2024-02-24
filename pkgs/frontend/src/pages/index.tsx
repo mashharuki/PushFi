@@ -4,11 +4,11 @@ import { GameInfo, TxData, createContract, createPlayGameTxData, getGameInfo } f
 import styles from '@/styles/Home.module.css';
 import { verifyRecaptcha } from '@/utils/verifyRecaptcha';
 import { ChainId } from '@biconomy/core-types';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useState } from "react";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-import { login, logout } from './../hooks/web3auth';
 import gameContractAbi from './../utils/abi.json';
 import {
   GAMECONTRACT_ADDRESS,
@@ -44,6 +44,8 @@ export default function Home() {
   const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
   // reCAPTCHAからtokenを取得する No.2の処理
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { wallets } = useWallets();
+  const { authenticated, login, logout } = usePrivy();
 
   /**
    * logIn method
@@ -58,11 +60,17 @@ export default function Home() {
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
       console.log("gameInfo:", gameInfo)
-
+      
+      // login
+      login();
+      // create embeddedWallet instance
+      const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+      await embeddedWallet!.switchChain(chainId);
       // login & create signer
-      const signer = await login(chainId, RPC_URL);
+      const provider = await embeddedWallet!.getEthersProvider();
+      const signer = provider.getSigner();
 
-      console.log("signer:", signer)
+      console.log("signer:", signer);
      
       // create smartWallet
       const {
@@ -167,6 +175,7 @@ export default function Home() {
       setLoading(false)
     }
   }
+
 
   return (
     <>
