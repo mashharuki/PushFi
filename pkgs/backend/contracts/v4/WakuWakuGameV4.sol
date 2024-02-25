@@ -29,7 +29,7 @@ contract WakuWakuGameV4 is Ownable, ReentrancyGuard {
   // gameID
   uint256 private gameIdCounter = 0;
   // ミントできる確率の分母(数が大きくなるほど確率は低くなる)
-  uint256 public mintProbability = 50;
+  uint256 public mintProbability = 10;
   // VRF Contract
   address public sampleVRFAddress;
 
@@ -133,7 +133,7 @@ contract WakuWakuGameV4 is Ownable, ReentrancyGuard {
 
     for(uint256 i = 0; i < pushCount; i++) {
       // 確率を計算して条件を満たしたらSuperNFTをミントする
-      if(random(pushCount) % mintProbability == 0) {
+      if(random(i) % mintProbability == 0) {
         // send Super NFT
         mintNft(wakuWakuGame.supserNftAddress, _gameId, _player);
       } else {
@@ -261,11 +261,11 @@ contract WakuWakuGameV4 is Ownable, ReentrancyGuard {
   /**
    * 確率の計算用のランダム関数
    */
-  function random(uint256 pushCount) internal view returns (uint256) {
+  function random(uint256 count) internal view returns (uint256) {
     SampleVRF sampleVRF = SampleVRF(sampleVRFAddress);
     // get randamNumber
     uint256 randamNumber = sampleVRF.s_randomWords(0);
-    return uint256(keccak256(abi.encodePacked(block.prevrandao, randamNumber, pushCount, msg.sender)));
+    return uint256(keccak256(abi.encodePacked(block.prevrandao, randamNumber, count, msg.sender)));
   }
 
   /**
