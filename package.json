@@ -1,9 +1,9 @@
 {
-  "name": "WakuWakuOnchainGame",
+  "name": "PushFi",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
-  "repository": "https://github.com/mashharuki/WakuWakuOnchainGame.git",
+  "repository": "https://github.com/mashharuki/PushFi.git",
   "author": "Haruki Kondo",
   "license": "MIT",
   "workspaces": [

@@ -15,19 +15,26 @@ export default function App({ Component, pageProps }: AppProps) {
       language="ja"
     >
       <PrivyProvider
-          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
-          config={{
-              loginMethods: ['email', 'wallet', 'discord', 'github', 'google', 'twitter'],
-              appearance: {
-                  theme: 'light',
-                  accentColor: '#676FFF',
-                  logo: '/logo.png'
-              },
-              embeddedWallets: {
-                  createOnLogin: 'users-without-wallets',
-                  noPromptOnSignature: true
-              }
-          }}
+        appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+        config={{
+          loginMethods: [
+            'email', 
+            'wallet', 
+            'discord', 
+            'github', 
+            'google', 
+            'twitter'
+          ],
+          appearance: {
+            theme: 'light',
+            accentColor: '#676FFF',
+            logo: '/logo.png'
+          },
+          embeddedWallets: {
+            createOnLogin: 'users-without-wallets',
+            noPromptOnSignature: true
+          }
+        }}
       >
         <Component {...pageProps} />
       </PrivyProvider>

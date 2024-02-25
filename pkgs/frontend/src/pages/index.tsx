@@ -157,7 +157,7 @@ export default function Home() {
       
       // call mintNFT method
       const transactionHash = await sendUserOp(txData);
-      console.error("tx Hash:", transactionHash)
+      console.log("tx Hash:", transactionHash)
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
       // set Status
