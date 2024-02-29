@@ -1,5 +1,5 @@
 export const RPC_URL = "https://api.avax-test.network/ext/bc/C/rpc";
-export const GAMECONTRACT_ADDRESS = "0xA95F8D0B4cAE1d58d73C5148c6c1EA60A6aC1eDB"; // Avanache
+export const GAMECONTRACT_ADDRESS = "0x23E4288DCEE0C901D5b7FD1e5EECF9c4Bb1b3cF4"; // Avanache
 export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
 export const GAME_ID = 0;
 

@@ -11,8 +11,8 @@ async function main() {
   const gameName = "SampleGame";
   const goalCount = 5;
   const adverUrl = "https://bafkreidkyzvx746bw6465ky6wwmb23lbwqp6qbyeoosfdbi4osdkemtqle.ipfs.w3s.link/";
-  const nftAddress = "0xe6776D35F703AE7aCBA88B6655263aAC3E069E7f"; 
-  const superNftAddress = "0x8cCb17Eb75Ad18863F3aBDa11F3cDd075682338d";
+  const nftAddress = "0xBA54D522A30684ae8000D961F6d7e69207B3bFBb"; 
+  const superNftAddress = "0x8Efc46682Db85924A69640e9AF919026db5481A1";
 
   const game = await ethers.getContractAt('WakuWakuGameV4', contractAddress);
 
