@@ -6,7 +6,7 @@ import { ethers } from 'hardhat';
 async function main() {
 
   // Deployed Contract address
-  const contractAddress = "0xA95F8D0B4cAE1d58d73C5148c6c1EA60A6aC1eDB"
+  const contractAddress = "0x23E4288DCEE0C901D5b7FD1e5EECF9c4Bb1b3cF4"
   // Game用の変数
   const gameName = "SampleGame";
   const goalCount = 5;

@@ -98,10 +98,8 @@ export const sendUserOp = async (
       paymasterAndDataResponse.preVerificationGas
     ) {
       userOp.callGasLimit = paymasterAndDataResponse.callGasLimit;
-      userOp.verificationGasLimit =
-      paymasterAndDataResponse.verificationGasLimit;
-      userOp.preVerificationGas =
-      paymasterAndDataResponse.preVerificationGas;
+      userOp.verificationGasLimit = paymasterAndDataResponse.verificationGasLimit;
+      userOp.preVerificationGas = paymasterAndDataResponse.preVerificationGas;
     }
       
     const userOpResponse = await smartAccount.sendUserOp(userOp);
