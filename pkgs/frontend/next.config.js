@@ -1,5 +1,11 @@
+const withPWA = require("next-pwa")({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withPWA({
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -11,6 +17,7 @@ const nextConfig = {
     }
     return config
   },
+  reactStrinctMode: true,
   images: {
     domains: [
       'bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link',
@@ -19,6 +26,6 @@ const nextConfig = {
       'bafkreidkyzvx746bw6465ky6wwmb23lbwqp6qbyeoosfdbi4osdkemtqle.ipfs.w3s.link',
     ],
   },
-}
+})
 
 module.exports = nextConfig
