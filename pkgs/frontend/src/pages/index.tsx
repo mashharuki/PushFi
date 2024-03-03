@@ -9,6 +9,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useState } from "react";
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import gameContractAbi from './../utils/abi.json';
 import {
   GAMECONTRACT_ADDRESS,
@@ -135,8 +137,29 @@ export default function Home() {
         const responceJson_recaptcha = await verifyRecaptcha(token);
         console.log("responce_server:", responceJson_recaptcha);
         setVerifyFlg(responceJson_recaptcha.success);
+
+        toast.success('🦄 Verify Success!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       } catch(err) {
         console.error("error:", err);
+        toast.error('Verify Failed....', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       } finally {
         setLoading(false)
       }
@@ -164,8 +187,28 @@ export default function Home() {
       setOpening(gameInfo.openingStatus);
       setGameStatus(GameStatus.NOT_START);
 
+      toast.success('🦄 Success!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } catch(err: any) {
-      console.error("error occurred while playing game.. :", err)
+      console.error("error occurred while playing game.. :", err);
+      toast.error('Play Game Failed....', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } finally {
       console.log("====================  end ====================")
       setCount((pre_count) => pre_count)  
@@ -309,6 +352,18 @@ export default function Home() {
             )}
           </>
         )}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </main>
     </>
   )
