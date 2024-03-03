@@ -11,17 +11,7 @@
   ],
   "scripts": {
     "upload": "yarn workspace script upload",
-    "frontend:dev": "yarn workspace frontend dev",
-    "frontend:build": "yarn workspace frontend build",
-    "backend:compile": "yarn workspace backend compile",
-    "backend:clean": "yarn workspace backend clean",
-    "backend:test": "yarn workspace backend test",
-    "backend:deploy:fuji": "yarn workspace backend deploy:fuji",
-    "backend:deploy:nft:fuji": "yarn workspace backend deploy:nft:fuji",
-    "backend:deploy:game:fuji": "yarn workspace backend deploy:game:fuji",
-    "backend:deploy:mock:sampleVRF:fuji": "yarn workspace backend deploy:mock:sampleVRF:fuji",
-    "backend:verify:fuji": "yarn workspace backend verify:fuji",
-    "backend:verify:game:fuji": "yarn workspace backend verify:game:fuji",
-    "backend:create-game:fuji": "yarn workspace backend scripts:create-game:fuji"
+    "frontend": "yarn workspace frontend",
+    "backend": "yarn workspace backend"
   }
 }

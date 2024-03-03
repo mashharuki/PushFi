@@ -1,6 +1,6 @@
-import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-import * as dotenv from "dotenv"; 
+import * as dotenv from "dotenv";
+import { HardhatUserConfig } from "hardhat/config";
 
 dotenv.config();
 
@@ -8,7 +8,8 @@ const {
   PRIVATE_KEY,
   GAS_REPORT,
   COINMARKETCAP_API_KEY,
-  SNOWTRACE_API_KEY
+  SNOWTRACE_API_KEY,
+  ARBITRUMSCAN_API_KEY
 } = process.env
 
 const config: HardhatUserConfig = {
@@ -27,6 +28,11 @@ const config: HardhatUserConfig = {
       chainId: 43113,
       accounts: [`${PRIVATE_KEY}`]
     },
+    arbitrumSepolia: {
+      url: 'https://sepolia-rollup.arbitrum.io/rpc',
+      accounts: [`${PRIVATE_KEY}`],
+      chainId: 421614,
+    }
   },
   gasReporter: {
     enabled: GAS_REPORT ? true : false,
@@ -38,8 +44,19 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      avalancheFujiTestnet: SNOWTRACE_API_KEY!
+      avalancheFujiTestnet: SNOWTRACE_API_KEY!,
+      arbitrumSepolia: ARBITRUMSCAN_API_KEY!
     },
+    customChains: [
+      {
+        network: 'arbitrumSepolia',
+        chainId: 421614,
+        urls: {
+          apiURL: 'https://sepolia-rollup.arbitrum.io/rpc',
+          browserURL: 'https://sepolia.arbiscan.io/',
+        },
+      },
+    ],
   }
 };
 

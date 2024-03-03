@@ -1,6 +1,6 @@
 # WakuWakuGame Project
 
-## デプロイ済みコントラクトの情報
+## デプロイ済みコントラクトの情報(Aalanche Fuji)
 
 - NFT
 
@@ -32,3 +32,21 @@
 
 - Game Contract(v3)
   [WakuWakuGameV3](https://testnet.snowtrace.io/address/0x587E68B8b22d803Ac0aAF568e87c6fE12DA103E7#code)
+
+## デプロイ済みのコントラクトの情報(Arbitrum Sepolia)
+
+- NFT
+
+  [0x08FeD32A2043DbCFbb1CE9d9b62416B9095CaD13](https://sepolia.arbiscan.io/address/0x08FeD32A2043DbCFbb1CE9d9b62416B9095CaD13)
+
+- SuperNFT
+
+  [0x9FeA082420CaBCae227aab5042b772636bcf00da](https://sepolia.arbiscan.io/address/0x9FeA082420CaBCae227aab5042b772636bcf00da)
+
+- SampleVRF
+
+  [0x9370c082dabfb847b6f4d7b3cf9c001adcc85d8d](https://sepolia.arbiscan.io/address/0x9370c082dabfb847b6f4d7b3cf9c001adcc85d8d)
+
+- Game
+
+  [0xE464705F67Aa68bb9387b23a68b4c26c60a8d9Dc](https://sepolia.arbiscan.io/address/0xE464705F67Aa68bb9387b23a68b4c26c60a8d9Dc)
