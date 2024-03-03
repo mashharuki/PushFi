@@ -1,5 +1,66 @@
 # WakuWakuGame Project
 
+## セットアップ手順(Chainlink 側)
+
+1. まず VRF 用のコントラクトをデプロイ&Verify する。
+
+```bash
+yarn backend deploy:mock:sampleVRF:fuji
+```
+
+```bash
+yarn backend verify:mock:sampleVRF:fuji
+```
+
+2. [https://vrf.chain.link/](https://vrf.chain.link/)に移動してデプロイしたコントラクトを登録する。
+
+3. [https://automation.chain.link/](https://automation.chain.link/)に移動して Automation を登録する。
+
+4. 最後にテスト用のスクリプトを実行して乱数が取得できるかチェックする。
+
+```bash
+yarn backend scripts:mock:getRandamNumber:fuji
+```
+
+```bash
+======================= start =========================
+randamNumber: 108137989208009555331517045519597547955163063415551176323732286775327001444949
+ ======================== end  ========================
+✨  Done in 1.74s.
+```
+
+## セットアップ手順(Game コントラクト)
+
+1. まず NFT をデプロイ & Verify する。
+
+```bash
+yarn backend deploy:nft:fuji
+```
+
+```bash
+yarn backend verify:nft:fuji
+```
+
+2. GameNFT をデプロイ & Verify する。
+
+```bash
+yarn backend deploy:game:fuji
+```
+
+```bash
+yarn backend verify:game:fuji
+```
+
+3. Game を作成する。
+
+```bash
+yarn backend scripts:create-game:fuji
+```
+
+4. Game コントラクトと GameID の情報をフロントエンド側に設定する。
+
+`pkgs/frontend/utils/constants.ts`ファイルを更新する。
+
 ## デプロイ済みコントラクトの情報(Aalanche Fuji)
 
 - NFT

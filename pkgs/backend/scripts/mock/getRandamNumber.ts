@@ -6,7 +6,7 @@ import { ethers } from 'hardhat';
 async function main() {
 
   // Deployed Contract address
-  const sampleVDRAddress = "0xaB2191d3A9546EEEf994823eDb0aeCA772042e20"
+  const sampleVDRAddress = "0x877e07ddC0b95640cD009154ab9dA6a691Ee783b"
   
   const sampleVRF = await ethers.getContractAt('SampleVRF', sampleVDRAddress);
 

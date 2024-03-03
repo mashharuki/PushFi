@@ -30,7 +30,6 @@ contract SampleVRF is VRFConsumerBaseV2 {
     // The default is 3, but you can set this higher.
     uint16 constant REQUEST_CONFIRMATIONS = 3;
 
-    // For this example, retrieve 2 random values in one request.
     // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
     uint32 constant NUM_WORDS = 2;
 
@@ -62,7 +61,7 @@ contract SampleVRF is VRFConsumerBaseV2 {
      * @notice Requests randomness
      * Assumes the subscription is funded sufficiently; "Words" refers to unit of data in Computer Science
      */
-    function requestRandomWords() external onlyOwner {
+    function requestRandomWords() external {
       // Will revert if subscription is not set and funded.
       s_requestId = COORDINATOR.requestRandomWords(
         s_keyHash,

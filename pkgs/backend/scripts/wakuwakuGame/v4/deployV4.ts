@@ -8,9 +8,9 @@ async function main() {
   // get signer
   const signer = (await ethers.getSigners())[0];
   // NFTContract address
-  const nftAddress = "0xBA54D522A30684ae8000D961F6d7e69207B3bFBb";
-  const superNftAddress = "0x8Efc46682Db85924A69640e9AF919026db5481A1";
-  const sampleVRFAddress = "0xab2191d3a9546eeef994823edb0aeca772042e20";
+  const nftAddress = "0x9Af52219D7d97B8eCCE52893CdA71a6c95b650f9";
+  const superNftAddress = "0x6aec1F4fddaa5c3dD559d884ED4905aE108d5Caa";
+  const sampleVRFAddress = "0x877e07ddC0b95640cD009154ab9dA6a691Ee783b";
 
   // create NFT & game contract
   const nft = await ethers.getContractAt('WakuWakuNFT', nftAddress);
