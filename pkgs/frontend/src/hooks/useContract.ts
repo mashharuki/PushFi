@@ -1,9 +1,9 @@
-import { Contract, ContractInterface, ethers } from "ethers";
+import {Contract, ContractInterface, ethers} from "ethers";
 
 export type TxData = {
   to: string;
   data: any;
-}
+};
 
 export type GameInfo = {
   gameName: string;
@@ -14,7 +14,7 @@ export type GameInfo = {
   nftAddress: string;
   winner: string;
   adverUrl: string;
-}
+};
 
 var contractAddress: string;
 var contract: Contract;
@@ -30,14 +30,10 @@ export const createContract = (
   // create provider
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   // コントラクトのインスタンスを生成
-  contract = new ethers.Contract(
-    address,
-    abi,
-    provider,
-  );
+  contract = new ethers.Contract(address, abi, provider);
 
   contractAddress = address;
-}
+};
 
 /**
  * createPlayGameTxData method
@@ -48,7 +44,11 @@ export const createPlayGameTxData = async (
   count: number
 ): Promise<TxData> => {
   // create NFT Cotntract's method call data
-  const minTx = await contract.populateTransaction.playGame(gameId, playerAddress, count);
+  const minTx = await contract.populateTransaction.playGame(
+    gameId,
+    playerAddress,
+    count
+  );
   console.log("txData :", minTx.data);
 
   const txData: TxData = {
@@ -60,29 +60,25 @@ export const createPlayGameTxData = async (
   console.log("txData :", txData);
 
   return txData;
-}
+};
 
 /**
  * getGameStatus method
  */
-export const getGameStatus = async(
-  gameId: number
-): Promise<boolean> => {
+export const getGameStatus = async (gameId: number): Promise<boolean> => {
   // get gameStatus
   const result = await contract.getOpeningStatus(gameId);
   return result;
-}
+};
 
 /**
  * getGameInfo method
  */
-export const getGameInfo = async(
-  gameId: number
-): Promise<GameInfo> => {
+export const getGameInfo = async (gameId: number): Promise<GameInfo> => {
   // get gameStatus
   const result: GameInfo = await contract.games(gameId);
 
   console.log("gameInfo:", result);
 
   return result;
-}
+};

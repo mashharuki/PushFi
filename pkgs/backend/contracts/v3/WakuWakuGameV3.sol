@@ -11,7 +11,6 @@ import "./../WakuWakuSuperNFT.sol";
  * WakuWakuGameV3 Contract
  */
 contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
-
   // WakuWakuGame Struct
   struct WakuWakuGame {
     string gameName;
@@ -34,16 +33,38 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
   mapping(uint256 => WakuWakuGame) public games;
 
   // Event
-  event GameCreated(uint256 gameId, string gameName, uint256 goalCount, address superNftAddress, address nftAddress, string adverUrl);
+  event GameCreated(
+    uint256 gameId,
+    string gameName,
+    uint256 goalCount,
+    address superNftAddress,
+    address nftAddress,
+    string adverUrl
+  );
   event GameFinished(uint256 gameId, address winner);
-  event PrizeSent(uint256 gameId, address erc20TokenAddress, address receiver, uint256 value);
+  event PrizeSent(
+    uint256 gameId,
+    address erc20TokenAddress,
+    address receiver,
+    uint256 value
+  );
   event NftMinted(uint256 gameId, address nftAddress, address player);
   event Withdrawn(address indexed payee, uint256 weiAmount);
-  event WithdrawnToken(address indexed payee, address prizeToken, uint256 weiAmount);
+  event WithdrawnToken(
+    address indexed payee,
+    address prizeToken,
+    uint256 weiAmount
+  );
   event Deposited(address indexed payee, uint256 weiAmount);
   event ChangeAdverUrl(string oldAdverUrl, string newAdverUrl);
-  event ChangeNormalNftAddress(address oldNormalNftAddress, address newNormalNftAddress);
-  event ChangeSuperNftAddress(address oldSuperNftAddress, address newSuperNftAddress);
+  event ChangeNormalNftAddress(
+    address oldNormalNftAddress,
+    address newNormalNftAddress
+  );
+  event ChangeSuperNftAddress(
+    address oldSuperNftAddress,
+    address newSuperNftAddress
+  );
 
   /**
    * Constructor
@@ -59,7 +80,7 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
     address _superNftAddress,
     address _nftAddress,
     string memory _adverUrl
-  ) onlyOwner public {
+  ) public onlyOwner {
     // get current gameId
     uint256 currentGameIdCounter = gameIdCounter;
     // initial participants
@@ -81,7 +102,14 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
     games[currentGameIdCounter] = newGame;
     gameIdCounter++;
 
-    emit GameCreated(currentGameIdCounter, _gameName, _goalCount, _superNftAddress, _nftAddress, _adverUrl);
+    emit GameCreated(
+      currentGameIdCounter,
+      _gameName,
+      _goalCount,
+      _superNftAddress,
+      _nftAddress,
+      _adverUrl
+    );
   }
 
   /**
@@ -99,19 +127,19 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
 
     // insert player address if not yet
     address[] memory participants = wakuWakuGame.paticipants;
-    
+
     bool alreadyInsertedFlg = false;
     // check registered status
-    for(uint256 i = 0; i < participants.length; i++) {
-      if(participants[i] == _player) {
+    for (uint256 i = 0; i < participants.length; i++) {
+      if (participants[i] == _player) {
         alreadyInsertedFlg = true;
       }
     }
 
-    if(!alreadyInsertedFlg) {
+    if (!alreadyInsertedFlg) {
       address[] memory newParticipants = new address[](participants.length + 1);
       // insert & set
-      for(uint256 i = 0; i < participants.length; i++) {
+      for (uint256 i = 0; i < participants.length; i++) {
         newParticipants[i] = participants[i];
       }
       // push
@@ -120,7 +148,7 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
     }
 
     // 確率を計算して条件を満たしたらSuperNFTをミントする
-    if(random() % mintProbability == 0) {
+    if (random() % mintProbability == 0) {
       // send Super NFT
       mintNft(wakuWakuGame.supserNftAddress, _gameId, _player);
     } else {
@@ -137,22 +165,22 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
    */
   function mintNft(
     address _nftAddress,
-    uint256 _gameId, 
+    uint256 _gameId,
     address _player
   ) internal {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
-    
-    if(wakuWakuGame.nftAddress == _nftAddress) {
+
+    if (wakuWakuGame.nftAddress == _nftAddress) {
       // create WakuWakuNFT contract instance
       WakuWakuNFT nft = WakuWakuNFT(wakuWakuGame.nftAddress);
-      // mint 
-      nft.mint(_player, _gameId, 1, '0x');
+      // mint
+      nft.mint(_player, _gameId, 1, "0x");
     } else {
       // create WakuWakuSuperNFT contract instance
       WakuWakuSuperNFT nft = WakuWakuSuperNFT(wakuWakuGame.supserNftAddress);
-      // mint 
-      nft.mint(_player, _gameId, 1, '0x');
+      // mint
+      nft.mint(_player, _gameId, 1, "0x");
     }
 
     emit NftMinted(_gameId, wakuWakuGame.nftAddress, _player);
@@ -162,7 +190,7 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
    * withdraw method
    * @param _to receiverAddress
    */
-  function withdraw(address payable _to) onlyOwner public {
+  function withdraw(address payable _to) public onlyOwner {
     uint256 balance = address(this).balance;
     _to.transfer(balance);
     emit Withdrawn(_to, balance);
@@ -172,6 +200,7 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
   receive() external payable {
     emit Deposited(msg.sender, msg.value);
   }
+
   // Fallback function is called when msg.data is not empty
   fallback() external payable {
     emit Deposited(msg.sender, msg.value);
@@ -197,7 +226,7 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
    * change Adver URL method
    */
   function changeAdverUrl(
-    uint256 _gameId, 
+    uint256 _gameId,
     string memory _newAdverUrl
   ) public onlyOwner {
     string memory oldAdverUrl = games[_gameId].adverUrl;
@@ -210,11 +239,11 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
    * change Normal NFT address method
    */
   function changeNormalNft(
-    uint256 _gameId, 
+    uint256 _gameId,
     address _newNormalNftAddress
   ) public onlyOwner {
     address oldNormalNftAddress = games[_gameId].nftAddress;
-    // change 
+    // change
     games[_gameId].nftAddress = _newNormalNftAddress;
 
     emit ChangeNormalNftAddress(oldNormalNftAddress, _newNormalNftAddress);
@@ -224,11 +253,11 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
    * change Super NFT address method
    */
   function changeSuperNft(
-    uint256 _gameId, 
+    uint256 _gameId,
     address _newSuperNftAddress
   ) public onlyOwner {
     address oldSuperNftAddress = games[_gameId].supserNftAddress;
-    // change 
+    // change
     games[_gameId].nftAddress = _newSuperNftAddress;
 
     emit ChangeNormalNftAddress(oldSuperNftAddress, _newSuperNftAddress);
@@ -248,7 +277,12 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
    * 確率の計算用のランダム関数
    */
   function random() internal view returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, msg.sender)));
+    return
+      uint256(
+        keccak256(
+          abi.encodePacked(block.prevrandao, block.timestamp, msg.sender)
+        )
+      );
   }
 
   /**
@@ -258,5 +292,4 @@ contract WakuWakuGameV3 is Ownable, ReentrancyGuard {
   function setMintProbability(uint256 newProbability) external onlyOwner {
     mintProbability = newProbability;
   }
-
 }

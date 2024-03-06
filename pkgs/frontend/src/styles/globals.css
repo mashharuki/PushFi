@@ -36,16 +36,15 @@ body {
 
 @keyframes gradientBG {
   0% {
-      background-position: 0% 50%;
+    background-position: 0% 50%;
   }
   50% {
-      background-position: 100% 50%;
+    background-position: 100% 50%;
   }
   1000% {
-      background-position: 0% 50%;
+    background-position: 0% 50%;
   }
 }
-
 
 h1 {
   font-size: 3.2em;

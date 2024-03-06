@@ -1,46 +1,52 @@
-import Loading from '@/components/Loading';
-import { createSmartWallet, sendUserOp } from '@/hooks/biconomy';
-import { GameInfo, TxData, createContract, createPlayGameTxData, getGameInfo } from '@/hooks/useContract';
-import styles from '@/styles/Home.module.css';
-import { verifyRecaptcha } from '@/utils/verifyRecaptcha';
-import { ChainId } from '@biconomy/core-types';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import Head from 'next/head';
-import Image from 'next/image';
+import Loading from "@/components/Loading";
+import { createSmartWallet, sendUserOp } from "@/hooks/biconomy";
+import {
+  GameInfo,
+  TxData,
+  createContract,
+  createPlayGameTxData,
+  getGameInfo,
+} from "@/hooks/useContract";
+import styles from "@/styles/Home.module.css";
+import { verifyRecaptcha } from "@/utils/verifyRecaptcha";
+import { ChainId } from "@biconomy/core-types";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import Head from "next/head";
+import Image from "next/image";
 import { useState } from "react";
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import gameContractAbi from './../utils/abi.json';
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import gameContractAbi from "./../utils/abi.json";
 import {
   GAMECONTRACT_ADDRESS,
   GAME_ID,
   RPC_URL,
-  TESTNET_OPENSEA_BASE_URL
-} from './../utils/constants';
+  TESTNET_OPENSEA_BASE_URL,
+} from "./../utils/constants";
 
 /**
  * ゲームのステータスを管理する独自の型
  */
 enum GameStatus {
-  NOT_START = 'not_start',
-  PRE_START = 'pre_start',
-  START = 'start',
-  PLAYING = 'playing',
-  END = 'end',
-  PROCESSING = 'processing'
-} 
+  NOT_START = "not_start",
+  PRE_START = "pre_start",
+  START = "start",
+  PLAYING = "playing",
+  END = "end",
+  PROCESSING = "processing",
+}
 
 /**
  * Home Component
- * @returns 
+ * @returns
  */
-export default function Home() { 
-  const [address, setAddress] = useState<string>("")
+export default function Home() {
+  const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET)
+  const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET);
   const [opening, setOpening] = useState<boolean>(true);
-  const [game, setGame] = useState<GameInfo>()
+  const [game, setGame] = useState<GameInfo>();
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
   const [count, setCount] = useState<number>(0);
   const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
@@ -61,44 +67,45 @@ export default function Home() {
       // get Status
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
-      console.log("gameInfo:", gameInfo)
-      
+      console.log("gameInfo:", gameInfo);
+
       // login
       login();
       // create embeddedWallet instance
-      const embeddedWallet = wallets.find((wallet) => (wallet.walletClientType === 'privy'));
+      const embeddedWallet = wallets.find(
+        (wallet) => wallet.walletClientType === "privy"
+      );
       await embeddedWallet!.switchChain(chainId);
       // login & create signer
       const provider = await embeddedWallet!.getEthersProvider();
       const signer = provider.getSigner();
 
       console.log("signer:", signer);
-     
-      // create smartWallet
-      const {
-        smartContractAddress: smartWalletAddress,
-      } = await createSmartWallet(chainId, signer);
 
-      console.log("smartWalletAddress:", smartWalletAddress)
+      // create smartWallet
+      const { smartContractAddress: smartWalletAddress } =
+        await createSmartWallet(chainId, signer);
+
+      console.log("smartWalletAddress:", smartWalletAddress);
 
       setGame(gameInfo);
       setOpening(gameInfo.openingStatus);
-      setAddress(smartWalletAddress)
+      setAddress(smartWalletAddress);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   /**
    * logout
    */
-  const logOut = async() => {
+  const logOut = async () => {
     await logout();
     setVerifyFlg(false);
     setAddress("");
-  }
+  };
 
   /**
    * Countを1増やすメソッド
@@ -116,29 +123,29 @@ export default function Home() {
     setGameStatus(GameStatus.PRE_START);
     setTimeout(() => {
       setGameStatus(GameStatus.START);
-    }, 1000) // 1秒後
+    }, 1000); // 1秒後
     setTimeout(() => {
       setGameStatus(GameStatus.PLAYING);
-    }, 2000) // 2秒後
+    }, 2000); // 2秒後
     setTimeout(() => {
       setGameStatus(GameStatus.END);
-    }, 15000) // 15秒後
-  }
+    }, 15000); // 15秒後
+  };
 
   /**
    * reCAPTCHA method
    */
-  const reCaptcha = async() => {
-    if(executeRecaptcha) { 
+  const reCaptcha = async () => {
+    if (executeRecaptcha) {
       try {
         setLoading(true);
-        const token: string = await executeRecaptcha('login');
+        const token: string = await executeRecaptcha("login");
         // ReCaptchaによる検証を実施
         const responceJson_recaptcha = await verifyRecaptcha(token);
         console.log("responce_server:", responceJson_recaptcha);
         setVerifyFlg(responceJson_recaptcha.success);
 
-        toast.success('🦄 Verify Success!', {
+        toast.success("🦄 Verify Success!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -148,9 +155,9 @@ export default function Home() {
           progress: undefined,
           theme: "colored",
         });
-      } catch(err) {
+      } catch (err) {
         console.error("error:", err);
-        toast.error('Verify Failed....', {
+        toast.error("Verify Failed....", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -161,33 +168,37 @@ export default function Home() {
           theme: "colored",
         });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    } 
-  }
+    }
+  };
 
   /**
    * sendTransaction method
    */
   const sendTransaction = async () => {
     try {
-      setLoading(true)
-      console.log("==================== start ====================")
+      setLoading(true);
+      console.log("==================== start ====================");
 
-      console.log("count:", count)
+      console.log("count:", count);
       // create txData
-      const txData: TxData = await createPlayGameTxData(GAME_ID, address, count)
-      
+      const txData: TxData = await createPlayGameTxData(
+        GAME_ID,
+        address,
+        count
+      );
+
       // call mintNFT method
       const transactionHash = await sendUserOp(txData);
-      console.log("tx Hash:", transactionHash)
+      console.log("tx Hash:", transactionHash);
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
       // set Status
       setOpening(gameInfo.openingStatus);
       setGameStatus(GameStatus.NOT_START);
 
-      toast.success('🦄 Success!', {
+      toast.success("🦄 Success!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -197,9 +208,9 @@ export default function Home() {
         progress: undefined,
         theme: "colored",
       });
-    } catch(err: any) {
+    } catch (err: any) {
       console.error("error occurred while playing game.. :", err);
-      toast.error('Play Game Failed....', {
+      toast.error("Play Game Failed....", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -210,15 +221,14 @@ export default function Home() {
         theme: "colored",
       });
     } finally {
-      console.log("====================  end ====================")
-      setCount((pre_count) => pre_count)  
-      setCount(() => {              
-        return 0
-      })
-      setLoading(false)
+      console.log("====================  end ====================");
+      setCount((pre_count) => pre_count);
+      setCount(() => {
+        return 0;
+      });
+      setLoading(false);
     }
-  }
-
+  };
 
   return (
     <>
@@ -227,42 +237,37 @@ export default function Home() {
         <meta name="description" content="Based Account Abstraction" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.neonText}>
-          Push Fi
-        </h1>
-        <h3> 
-          { address && ( 
+        <h1 className={styles.neonText}>Push Fi</h1>
+        <h3>
+          {address && (
             <>
-              { opening ? 
-                <>🚀🚀🚀  現在、開催中！  🚀🚀🚀</>
-              : 
+              {opening ? (
+                <>🚀🚀🚀 現在、開催中！ 🚀🚀🚀</>
+              ) : (
                 <>✨✨ 終了しました！ご参加ありがとうございました! ✨✨</>
-              } 
+              )}
               <div>
                 GetしたNFTは、
-                <a 
-                  href={TESTNET_OPENSEA_BASE_URL + address} 
-                  target="_blank"
-                >
+                <a href={TESTNET_OPENSEA_BASE_URL + address} target="_blank">
                   ここ
                 </a>
                 でみれるよ！！
               </div>
-            </> 
+            </>
           )}
         </h3>
-        { opening && (
+        {opening && (
           <>
             {address && (
               <>
                 <h2>
                   15秒間押して押して
-                  <br/>
+                  <br />
                   Super NFTをゲットせよ！
                 </h2>
               </>
             )}
-            { !address && (
+            {!address && (
               <>
                 <h2>ボタンをクリック！</h2>
               </>
@@ -270,83 +275,72 @@ export default function Home() {
           </>
         )}
         {game && (
-          <Image 
-            src={game.adverUrl} 
-            alt="sampleImg" 
-            height={300}
-            width={300}
-          />
+          <Image src={game.adverUrl} alt="sampleImg" height={300} width={300} />
         )}
         {loading ? (
-          <p><Loading/></p>
+          <p>
+            <Loading />
+          </p>
         ) : (
           <>
             <div></div>
             {address ? (
               <>
-                { gameStatus == GameStatus.NOT_START && (
+                {gameStatus == GameStatus.NOT_START && (
                   <>
                     {!verifyFlg ? (
-                      <button 
+                      <button
                         disabled={!opening}
-                        onClick={reCaptcha} 
+                        onClick={reCaptcha}
                         className={`${styles.connect} ${styles.playButton}`}
                       >
                         Verify I`m not a bot
                       </button>
                     ) : (
                       <>
-                        <button 
+                        <button
                           disabled={!opening}
-                          onClick={handlePlay} 
+                          onClick={handlePlay}
                           className={`${styles.connect} ${styles.playButton}`}
                         >
                           Let`s Play
                         </button>
                         <br />
-                        <button 
-                          onClick={logOut} 
-                          className={styles.authButton}
-                        >
+                        <button onClick={logOut} className={styles.authButton}>
                           LogOut
-                        </button>  
+                        </button>
                       </>
-                    )}  
+                    )}
                   </>
                 )}
-                { gameStatus == GameStatus.PRE_START && (
+                {gameStatus == GameStatus.PRE_START && (
                   <h2> Are you ready...?? </h2>
                 )}
-                { gameStatus == GameStatus.START && (
-                  <h2> Go!! </h2>
-                )}
-                { gameStatus == GameStatus.PLAYING && (
-                  <button 
+                {gameStatus == GameStatus.START && <h2> Go!! </h2>}
+                {gameStatus == GameStatus.PLAYING && (
+                  <button
                     disabled={!opening}
-                    onClick={incrementCount} 
+                    onClick={incrementCount}
                     className={`${styles.connect} ${styles.playButton}`}
                   >
                     Push!!
                   </button>
                 )}
-                { gameStatus == GameStatus.END && (
+                {gameStatus == GameStatus.END && (
                   <>
                     <h2>It`s over!!</h2>
-                    <button 
+                    <button
                       disabled={!opening}
-                      onClick={sendTransaction} 
+                      onClick={sendTransaction}
                       className={`${styles.connect} ${styles.playButton}`}
                     >
                       Submit your result
                     </button>
                   </>
                 )}
-              </>      
+              </>
             ) : (
-              <button 
-                onClick={logIn} 
-                className={styles.authButton}
-              >
+              <button onClick={logIn} className={styles.authButton}>
                 Let`s Start
               </button>
             )}
@@ -366,5 +360,5 @@ export default function Home() {
         />
       </main>
     </>
-  )
+  );
 }
