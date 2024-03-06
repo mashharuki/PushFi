@@ -87,7 +87,7 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 - フロントの起動
 
   ```bash
-  yarn frontend:dev
+  yarn frontend dev
   ```
 
 - メタデータ類のアップロード
@@ -99,25 +99,25 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 - スマートコントラクトのコンパイル
 
   ```bash
-  yarn backend:compile
+  yarn backend compile
   ```
 
 - スマートコントラクトのデプロイ
 
   ```bash
-  backend:deploy:fuji
+  backend deploy:fuji
   ```
 
 - スマートコントラクトの検証
 
   ```bash
-  yarn backend:verify:fuji
+  yarn backend verify:fuji
   ```
 
 - モック用の VRF コントラクトを使って乱数を生成する
 
   ```bash
-  yarn workspace backend scripts:mock:getRandamNumber:fuji
+  yarn backend scripts:mock:getRandamNumber:fuji
   ```
 
   実行例
@@ -133,7 +133,7 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 - スマートコントラクトのテスト
 
   ```bash
-  yarn backend:test
+  yarn backend test
   ```
 
   実行例
@@ -179,6 +179,14 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
     6 passing (993ms)
 
   ✨  Done in 2.50s.
+  ```
+
+- フォーマットの有効化
+
+  `frontend`と`backend`配下にそれぞれ移動して実行
+
+  ```bash
+  npx prettier --write .
   ```
 
 ## メタデータ関連
