@@ -7,8 +7,8 @@ async function main() {
   // get signer
   const signer = (await ethers.getSigners())[0];
   // NFTContract address
-  const nftAddress = "0xaBaeaD3662e18a5442199369BCa7d6e4B2f57Db1";
-  const superNftAddress = "0x953ae606af2B695EEdF012c0358eB65233CFc4c1";
+  const nftAddress = "0x1ad7fce32EdB9A1b4bd7E250Fd90e03cD74cDe06";
+  const superNftAddress = "0x822e253e3c239350799810E388DC45F371754CE1";
   const sampleVRFAddress = "0x877e07ddC0b95640cD009154ab9dA6a691Ee783b";
 
   // create NFT & game contract

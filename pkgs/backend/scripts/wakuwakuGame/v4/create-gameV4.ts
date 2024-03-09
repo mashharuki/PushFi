@@ -5,14 +5,14 @@ import {ethers} from "hardhat";
  */
 async function main() {
   // Deployed Contract address
-  const contractAddress = "0x452D352bc79B7c1eF23AF28D4CF841267b55DE1B";
+  const contractAddress = "0x530b265Ad60C9d7637321cA2B8A660006F28A297";
   // Game用の変数
   const gameName = "SampleGame";
   const goalCount = 5;
   const adverUrl =
     "https://bafkreidkyzvx746bw6465ky6wwmb23lbwqp6qbyeoosfdbi4osdkemtqle.ipfs.w3s.link/";
-  const nftAddress = "0xaBaeaD3662e18a5442199369BCa7d6e4B2f57Db1";
-  const superNftAddress = "0x953ae606af2B695EEdF012c0358eB65233CFc4c1";
+  const nftAddress = "0x1ad7fce32EdB9A1b4bd7E250Fd90e03cD74cDe06";
+  const superNftAddress = "0x822e253e3c239350799810E388DC45F371754CE1";
 
   const game = await ethers.getContractAt("WakuWakuGameV4", contractAddress);
 
