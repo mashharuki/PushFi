@@ -11,7 +11,15 @@
 ## サイトへの QR コード
 
 <div align="center">
-  <img width="200px" src="./pkgs/docs/img/QR_code.png" /> 
+  <a
+    href="https://pushfi.netlify.app/"
+    target="blank"
+  >
+    <img 
+      width="200px"
+      src="./pkgs/docs/img/QR_code.png" /> 
+  </a>
+  
 </div>
 
 ## What it does
