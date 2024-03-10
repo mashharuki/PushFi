@@ -234,7 +234,7 @@ export default function Home() {
     <>
       <Head>
         <title>Push Fi</title>
-        <meta name="description" content="Based Account Abstraction" />
+        <meta name="description" content="This is a onchain game" />
       </Head>
       <main className={styles.main}>
         <h1 className={styles.neonText}>Push Fi</h1>
@@ -261,7 +261,7 @@ export default function Home() {
             {address && (
               <>
                 <h2>
-                  15秒間押して押して
+                  15秒間押しまくって
                   <br />
                   Super NFTをゲットせよ！
                 </h2>
