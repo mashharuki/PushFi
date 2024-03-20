@@ -111,22 +111,56 @@ describe("ERC404 Examples", function () {
       expect(minted).to.eql(BigNumber.from(0));
     });
 
-    it("trasfer to whitelist address test", async function () {
+    it("trasfer & mint NFT test", async function () {
       // deploy contract
       const {owner, otherAccount, example} = await loadFixture(deployContract);
-      // set Whitelist
-      await example.setWhitelist(otherAccount.address, true);
+      const amount = BigInt(1 * 10 ** 18);
       // transfer 1000 FT
-      await example.transfer(otherAccount.address, 100000);
+      await example.transfer(otherAccount.address, amount);
       // get balance
-      const balance1 = await example.balanceOf(owner.address);
       const balance2 = await example.balanceOf(otherAccount.address);
       // check
-      expect(parseInt(balance1._hex, 16)).to.eql(9999999999999999900000);
-      expect(parseInt(balance2._hex, 16)).to.eql(100000);
+      expect(parseInt(balance2._hex, 16).toString()).to.equal(
+        amount.toString()
+      );
+      // check owner of token Id 1
+      expect(await example.ownerOf(1)).to.be.equal(otherAccount.address);
       // get minted counter
       const minted = await example.minted();
-      expect(minted).to.eql(BigNumber.from(0));
+      expect(minted).to.eql(BigNumber.from(1));
+    });
+
+    it("trasfer & mint NFT (otherAccount → otherAccount2) test", async function () {
+      // deploy contract
+      const {otherAccount, otherAccount2, example} = await loadFixture(
+        deployContract
+      );
+      const amount = BigInt(1 * 10 ** 18);
+      // transfer 1000 FT
+      await example.transfer(otherAccount.address, amount);
+      // get balance
+      const balance = await example.balanceOf(otherAccount.address);
+      // check
+      expect(parseInt(balance._hex, 16).toString()).to.equal(amount.toString());
+
+      // transfer from otherAcccount to otherAccount2
+      // & burn NFT (ID 1) , mint NFT (ID 2)
+      await example
+        .connect(otherAccount)
+        .transfer(otherAccount2.address, amount);
+      // check balance of FT
+      const balance2 = await example.balanceOf(otherAccount.address);
+      const balance3 = await example.balanceOf(otherAccount2.address);
+      // check
+      expect(parseInt(balance2._hex, 16).toString()).to.equal((0).toString());
+      expect(parseInt(balance3._hex, 16).toString()).to.equal(
+        amount.toString()
+      );
+      // check owner of token Id 2
+      expect(await example.ownerOf(2)).to.be.equal(otherAccount2.address);
+      // get minted counter
+      const minted = await example.minted();
+      expect(minted).to.eql(BigNumber.from(2));
     });
   });
 });
