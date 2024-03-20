@@ -37,8 +37,6 @@ describe("ERC404 Examples", function () {
       // deploy contract
       const {owner, example} = await loadFixture(deployContract);
 
-      console.log("example", example);
-
       // get owner
       const currentOwner = await example.owner();
       expect(await owner.getAddress()).to.eql(currentOwner);
