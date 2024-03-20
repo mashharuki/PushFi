@@ -1,4 +1,9 @@
-import {ethers} from "hardhat";
+import {ethers, network, run} from "hardhat";
+import {
+  loadDeployedContractAddresses,
+  resetContractAddressesJson,
+  writeContractAddress,
+} from "../../../helper/contractsJsonHelper";
 
 /**
  * WakuWakuGame コントラクト デプロイスクリプト
@@ -6,10 +11,16 @@ import {ethers} from "hardhat";
 async function main() {
   // get signer
   const signer = (await ethers.getSigners())[0];
+  // get Contract Address
+  const {
+    contracts: {WakuWakuNFT, WakuWakuSuperNFT, SampleVRF},
+  } = loadDeployedContractAddresses(network.name);
   // NFTContract address
-  const nftAddress = "0x1ad7fce32EdB9A1b4bd7E250Fd90e03cD74cDe06";
-  const superNftAddress = "0x822e253e3c239350799810E388DC45F371754CE1";
-  const sampleVRFAddress = "0x877e07ddC0b95640cD009154ab9dA6a691Ee783b";
+  const nftAddress = WakuWakuNFT;
+  const superNftAddress = WakuWakuSuperNFT;
+  const sampleVRFAddress = SampleVRF;
+
+  const signerAddress = await signer.getAddress();
 
   // create NFT & game contract
   const nft = await ethers.getContractAt("WakuWakuNFT", nftAddress);
@@ -17,8 +28,9 @@ async function main() {
     "WakuWakuSuperNFT",
     superNftAddress
   );
+  // deploy game contract
   const game = await ethers.deployContract("WakuWakuGameV4", [
-    await signer.getAddress(),
+    signerAddress,
     sampleVRFAddress,
   ]);
 
@@ -28,28 +40,35 @@ async function main() {
   console.log(` WakuWakuGameV4 deployed to ${game.address}`);
 
   console.log(
-    ` NFT's ownership transfering from ${await signer.getAddress()} to ${
-      game.address
-    }`
+    ` NFT's ownership transfering from ${signerAddress} to ${game.address}`
   );
   await nft.transferOwnership(game.address);
   console.log(
-    ` NFT's ownership transfered from ${await signer.getAddress()} to ${
-      game.address
-    }`
+    ` NFT's ownership transfered from ${signerAddress} to ${game.address}`
   );
 
   console.log(
-    ` SuperNFT's ownership transfering from ${await signer.getAddress()} to ${
-      game.address
-    }`
+    ` SuperNFT's ownership transfering from ${signerAddress} to ${game.address}`
   );
   await superNft.transferOwnership(game.address);
   console.log(
-    ` SuperNFT's ownership transfered from ${await signer.getAddress()} to ${
-      game.address
-    }`
+    ` SuperNFT's ownership transfered from ${signerAddress} to ${game.address}`
   );
+
+  await run(`verify:verify`, {
+    contract: "contracts/v4/WakuWakuGameV4.sol:WakuWakuGameV4",
+    address: game.address,
+    constructorArguments: [signerAddress, sampleVRFAddress],
+  });
+
+  // write Contract Address
+  writeContractAddress({
+    group: "contracts",
+    name: "WakuWakuGameV4",
+    value: game.address,
+    network: network.name,
+  });
+
   console.log(` ======================== end  ======================== `);
 }
 

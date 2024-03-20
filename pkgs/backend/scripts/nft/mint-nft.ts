@@ -1,4 +1,5 @@
-import {ethers} from "hardhat";
+import {ethers, network} from "hardhat";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
 /**
  * NFTをミントするためのスクリプト
@@ -6,14 +7,16 @@ import {ethers} from "hardhat";
 async function main() {
   // get signer
   const signer = (await ethers.getSigners())[0];
-  // Deployed Contract address
-  const contractAddress = "0x7518C6Ca099673C41890f0f2dAd7a6797e201bA4";
-  const superNftcontractAddress = "0x96cf27b3EfA3DbE9890b0a299A072F7Ff8adf0Ab";
 
-  const nft = await ethers.getContractAt("WakuWakuNFT", contractAddress);
+  // get Contract Address
+  const {
+    contracts: {WakuWakuNFT, WakuWakuSuperNFT},
+  } = loadDeployedContractAddresses(network.name);
+
+  const nft = await ethers.getContractAt("WakuWakuNFT", WakuWakuNFT);
   const superNft = await ethers.getContractAt(
     "WakuWakuSuperNFT",
-    superNftcontractAddress
+    WakuWakuSuperNFT
   );
 
   console.log(` ======================= start ========================= `);

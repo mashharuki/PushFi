@@ -2,14 +2,10 @@
 
 ## セットアップ手順(Chainlink 側)
 
-1. まず VRF 用のコントラクトをデプロイ&Verify する。
+1. まず VRF 用のコントラクトをデプロイ する。
 
 ```bash
 yarn backend deploy:mock:sampleVRF:fuji
-```
-
-```bash
-yarn backend verify:mock:sampleVRF:fuji
 ```
 
 2. [https://vrf.chain.link/](https://vrf.chain.link/)に移動してデプロイしたコントラクトを登録する。
@@ -31,24 +27,16 @@ randamNumber: 108137989208009555331517045519597547955163063415551176323732286775
 
 ## セットアップ手順(Game コントラクト)
 
-1. まず NFT をデプロイ & Verify する。
+1. まず NFT をデプロイ する。
 
 ```bash
 yarn backend deploy:nft:fuji
 ```
 
-```bash
-yarn backend verify:nft:fuji
-```
-
-2. GameNFT をデプロイ & Verify する。
+2. GameNFT をデプロイする。
 
 ```bash
 yarn backend deploy:game:fuji
-```
-
-```bash
-yarn backend verify:game:fuji
 ```
 
 3. Game を作成する。

@@ -1,13 +1,16 @@
-import {ethers} from "hardhat";
+import {ethers, network} from "hardhat";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
 /**
  * Chainlinkを使って乱数を生成するサンプルコード
  */
 async function main() {
-  // Deployed Contract address
-  const sampleVDRAddress = "0x877e07ddC0b95640cD009154ab9dA6a691Ee783b";
+  // get Contract Address
+  const {
+    contracts: {SampleVRF},
+  } = loadDeployedContractAddresses(network.name);
 
-  const sampleVRF = await ethers.getContractAt("SampleVRF", sampleVDRAddress);
+  const sampleVRF = await ethers.getContractAt("SampleVRF", SampleVRF);
 
   console.log(` ======================= start ========================= `);
   // const tx = await sampleVRF.requestRandomWords(); // リクエストする。
