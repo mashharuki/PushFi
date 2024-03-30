@@ -2,6 +2,8 @@ import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 import {HardhatUserConfig} from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
@@ -12,6 +14,19 @@ const {
   SNOWTRACE_API_KEY,
   ARBITRUMSCAN_API_KEY,
 } = process.env;
+
+const SKIP_LOAD = process.env.SKIP_LOAD === "true";
+if (!SKIP_LOAD) {
+  const taskPaths = ["mock"];
+  taskPaths.forEach((folder) => {
+    const tasksPath = path.join(__dirname, "tasks", folder);
+    fs.readdirSync(tasksPath)
+      .filter((_path) => _path.includes(".ts"))
+      .forEach((task) => {
+        require(`${tasksPath}/${task}`);
+      });
+  });
+}
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -33,6 +48,11 @@ const config: HardhatUserConfig = {
       url: "https://sepolia-rollup.arbitrum.io/rpc",
       accounts: [`${PRIVATE_KEY}`],
       chainId: 421614,
+    },
+    zKatana: {
+      url: `https://rpc.zkatana.gelato.digital`,
+      accounts: [`${PRIVATE_KEY}`],
+      chainId: 1261120,
     },
   },
   gasReporter: {

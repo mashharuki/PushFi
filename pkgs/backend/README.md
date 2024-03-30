@@ -99,3 +99,17 @@ yarn backend scripts:create-game:fuji
 - Game
 
   [0xE464705F67Aa68bb9387b23a68b4c26c60a8d9Dc](https://sepolia.arbiscan.io/address/0xE464705F67Aa68bb9387b23a68b4c26c60a8d9Dc)
+
+## デプロイ済みコントラクトの情報(zKatana)
+
+- Example
+
+  [0xD3095061512BCEA8E823063706BB9B15F75b187b](https://zkatana.blockscout.com/address/0xD3095061512BCEA8E823063706BB9B15F75b187b)
+
+## task の動かし方
+
+- 404mint
+
+  ```bash
+  npx hardhat 404mint --to 0x1295BDc0C102EB105dC0198fdC193588fe66A1e4 --network zKatana
+  ```

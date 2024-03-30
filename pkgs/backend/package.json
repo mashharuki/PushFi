@@ -15,6 +15,7 @@
     "deploy:game:arbitrumSepolia": "npx hardhat run scripts/wakuwakuGame/v4/deployV4.ts --network arbitrumSepolia",
     "deploy:mock:sampleVRF:fuji": "npx hardhat run scripts/mock/deploy-SampleVRF.ts --network fuji",
     "deploy:mock:sampleVRF:arbitrumSepolia": "npx hardhat run scripts/mock/deploy-SampleVRF.ts --network arbitrumSepolia",
+    "deploy:mock:Example:zKatana": "npx hardhat run scripts/mock/erc404/deploy.ts --network zKatana",
     "scripts:mint-nft:fuji": "npx hardhat run scripts/nft/mint-nft.ts --network fuji",
     "scripts:create-game:fuji": "npx hardhat run scripts/wakuwakuGame/v4/create-gameV4.ts --network fuji",
     "scripts:create-game:arbitrumSepolia": "npx hardhat run scripts/wakuwakuGame/v4/create-gameV4.ts --network arbitrumSepolia",
