@@ -1,20 +1,24 @@
-import {ethers} from "hardhat";
+import {ethers, network} from "hardhat";
+import {loadDeployedContractAddresses} from "../../../helper/contractsJsonHelper";
 
 /**
  * 新しくゲームを作成するためのスクリプト
  */
 async function main() {
-  // Deployed Contract address
-  const contractAddress = "0x530b265Ad60C9d7637321cA2B8A660006F28A297";
+  // get Contract Address
+  const {
+    contracts: {WakuWakuNFT, WakuWakuSuperNFT, WakuWakuGameV4},
+  } = loadDeployedContractAddresses(network.name);
+
   // Game用の変数
   const gameName = "SampleGame";
   const goalCount = 5;
   const adverUrl =
     "https://bafkreidkyzvx746bw6465ky6wwmb23lbwqp6qbyeoosfdbi4osdkemtqle.ipfs.w3s.link/";
-  const nftAddress = "0x1ad7fce32EdB9A1b4bd7E250Fd90e03cD74cDe06";
-  const superNftAddress = "0x822e253e3c239350799810E388DC45F371754CE1";
+  const nftAddress = WakuWakuNFT;
+  const superNftAddress = WakuWakuSuperNFT;
 
-  const game = await ethers.getContractAt("WakuWakuGameV4", contractAddress);
+  const game = await ethers.getContractAt("WakuWakuGameV4", WakuWakuGameV4);
 
   console.log(` ======================= start ========================= `);
   const tx = await game.createGame(
