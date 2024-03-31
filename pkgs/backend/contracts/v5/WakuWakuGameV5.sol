@@ -32,6 +32,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
     address superNftAddress;
     address cardNftAddress;
     uint256 cardNftSupply;
+    uint256 currentSupply;
     address winner;
     EnemyInfo enemyInfo;
   }
@@ -55,6 +56,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
     address superNftAddress,
     address cardNftAddress,
     uint256 cardNftSupply,
+    uint256 currentSupply,
     address winner,
     EnemyInfo enemyInfo
   );
@@ -120,12 +122,12 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
       _superNftAddress,
       _cardNftAddress,
       _cardNftSupply,
+      0,
       0x0000000000000000000000000000000000000000,
       enemyInfo
     );
 
     games[currentGameId] = newGame;
-    activeGameIdCounter.increment();
 
     emit GameCreated(
       _gameName,
@@ -135,6 +137,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
       _superNftAddress,
       _cardNftAddress,
       _cardNftSupply,
+      0,
       0x0000000000000000000000000000000000000000,
       enemyInfo
     );
@@ -159,8 +162,17 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
     uint256 currentSeason = wakuWakuGame.gameSeacon;
     // シーズン1とシーズン2でロジックを切り替える
     if(currentSeason == 1) {
+      // get current supply
+      uint256 currentSupply = wakuWakuGame.currentSupply;
+      uint256 newSupply = currentSupply + _pushCount;
       // Battle Card NFTをミントする。
       mintNft(wakuWakuGame.cardNftAddress, activeGameId, _player, _pushCount);
+      // セット
+      wakuWakuGame.currentSupply = newSupply;
+      if(newSupply >= wakuWakuGame.cardNftSupply) {
+        wakuWakuGame.gameSeacon = 2;
+        emit GameSeasonChanged(activeGameId, 2);
+      }
       return "mintNFT";
     } else if(currentSeason == 2){
       // プレイヤーが参加者として登録されていないのであれば登録する。
@@ -192,6 +204,8 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
           maxCount = 0;
           // NFTをミントする。(winner用)
           mintNft(wakuWakuGame.superNftAddress, activeGameId, wakuWakuGame.winner, 1);
+          // acticeGameIdをインクリメントする。
+          activeGameIdCounter.increment();
           // GameFinish イベントを終了させる。
           emit GameFinished(activeGameId, wakuWakuGame.winner);
         } else {
