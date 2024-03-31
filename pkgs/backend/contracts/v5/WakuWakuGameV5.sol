@@ -1,0 +1,374 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./../utils/Counters.sol";
+import "./../WakuWakuNFT.sol";
+import "./../WakuWakuSuperNFT.sol";
+import "./../BattleCardNFT.sol";
+import "./../mock/SampleVRF.sol";
+
+/**
+ * WakuWakuGameV5 Contract
+ */
+contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
+  using Counters for Counters.Counter;
+  Counters.Counter public activeGameIdCounter;
+
+  // 大ボスの情報を格納する構造体
+  struct EnemyInfo {
+    string enemyImgUrl;
+    uint256 enemyLife;
+  }
+
+  // GameInfo Struct
+  struct GameInfo {
+    string gameName;
+    uint256 gameSeacon;
+    bool openingStatus;
+    address normalNftAddress;
+    address superNftAddress;
+    address cardNftAddress;
+    uint256 cardNftSupply;
+    address winner;
+    EnemyInfo enemyInfo;
+  }
+   
+  // ボスの攻撃力
+  uint256[] private bossAttacks = [30, 40, 50, 60, 70, 80, 90, 100];
+  // 最も貢献したプレイヤーのアドレスとcount数を保持しておくための変数
+  address public maxAddress;
+  uint256 public maxCount;
+
+  // mapping
+  mapping(uint256 => GameInfo) public games;
+  mapping(address => uint256) public partipants;
+
+  // Event
+  event GameCreated(
+    string gameName,
+    uint256 gameSeacon,
+    bool openingStatus,
+    address normalNftAddress,
+    address superNftAddress,
+    address cardNftAddress,
+    uint256 cardNftSupply,
+    address winner,
+    EnemyInfo enemyInfo
+  );
+  event GameStarted(uint256 activeGameId);
+  event GameSeasonChanged(uint256 gameId, uint256 season);
+  event Attack(uint256 gameId, string result, uint256 attack, uint256 pushCount);
+  event GameFinished(uint256 gameId, address winner);
+  event NftMinted(uint256 gameId, address nftAddress, address player);
+  event Withdraw(address indexed payee, uint256 weiAmount);
+  event WithdrawToken(
+    address indexed payee,
+    address prizeToken,
+    uint256 weiAmount
+  );
+  event Deposited(address indexed payee, uint256 weiAmount);
+  event ChangeEnemyImgUrl(string oldEnemyUrl, string newEnemyUrl);
+  event ChangeNormalNftAddress(
+    address oldNormalNftAddress,
+    address newNormalNftAddress
+  );
+  event ChangeSuperNftAddress(
+    address oldSuperNftAddress,
+    address newSuperNftAddress
+  );
+
+  modifier onlyGameOpening(uint256 gameId) {
+    require(games[gameId].openingStatus, "Game is not open yet");
+    _;
+  }
+
+  /**
+   * Constructor
+   */
+  constructor(address initialOwner) Ownable(initialOwner) {}
+
+  /**
+   * CreateGame method
+   */
+  function createGame(
+    string memory _gameName,
+    address _normalNftAddress,
+    address _superNftAddress,
+    address _cardNftAddress,
+    uint256 _cardNftSupply,
+    string memory _enemyImgUrl,
+    uint256 _enemyLife
+  ) public onlyOwner {
+    // get current gameId
+    uint256 currentGameId = activeGameIdCounter.current();
+
+    // ボスキャラの情報を作成する。
+    EnemyInfo memory enemyInfo = EnemyInfo(
+      _enemyImgUrl,
+      _enemyLife
+    );
+
+    // create New WakuWakuGame
+    GameInfo memory newGame = GameInfo(
+      _gameName,
+      1,
+      true,
+      _normalNftAddress,
+      _superNftAddress,
+      _cardNftAddress,
+      _cardNftSupply,
+      0x0000000000000000000000000000000000000000,
+      enemyInfo
+    );
+
+    games[currentGameId] = newGame;
+    activeGameIdCounter.increment();
+
+    emit GameCreated(
+      _gameName,
+       1,
+      true,
+      _normalNftAddress,
+      _superNftAddress,
+      _cardNftAddress,
+      _cardNftSupply,
+      0x0000000000000000000000000000000000000000,
+      enemyInfo
+    );
+  }
+
+  /**
+   * playGame method
+   * @param _player gameID
+   * @param _pushCount plaerAddress
+   */
+  function playGame(
+    address _player,
+    uint256 _pushCount
+  ) public onlyGameOpening(activeGameIdCounter.current()) returns (string memory) {
+    // get current active gameId
+    uint256 activeGameId = activeGameIdCounter.current();
+    // get game info
+    GameInfo memory wakuWakuGame = games[activeGameId];
+    require(wakuWakuGame.openingStatus, "This game is already finished!!");
+
+    // シーズン情報を取得する
+    uint256 currentSeason = wakuWakuGame.gameSeacon;
+    // シーズン1とシーズン2でロジックを切り替える
+    if(currentSeason == 1) {
+      // Battle Card NFTをミントする。
+      mintNft(wakuWakuGame.cardNftAddress, activeGameId, _player, _pushCount);
+      return "mintNFT";
+    } else if(currentSeason == 2){
+      // プレイヤーが参加者として登録されていないのであれば登録する。
+
+      // ボスの攻撃力をランダムで取得する。
+      uint256 randomIndex = random(_pushCount);
+      uint256 randomAttack = bossAttacks[randomIndex];
+      // ボスの攻撃力とpushCountを比較する。
+      if(_pushCount >= randomAttack) {
+        // ボスにダメージを与えるロジック
+        // ボスキャラの体力を取得する。
+        uint256 currentEnemyLife = wakuWakuGame.enemyInfo.enemyLife;
+        // pushCount分だけ体力を減らす。(0以下になった場合は強制的に0にしてゲームを終了させる。)
+        if( (currentEnemyLife - _pushCount) < 0) {
+          // プレイヤーがこれまで与えたダメージを取得する。
+          uint256 currentCount = partipants[_player];
+          // プレイヤーが与えたダメージを更新する。
+          uint256 newCount = currentCount + _pushCount;
+          partipants[_player] = newCount;
+          // call check checkMaxCount メソッド
+          checkMaxCount(_player, newCount);
+          // ボスキャラの体力を0にする。
+          wakuWakuGame.enemyInfo.enemyLife = 0;
+          // winnerアドレスを設定する。
+          wakuWakuGame.winner = maxAddress;
+          // Gameのステータスを更新する。
+          wakuWakuGame.openingStatus = false;
+          // maxCount を更新する。
+          maxCount = 0;
+          // NFTをミントする。(winner用)
+          mintNft(wakuWakuGame.superNftAddress, activeGameId, wakuWakuGame.winner, 1);
+          // GameFinish イベントを終了させる。
+          emit GameFinished(activeGameId, wakuWakuGame.winner);
+        } else {
+          // プレイヤーがこれまで与えたダメージを取得する。
+          uint256 currentCount = partipants[_player];
+          // プレイヤーが与えたダメージを更新する。
+          uint256 newCount = currentCount + _pushCount;
+          partipants[_player] = newCount;
+          // call check checkMaxCount メソッド
+          checkMaxCount(_player, newCount);
+          // create NFT 
+          BattleCardNFT nft = BattleCardNFT(wakuWakuGame.cardNftAddress);
+          // ローカル変数に詰める
+          address to = _player;
+          uint256 value = _pushCount;
+          // CardNFTをプレイヤーに譲渡する。 (預けたNFTが戻ってくるイメージ)
+          nft.safeTransferFrom(address(this), to, activeGameId, value, "0x");
+        }
+
+        emit Attack(activeGameId, "win", randomAttack, _pushCount);
+        return "win";
+      } else {
+        // ボスからダメージを受けるロジック。
+        // 預けたNFTは全て没収される。
+        emit Attack(activeGameId, "lose", randomAttack, _pushCount);
+        return "lose";
+      }
+    }
+  }
+
+  /**
+   * ゲーム終了後にノーマルNFTとスーパーNFTをミントするメソッド
+   * @param _nftAddress NFT Contract Address
+   * @param _gameId gameID
+   * @param _player palyer's address
+   * @param _count push count
+   */
+  function mintNft(
+    address _nftAddress,
+    uint256 _gameId,
+    address _player,
+    uint256 _count
+  ) internal {
+    // get game info
+    GameInfo memory wakuWakuGame = games[_gameId];
+
+    if (wakuWakuGame.normalNftAddress == _nftAddress) {
+      // create WakuWakuNFT contract instance
+      WakuWakuNFT nft = WakuWakuNFT(_nftAddress);
+      // mint
+      nft.mint(_player, _gameId, 1, "0x");
+      emit NftMinted(_gameId, _nftAddress, _player);
+    } else if(wakuWakuGame.superNftAddress == _nftAddress) {
+      // create WakuWakuSuperNFT contract instance
+      WakuWakuSuperNFT nft = WakuWakuSuperNFT(_nftAddress);
+      // mint
+      nft.mint(_player, _gameId, 1, "0x");
+      emit NftMinted(_gameId, _nftAddress, _player);
+    } else if(wakuWakuGame.cardNftAddress == _nftAddress) {
+      // create BattleCardNFT contract instance
+      BattleCardNFT nft = BattleCardNFT(_nftAddress);
+      // get current TotalSupply
+      uint256 currentSupply = nft.totalSupply(_gameId);
+      // mint
+      nft.mint(_player, _gameId, _count, "0x");
+      emit NftMinted(_gameId, _nftAddress, _player);
+      // もし指定した数以上のNFTをミントしたらシーズンを2に移行させる。
+      if((currentSupply + _count) >= wakuWakuGame.cardNftSupply) {
+        wakuWakuGame.gameSeacon = 2;
+        emit GameSeasonChanged(_gameId ,2);
+      }
+    }
+  }
+
+  /**
+   * withdraw method
+   * @param _to receiverAddress
+   */
+  function withdraw(address payable _to) public onlyOwner {
+    uint256 balance = address(this).balance;
+    _to.transfer(balance);
+    emit Withdraw(_to, balance);
+  }
+
+  // Function to receive Ether. msg.data must be empty
+  receive() external payable {
+    emit Deposited(msg.sender, msg.value);
+  }
+
+  // Fallback function is called when msg.data is not empty
+  fallback() external payable {
+    emit Deposited(msg.sender, msg.value);
+  }
+
+  /**
+   * get OpeningStatus method
+   * @param _gameId gameID
+   */
+  function getOpeningStatus(uint256 _gameId) public view returns (bool result) {
+    result = games[_gameId].openingStatus;
+    return result;
+  }
+
+  /**
+   * Pause Game
+   */
+  function pauseGame(uint256 _gameId) public onlyOwner {
+    games[_gameId].openingStatus = false;
+  }
+
+  /**
+   * change Enemy URL method
+   */
+  function changeEnemyUrl(
+    uint256 _gameId,
+    string memory _newEnemyImgUrl
+  ) public onlyOwner {
+    string memory oldEnemyImgUrl = games[_gameId].enemyInfo.enemyImgUrl;
+    games[_gameId].enemyInfo.enemyImgUrl = _newEnemyImgUrl;
+    // emit
+    emit ChangeEnemyImgUrl(oldEnemyImgUrl, _newEnemyImgUrl);
+  }
+
+  /**
+   * change Normal NFT address method
+   */
+  function changeNormalNft(
+    uint256 _gameId,
+    address _newNormalNftAddress
+  ) public onlyOwner {
+    address oldNormalNftAddress = games[_gameId].normalNftAddress;
+    // change
+    games[_gameId].normalNftAddress = _newNormalNftAddress;
+
+    emit ChangeNormalNftAddress(oldNormalNftAddress, _newNormalNftAddress);
+  }
+
+  /**
+   * change Super NFT address method
+   */
+  function changeSuperNft(
+    uint256 _gameId,
+    address _newSuperNftAddress
+  ) public onlyOwner {
+    address oldSuperNftAddress = games[_gameId].superNftAddress;
+    // change
+    games[_gameId].superNftAddress = _newSuperNftAddress;
+
+    emit ChangeNormalNftAddress(oldSuperNftAddress, _newSuperNftAddress);
+  }
+
+  /**
+   * 確率の計算用のランダム関数
+   */
+  function random(
+    uint256 count
+  ) internal view returns (uint256) {
+    return
+      uint256(
+        keccak256(
+          abi.encodePacked(block.prevrandao, count, msg.sender)
+        )
+      ) % bossAttacks.length;
+  }
+
+  /**
+   * 新たに更新されたnewCountが最大値かどうかをチェックするメソッド
+   */
+  function checkMaxCount(
+    address _player,
+    uint256 _count
+  ) internal {
+    require(_count > 0, "count must be greater than zero");
+    // もし最大値以上であれば値を更新する。
+    if (_count > maxCount) {
+        maxCount = _count;
+        maxAddress = _player;
+    }
+  }
+}
