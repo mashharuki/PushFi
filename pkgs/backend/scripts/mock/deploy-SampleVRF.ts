@@ -1,8 +1,5 @@
 import {ethers, network, run} from "hardhat";
-import {
-  resetContractAddressesJson,
-  writeContractAddress,
-} from "../../helper/contractsJsonHelper";
+import {writeContractAddress} from "../../helper/contractsJsonHelper";
 
 /**
  * モック用のサンプルVRFコントラクトのデプロイ
@@ -25,11 +22,13 @@ async function main() {
 
   console.log(` SampleVRF deployed to ${sampleVRF.address}`);
 
-  await run(`verify:verify`, {
-    contract: "contracts/mock/SampleVRF.sol:SampleVRF",
-    address: sampleVRF.address,
-    constructorArguments: [subscriptionId, vrfCoordinator, keyHash],
-  });
+  if (network.name == "fuji") {
+    await run(`verify:verify`, {
+      contract: "contracts/mock/SampleVRF.sol:SampleVRF",
+      address: sampleVRF.address,
+      constructorArguments: [subscriptionId, vrfCoordinator, keyHash],
+    });
+  }
 
   // write Contract Address
   writeContractAddress({

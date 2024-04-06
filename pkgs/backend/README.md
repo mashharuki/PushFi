@@ -113,3 +113,9 @@ yarn backend scripts:create-game:fuji
   ```bash
   npx hardhat 404mint --to 0x1295BDc0C102EB105dC0198fdC193588fe66A1e4 --network zKatana
   ```
+
+## flatten コントラクトを作成するコマンド
+
+```bash
+npx hardhat flatten contracts/v5/WakuWakuGameV5.sol > contracts/flatten/flatten.sol
+```

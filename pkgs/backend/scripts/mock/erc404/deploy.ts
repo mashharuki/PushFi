@@ -14,7 +14,7 @@ async function main() {
 
   console.log(` Example deployed to ${example.address}`);
 
-  if (network.name != "zKyoto") {
+  if (network.name == "fuji") {
     await run(`verify:verify`, {
       contract: "contracts/mock/erc404/Example.sol:Example",
       address: example.address,

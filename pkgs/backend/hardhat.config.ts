@@ -14,6 +14,7 @@ const {
   SNOWTRACE_API_KEY,
   ARBITRUMSCAN_API_KEY,
   POLYGONSCAN_ZKEVM_API_KEY,
+  ASTAR_ZKYOTO_SCAN_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -78,6 +79,7 @@ const config: HardhatUserConfig = {
       avalancheFujiTestnet: SNOWTRACE_API_KEY!,
       arbitrumSepolia: ARBITRUMSCAN_API_KEY!,
       polygonZkEvmTestnet: POLYGONSCAN_ZKEVM_API_KEY!,
+      zKyoto: ASTAR_ZKYOTO_SCAN_API_KEY!,
     },
     customChains: [
       {
@@ -94,6 +96,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://rpc.public.zkevm-test.net/",
           browserURL: "https://testnet-zkevm.polygonscan.com/",
+        },
+      },
+      {
+        network: "zKyoto",
+        chainId: 6038361,
+        urls: {
+          apiURL: "https://rpc.startale.com/zkyoto",
+          browserURL: "https://zkyoto.explorer.startale.com/",
         },
       },
     ],

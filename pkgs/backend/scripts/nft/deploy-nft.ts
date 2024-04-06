@@ -1,8 +1,5 @@
 import {ethers, network, run} from "hardhat";
-import {
-  resetContractAddressesJson,
-  writeContractAddress,
-} from "../../helper/contractsJsonHelper";
+import {writeContractAddress} from "../../helper/contractsJsonHelper";
 
 /**
  * NFTコントラクトデプロイスクリプト
@@ -17,24 +14,36 @@ async function main() {
     signerAddress,
   ]);
 
+  const cardNft = await ethers.deployContract("BattleCardNFT", [signerAddress]);
+
   console.log(` ======================= start ========================= `);
   await nft.deployed();
   await superNft.deployed();
+  await cardNft.deployed();
 
   console.log(` WakuWakuNFT deployed to ${nft.address}`);
   console.log(` WakuWakuSuperNFT deployed to ${superNft.address}`);
+  console.log(` BattleCardNFT deployed to ${cardNft.address}`);
 
-  await run(`verify:verify`, {
-    contract: "contracts/WakuWakuNFT.sol:WakuWakuNFT",
-    address: nft.address,
-    constructorArguments: [signerAddress],
-  });
+  if (network.name == "fuji") {
+    await run(`verify:verify`, {
+      contract: "contracts/WakuWakuNFT.sol:WakuWakuNFT",
+      address: nft.address,
+      constructorArguments: [signerAddress],
+    });
 
-  await run(`verify:verify`, {
-    contract: "contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT",
-    address: superNft.address,
-    constructorArguments: [signerAddress],
-  });
+    await run(`verify:verify`, {
+      contract: "contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT",
+      address: superNft.address,
+      constructorArguments: [signerAddress],
+    });
+
+    await run(`verify:verify`, {
+      contract: "contracts/BattleCardNFT.sol:BattleCardNFT",
+      address: cardNft.address,
+      constructorArguments: [signerAddress],
+    });
+  }
 
   // write Contract Address
   writeContractAddress({
@@ -48,6 +57,12 @@ async function main() {
     group: "contracts",
     name: "WakuWakuSuperNFT",
     value: superNft.address,
+    network: network.name,
+  });
+  writeContractAddress({
+    group: "contracts",
+    name: "BattleCardNFT",
+    value: cardNft.address,
     network: network.name,
   });
   console.log(` ======================== end  ======================== `);
