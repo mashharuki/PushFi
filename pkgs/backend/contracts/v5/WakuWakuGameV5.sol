@@ -189,7 +189,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
         // ボスキャラの体力を取得する。
         uint256 currentEnemyLife = wakuWakuGame.enemyInfo.enemyLife;
         // pushCount分だけ体力を減らす。(0以下になった場合は強制的に0にしてゲームを終了させる。)
-        if ((currentEnemyLife - _pushCount) < 0) {
+        if (_pushCount >= currentEnemyLife) {
           // プレイヤーがこれまで与えたダメージを取得する。
           uint256 currentCount = partipants[_player];
           // プレイヤーが与えたダメージを更新する。

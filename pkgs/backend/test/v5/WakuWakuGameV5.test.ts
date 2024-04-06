@@ -534,7 +534,86 @@ describe("WakuWakuGameV5 test", function () {
       const partipantsInfo2 = await game.partipants(otherAccount.address);
       // check
       expect(BigNumber.from("50")).to.eql(partipantsInfo);
-      expect(BigNumber.from("41")).to.eql(partipantsInfo2);
+      expect(BigNumber.from("51")).to.eql(partipantsInfo2);
+
+      // get superNFT
+      const balanceOf = await superNft.balanceOf(
+        otherAccount.address,
+        activeId
+      );
+      // check
+      expect(BigNumber.from("1")).to.eql(balanceOf);
+    });
+
+    it("【Seazon2】play game - GameFinish - emit Event", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+
+      // play game (50 pushCount)
+      await playGame(game, owner, 50);
+      // play game (51 pushCount)
+      await playGame(game, otherAccount, 51);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT.safeTransferFrom(
+        owner.address,
+        game.address,
+        activeId,
+        50,
+        "0x"
+      );
+
+      // play game (50 attack from owner)
+      await playGame(game, owner, 50);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT
+        .connect(otherAccount)
+        .safeTransferFrom(
+          otherAccount.address,
+          game.address,
+          activeId,
+          51,
+          "0x"
+        );
+
+      // play game (50 attack from otherAccount)
+      // check emit event
+      await expect(
+        game.connect(otherAccount).playGame(otherAccount.address, 51)
+      )
+        .to.emit(game, "Attack")
+        .withArgs(activeId, "win", 30, 51)
+        .to.emit(game, "GameFinished")
+        .withArgs(activeId, otherAccount.address);
+
+      // get partipants info
+      const partipantsInfo = await game.partipants(owner.address);
+      const partipantsInfo2 = await game.partipants(otherAccount.address);
+      // check
+      expect(BigNumber.from("50")).to.eql(partipantsInfo);
+      expect(BigNumber.from("51")).to.eql(partipantsInfo2);
+
+      // get superNFT
+      const balanceOf = await superNft.balanceOf(
+        otherAccount.address,
+        activeId
+      );
+      // check
+      expect(BigNumber.from("1")).to.eql(balanceOf);
     });
   });
 });
