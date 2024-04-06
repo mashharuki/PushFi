@@ -1,8 +1,8 @@
 import "@nomicfoundation/hardhat-toolbox";
-import * as dotenv from "dotenv";
-import {HardhatUserConfig} from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
+import * as dotenv from "dotenv";
 import fs from "fs";
+import {HardhatUserConfig} from "hardhat/config";
 import path from "path";
 
 dotenv.config();
@@ -17,7 +17,7 @@ const {
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
 if (!SKIP_LOAD) {
-  const taskPaths = ["mock"];
+  const taskPaths = ["mock", "util"];
   taskPaths.forEach((folder) => {
     const tasksPath = path.join(__dirname, "tasks", folder);
     fs.readdirSync(tasksPath)

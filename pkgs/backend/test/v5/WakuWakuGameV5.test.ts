@@ -4,14 +4,14 @@ import {expect} from "chai";
 import {BigNumber} from "ethers";
 import {ethers} from "hardhat";
 import {
+  BattleCardNFT,
+  BattleCardNFT__factory,
   WakuWakuGameV5,
   WakuWakuGameV5__factory,
   WakuWakuNFT,
   WakuWakuNFT__factory,
   WakuWakuSuperNFT,
   WakuWakuSuperNFT__factory,
-  BattleCardNFT,
-  BattleCardNFT__factory,
 } from "../../typechain-types";
 
 describe("WakuWakuGameV5 test", function () {
@@ -141,8 +141,10 @@ describe("WakuWakuGameV5 test", function () {
         superNft.address,
         battleCardNFT.address
       );
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
       // get game info
-      const gameInfo = await game.games(0);
+      const gameInfo = await game.games(activeId);
       // check
       expect(gameName).to.eql(gameInfo.gameName);
       expect(BigNumber.from("1")).to.eql(gameInfo.gameSeacon);
@@ -155,6 +157,7 @@ describe("WakuWakuGameV5 test", function () {
       expect(initWinner).to.eql(gameInfo.winner);
       expect(enemyImgUrl).to.eql(gameInfo.enemyInfo.enemyImgUrl);
       expect(BigNumber.from(enemyLife)).to.eql(gameInfo.enemyInfo.enemyLife);
+      expect(BigNumber.from("0")).to.eql(activeId);
     });
   });
 
@@ -170,16 +173,69 @@ describe("WakuWakuGameV5 test", function () {
         superNft.address,
         battleCardNFT.address
       );
-      // play game (100 pushCount)
+      // play game (101 pushCount)
       await playGame(game, owner, 101);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
       // get game info
-      const gameInfo = await game.games(0);
-
-      console.log({gameInfo});
+      const gameInfo = await game.games(activeId);
+      // get battleCardNFT balance
+      const balance1 = await battleCardNFT.balanceOf(owner.address, activeId);
 
       // check
       expect(BigNumber.from("101")).to.eql(gameInfo.currentSupply);
       expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+      expect(BigNumber.from("101")).to.eql(balance1);
+    });
+
+    it("play game by multi players", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // play game (101 pushCount)
+      await playGame(game, owner, 51);
+      await playGame(game, otherAccount, 50);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // get battleCardNFT balance
+      const balance1 = await battleCardNFT.balanceOf(owner.address, activeId);
+      const balance2 = await battleCardNFT.balanceOf(
+        otherAccount.address,
+        activeId
+      );
+
+      // check
+      expect(BigNumber.from("101")).to.eql(gameInfo.currentSupply);
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+      expect(BigNumber.from("51")).to.eql(balance1);
+      expect(BigNumber.from("50")).to.eql(balance2);
+    });
+
+    it("emit event test", async function () {
+      const {owner, nft, superNft, battleCardNFT, game} = await loadFixture(
+        deployContract
+      );
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // play game (101 pushCount)
+      await expect(game.connect(owner).playGame(owner.address, 101))
+        .to.emit(game, "GameSeasonChanged")
+        .withArgs(activeId, 2);
     });
   });
 });
