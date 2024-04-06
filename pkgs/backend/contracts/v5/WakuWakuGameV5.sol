@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "./../utils/Counters.sol";
 import "./../WakuWakuNFT.sol";
 import "./../WakuWakuSuperNFT.sol";
@@ -13,7 +14,7 @@ import "./../mock/SampleVRF.sol";
 /**
  * WakuWakuGameV5 Contract
  */
-contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
+contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
   using Counters for Counters.Counter;
   Counters.Counter public activeGameIdCounter;
 
@@ -152,11 +153,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
   function playGame(
     address _player,
     uint256 _pushCount
-  )
-    public
-    onlyGameOpening(activeGameIdCounter.current())
-    returns (string memory)
-  {
+  ) public onlyGameOpening(activeGameIdCounter.current()) {
     // get current active gameId
     uint256 activeGameId = activeGameIdCounter.current();
     // get game info
@@ -182,11 +179,10 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
       }
       // 新しくGameInfoをセットし直す
       games[activeGameId] = wakuWakuGame;
-      return "mintNFT";
     } else if (currentSeason == 2) {
       // ボスの攻撃力をランダムで取得する。
       uint256 randomIndex = random(_pushCount);
-      uint256 randomAttack = bossAttacks[randomIndex];
+      uint256 randomAttack = bossAttacks[0];
       // ボスの攻撃力とpushCountを比較する。
       if (_pushCount >= randomAttack) {
         // ボスにダメージを与えるロジック
@@ -201,25 +197,21 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
           partipants[_player] = newCount;
           // call check checkMaxCount メソッド
           checkMaxCount(_player, newCount);
-          // ボスキャラの体力を0にする。
-          wakuWakuGame.enemyInfo.enemyLife = 0;
-          // winnerアドレスを設定する。
-          wakuWakuGame.winner = maxAddress;
-          // Gameのステータスを更新する。
-          wakuWakuGame.openingStatus = false;
           // maxCount を更新する。
           maxCount = 0;
+          // Gameのステータスを更新する。
+          wakuWakuGame.openingStatus = false;
+          // winnerアドレスを設定する。
+          wakuWakuGame.winner = maxAddress;
+          wakuWakuGame.enemyInfo.enemyLife = 0;
           // NFTをミントする。(winner用)
-          mintNft(
-            wakuWakuGame.superNftAddress,
-            activeGameId,
-            wakuWakuGame.winner,
-            1
-          );
+          mintNft(wakuWakuGame.superNftAddress, activeGameId, maxAddress, 1);
+          // 新しくGameInfoをセットし直す
+          games[activeGameId] = wakuWakuGame;
           // acticeGameIdをインクリメントする。
           activeGameIdCounter.increment();
           // GameFinish イベントを終了させる。
-          emit GameFinished(activeGameId, wakuWakuGame.winner);
+          emit GameFinished(activeGameId, maxAddress);
         } else {
           // プレイヤーがこれまで与えたダメージを取得する。
           uint256 currentCount = partipants[_player];
@@ -228,6 +220,11 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
           partipants[_player] = newCount;
           // call check checkMaxCount メソッド
           checkMaxCount(_player, newCount);
+          // 大ボスのHPを更新する。
+          uint256 newEnemyLife = currentEnemyLife - _pushCount;
+          wakuWakuGame.enemyInfo.enemyLife = newEnemyLife;
+          // 新しくGameInfoをセットし直す
+          games[activeGameId] = wakuWakuGame;
           // create NFT
           BattleCardNFT nft = BattleCardNFT(wakuWakuGame.cardNftAddress);
           // ローカル変数に詰める
@@ -238,12 +235,10 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
         }
 
         emit Attack(activeGameId, "win", randomAttack, _pushCount);
-        return "win";
       } else {
         // ボスからダメージを受けるロジック。
         // 預けたNFTは全て没収される。
         emit Attack(activeGameId, "lose", randomAttack, _pushCount);
-        return "lose";
       }
     }
   }
@@ -396,5 +391,43 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
    */
   function getActiveGameId() public view returns (uint256) {
     return activeGameIdCounter.current();
+  }
+
+  /**
+   * =======================================================================================
+   * IERC1155Receiver Contract method
+   * =======================================================================================
+   */
+
+  function onERC1155Received(
+    address operator,
+    address from,
+    uint256 id,
+    uint256 value,
+    bytes calldata data
+  ) external override returns (bytes4) {
+    return this.onERC1155Received.selector;
+  }
+
+  function onERC1155BatchReceived(
+    address operator,
+    address from,
+    uint256[] calldata ids,
+    uint256[] calldata values,
+    bytes calldata data
+  ) external override returns (bytes4) {
+    return this.onERC1155BatchReceived.selector;
+  }
+
+  /**
+   * =======================================================================================
+   * IERC165 Contract method
+   * =======================================================================================
+   */
+
+  function supportsInterface(
+    bytes4 interfaceId
+  ) external view override returns (bool) {
+    return true;
   }
 }

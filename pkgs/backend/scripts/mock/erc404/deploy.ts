@@ -1,8 +1,5 @@
 import {ethers, network, run} from "hardhat";
-import {
-  resetContractAddressesJson,
-  writeContractAddress,
-} from "../../../helper/contractsJsonHelper";
+import {writeContractAddress} from "../../../helper/contractsJsonHelper";
 
 /**
  * モック用のサンプルVRFコントラクトのデプロイ
@@ -17,7 +14,7 @@ async function main() {
 
   console.log(` Example deployed to ${example.address}`);
 
-  if (network.name != "zKatana") {
+  if (network.name != "zKyoto") {
     await run(`verify:verify`, {
       contract: "contracts/mock/erc404/Example.sol:Example",
       address: example.address,

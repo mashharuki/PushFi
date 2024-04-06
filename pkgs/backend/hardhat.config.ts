@@ -13,6 +13,7 @@ const {
   COINMARKETCAP_API_KEY,
   SNOWTRACE_API_KEY,
   ARBITRUMSCAN_API_KEY,
+  POLYGONSCAN_ZKEVM_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -49,10 +50,18 @@ const config: HardhatUserConfig = {
       accounts: [`${PRIVATE_KEY}`],
       chainId: 421614,
     },
-    zKatana: {
-      url: `https://rpc.zkatana.gelato.digital`,
+    zKyoto: {
+      url: `https://rpc.startale.com/zkyoto`,
       accounts: [`${PRIVATE_KEY}`],
-      chainId: 1261120,
+      chainId: 6038361,
+    },
+    mantaSepolia: {
+      url: `https://pacific-rpc.testnet.manta.network/http`,
+      chainId: 3441006,
+    },
+    polygonZkEvmTestnet: {
+      url: `https://rpc.public.zkevm-test.net/`,
+      chainId: 1442,
     },
   },
   gasReporter: {
@@ -68,6 +77,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       avalancheFujiTestnet: SNOWTRACE_API_KEY!,
       arbitrumSepolia: ARBITRUMSCAN_API_KEY!,
+      polygonZkEvmTestnet: POLYGONSCAN_ZKEVM_API_KEY!,
     },
     customChains: [
       {
@@ -76,6 +86,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://sepolia-rollup.arbitrum.io/rpc",
           browserURL: "https://sepolia.arbiscan.io/",
+        },
+      },
+      {
+        network: "polygonZkEvmTestnet",
+        chainId: 1442,
+        urls: {
+          apiURL: "https://rpc.public.zkevm-test.net/",
+          browserURL: "https://testnet-zkevm.polygonscan.com/",
         },
       },
     ],

@@ -18,12 +18,13 @@ describe("WakuWakuGameV5 test", function () {
   // test variavals
   const gameName = "SampleGame";
   const cardNftSupply = 100;
-  const sampleAdverUrl =
-    "https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif";
   const enemyImgUrl =
+    "https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif";
+  const enemyImgUrl2 =
     "https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif";
   const enemyLife = 100;
   const initWinner = "0x0000000000000000000000000000000000000000";
+  const TEST_ADDRESS = "0x0000000000000000000000000000000000000002";
 
   /**
    * WakuWakuGameV5
@@ -161,8 +162,102 @@ describe("WakuWakuGameV5 test", function () {
     });
   });
 
+  describe("change game status", function () {
+    it("change game status", async function () {
+      const {nft, superNft, battleCardNFT, game} = await loadFixture(
+        deployContract
+      );
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(true).to.eql(gameInfo.openingStatus);
+
+      // change game status
+      await game.pauseGame(activeId);
+      // get status
+      const gameStatus = await game.getOpeningStatus(activeId);
+      // get game info
+      const gameInfo2 = await game.games(activeId);
+      // check
+      expect(false).to.eql(gameStatus);
+      expect(false).to.eql(gameInfo2.openingStatus);
+    });
+
+    it("change enemyUrl", async function () {
+      const {nft, superNft, battleCardNFT, game} = await loadFixture(
+        deployContract
+      );
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // chenge enemyUrl
+      await game.changeEnemyUrl(activeId, enemyImgUrl2);
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(enemyImgUrl2).to.eql(gameInfo.enemyInfo.enemyImgUrl);
+    });
+
+    it("change normal NFT", async function () {
+      const {nft, superNft, battleCardNFT, game} = await loadFixture(
+        deployContract
+      );
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // change NFT address
+      await game.changeNormalNft(activeId, TEST_ADDRESS);
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(TEST_ADDRESS).to.eql(gameInfo.normalNftAddress);
+    });
+
+    it("change super NFT", async function () {
+      const {nft, superNft, battleCardNFT, game} = await loadFixture(
+        deployContract
+      );
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // change NFT address
+      await game.changeSuperNft(activeId, TEST_ADDRESS);
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(TEST_ADDRESS).to.eql(gameInfo.superNftAddress);
+    });
+  });
+
   describe("playGame", function () {
-    it("play game", async function () {
+    it("【Seazon1】play game", async function () {
       const {owner, nft, superNft, battleCardNFT, game} = await loadFixture(
         deployContract
       );
@@ -219,7 +314,7 @@ describe("WakuWakuGameV5 test", function () {
       expect(BigNumber.from("50")).to.eql(balance2);
     });
 
-    it("emit event test", async function () {
+    it("【Seazon1】emit event test", async function () {
       const {owner, nft, superNft, battleCardNFT, game} = await loadFixture(
         deployContract
       );
@@ -236,6 +331,210 @@ describe("WakuWakuGameV5 test", function () {
       await expect(game.connect(owner).playGame(owner.address, 101))
         .to.emit(game, "GameSeasonChanged")
         .withArgs(activeId, 2);
+    });
+
+    it("【Seazon2】play game - simple attack(win)", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // play game (101 pushCount)
+      await playGame(game, owner, 101);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT.safeTransferFrom(
+        owner.address,
+        game.address,
+        activeId,
+        40,
+        "0x"
+      );
+      // play game (40 pushCount - win)
+      await playGame(game, owner, 40);
+
+      // get partipants info
+      const partipantsInfo = await game.partipants(owner.address);
+      // check
+      expect(BigNumber.from("40")).to.eql(partipantsInfo);
+    });
+
+    it("【Seazon2】play game - simple attack(win) - emit event", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // play game (101 pushCount)
+      await playGame(game, owner, 101);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT.safeTransferFrom(
+        owner.address,
+        game.address,
+        activeId,
+        40,
+        "0x"
+      );
+      // play game (40 pushCount - win)
+      await expect(game.connect(owner).playGame(owner.address, 40))
+        .to.emit(game, "Attack")
+        .withArgs(activeId, "win", 30, 40);
+
+      // get partipants info
+      const partipantsInfo = await game.partipants(owner.address);
+      // check
+      expect(BigNumber.from("40")).to.eql(partipantsInfo);
+    });
+
+    it("【Seazon2】play game - simple attack(lose)", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // play game (101 pushCount)
+      await playGame(game, owner, 101);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT.safeTransferFrom(
+        owner.address,
+        game.address,
+        activeId,
+        20,
+        "0x"
+      );
+      // play game (40 pushCount - lose)
+      await playGame(game, owner, 20);
+
+      // get partipants info
+      const partipantsInfo = await game.partipants(owner.address);
+      // check
+      expect(BigNumber.from("0")).to.eql(partipantsInfo);
+    });
+
+    it("【Seazon2】play game - simple attack(lose) - emit event", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+      // play game (101 pushCount)
+      await playGame(game, owner, 101);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT.safeTransferFrom(
+        owner.address,
+        game.address,
+        activeId,
+        20,
+        "0x"
+      );
+      // play game (40 pushCount - lose)
+      await expect(game.connect(owner).playGame(owner.address, 20))
+        .to.emit(game, "Attack")
+        .withArgs(activeId, "lose", 30, 20);
+
+      // get partipants info
+      const partipantsInfo = await game.partipants(owner.address);
+      // check
+      expect(BigNumber.from("0")).to.eql(partipantsInfo);
+    });
+
+    it("【Seazon2】play game - GameFinish", async function () {
+      const {owner, otherAccount, nft, superNft, battleCardNFT, game} =
+        await loadFixture(deployContract);
+      // create new game
+      await createNewGame(
+        game,
+        nft.address,
+        superNft.address,
+        battleCardNFT.address
+      );
+
+      // play game (50 pushCount)
+      await playGame(game, owner, 50);
+      // play game (51 pushCount)
+      await playGame(game, otherAccount, 51);
+      // get active Game ID
+      const activeId = await game.getActiveGameId();
+      // get game info
+      const gameInfo = await game.games(activeId);
+      // check
+      expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT.safeTransferFrom(
+        owner.address,
+        game.address,
+        activeId,
+        50,
+        "0x"
+      );
+
+      // play game (50 attack from owner)
+      await playGame(game, owner, 50);
+
+      // NFTをgameコントラクトに預ける。
+      await battleCardNFT
+        .connect(otherAccount)
+        .safeTransferFrom(
+          otherAccount.address,
+          game.address,
+          activeId,
+          51,
+          "0x"
+        );
+
+      // play game (50 attack from otherAccount)
+      await playGame(game, otherAccount, 51);
+
+      // get partipants info
+      const partipantsInfo = await game.partipants(owner.address);
+      const partipantsInfo2 = await game.partipants(otherAccount.address);
+      // check
+      expect(BigNumber.from("50")).to.eql(partipantsInfo);
+      expect(BigNumber.from("41")).to.eql(partipantsInfo2);
     });
   });
 });
