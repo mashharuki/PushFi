@@ -104,9 +104,7 @@ describe("WakuWakuGameV5 test", function () {
     player: SignerWithAddress,
     count: number
   ) => {
-    for (var i = 0; i < count; i++) {
-      await game.connect(player).playGame(player.address, count);
-    }
+    await game.connect(player).playGame(player.address, count);
   };
 
   describe("init", function () {
@@ -173,9 +171,12 @@ describe("WakuWakuGameV5 test", function () {
         battleCardNFT.address
       );
       // play game (100 pushCount)
-      await game.playGame(owner.address, 101);
+      await playGame(game, owner, 101);
       // get game info
       const gameInfo = await game.games(0);
+
+      console.log({gameInfo});
+
       // check
       expect(BigNumber.from("101")).to.eql(gameInfo.currentSupply);
       expect(BigNumber.from("2")).to.eql(gameInfo.gameSeacon);

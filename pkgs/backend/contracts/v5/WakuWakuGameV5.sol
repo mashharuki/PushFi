@@ -165,18 +165,20 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard {
       // get current supply
       uint256 currentSupply = wakuWakuGame.currentSupply;
       uint256 newSupply = currentSupply + _pushCount;
-      // Battle Card NFTをミントする。
-      mintNft(wakuWakuGame.cardNftAddress, activeGameId, _player, _pushCount);
       // セット
       wakuWakuGame.currentSupply = newSupply;
-      if(newSupply >= wakuWakuGame.cardNftSupply) {
+      // cardSupply 
+      uint256 cardNftSupply = wakuWakuGame.cardNftSupply;
+      // Battle Card NFTをミントする。
+      mintNft(wakuWakuGame.cardNftAddress, activeGameId, _player, _pushCount);
+      if(newSupply >= cardNftSupply) {
         wakuWakuGame.gameSeacon = 2;
         emit GameSeasonChanged(activeGameId, 2);
       }
+      // 新しくGameInfoをセットし直す
+      games[activeGameId] = wakuWakuGame;
       return "mintNFT";
     } else if(currentSeason == 2){
-      // プレイヤーが参加者として登録されていないのであれば登録する。
-
       // ボスの攻撃力をランダムで取得する。
       uint256 randomIndex = random(_pushCount);
       uint256 randomAttack = bossAttacks[randomIndex];
