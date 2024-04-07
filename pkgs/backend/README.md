@@ -120,6 +120,12 @@ yarn backend scripts:create-game:fuji
   npx hardhat getGameInfo --network zKyoto
   ```
 
+- play game
+
+  ```bash
+  npx hardhat playGame  --count 250 --network zKyoto
+  ```
+
 - update enemyURL
 
   ```bash
