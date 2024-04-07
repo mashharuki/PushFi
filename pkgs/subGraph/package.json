@@ -1,5 +1,7 @@
 {
-  "name": "pushfi",
+  "name": "subGraph",
+  "version": "0.1.0",
+  "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
@@ -14,5 +16,7 @@
     "@graphprotocol/graph-cli": "0.69.1",
     "@graphprotocol/graph-ts": "0.32.0"
   },
-  "devDependencies": { "matchstick-as": "0.5.0" }
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
 }
