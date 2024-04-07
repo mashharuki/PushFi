@@ -120,6 +120,12 @@ yarn backend scripts:create-game:fuji
   npx hardhat getGameInfo --network zKyoto
   ```
 
+- update enemyURL
+
+  ```bash
+  npx hardhat changeEnemyUrl --newurl https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif --network zKyoto
+  ```
+
 ## flatten コントラクトを作成するコマンド
 
 ```bash

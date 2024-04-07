@@ -1,0 +1,59 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: WakuWakuGameV5
+    network: astar-zkevm-sepolia
+    source:
+      address: "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b"
+      abi: WakuWakuGameV5
+      startBlock: 1253211
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Attack
+        - ChangeEnemyImgUrl
+        - ChangeNormalNftAddress
+        - ChangeSuperNftAddress
+        - Deposited
+        - GameCreated
+        - GameFinished
+        - GameSeasonChanged
+        - NftMinted
+        - OwnershipTransferred
+        - Withdraw
+        - WithdrawToken
+      abis:
+        - name: WakuWakuGameV5
+          file: ./abis/WakuWakuGameV5.json
+      eventHandlers:
+        - event: Attack(uint256,string,uint256,uint256)
+          handler: handleAttack
+        - event: ChangeEnemyImgUrl(string,string)
+          handler: handleChangeEnemyImgUrl
+        - event: ChangeNormalNftAddress(address,address)
+          handler: handleChangeNormalNftAddress
+        - event: ChangeSuperNftAddress(address,address)
+          handler: handleChangeSuperNftAddress
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: GameCreated(string,uint256,bool,address,address,address,uint256,uint256,address,(string,uint256))
+          handler: handleGameCreated
+        - event: GameFinished(uint256,address)
+          handler: handleGameFinished
+        - event: GameSeasonChanged(uint256,uint256)
+          handler: handleGameSeasonChanged
+        - event: NftMinted(uint256,address,address)
+          handler: handleNftMinted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        - event: WithdrawToken(indexed address,address,uint256)
+          handler: handleWithdrawToken
+      file: ./src/waku-waku-game-v-5.ts
