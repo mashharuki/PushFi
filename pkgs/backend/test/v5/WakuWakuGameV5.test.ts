@@ -364,7 +364,7 @@ describe("WakuWakuGameV5 test", function () {
       await playGame(game, owner, 40);
 
       // get partipants info
-      const partipantsInfo = await game.partipants(owner.address);
+      const partipantsInfo = await game.partipants(activeId, owner.address);
       // check
       expect(BigNumber.from("40")).to.eql(partipantsInfo);
     });
@@ -402,7 +402,7 @@ describe("WakuWakuGameV5 test", function () {
         .withArgs(activeId, "win", 30, 40);
 
       // get partipants info
-      const partipantsInfo = await game.partipants(owner.address);
+      const partipantsInfo = await game.partipants(activeId, owner.address);
       // check
       expect(BigNumber.from("40")).to.eql(partipantsInfo);
     });
@@ -438,7 +438,7 @@ describe("WakuWakuGameV5 test", function () {
       await playGame(game, owner, 20);
 
       // get partipants info
-      const partipantsInfo = await game.partipants(owner.address);
+      const partipantsInfo = await game.partipants(activeId, owner.address);
       // check
       expect(BigNumber.from("0")).to.eql(partipantsInfo);
     });
@@ -476,7 +476,7 @@ describe("WakuWakuGameV5 test", function () {
         .withArgs(activeId, "lose", 30, 20);
 
       // get partipants info
-      const partipantsInfo = await game.partipants(owner.address);
+      const partipantsInfo = await game.partipants(activeId, owner.address);
       // check
       expect(BigNumber.from("0")).to.eql(partipantsInfo);
     });
@@ -530,8 +530,11 @@ describe("WakuWakuGameV5 test", function () {
       await playGame(game, otherAccount, 51);
 
       // get partipants info
-      const partipantsInfo = await game.partipants(owner.address);
-      const partipantsInfo2 = await game.partipants(otherAccount.address);
+      const partipantsInfo = await game.partipants(activeId, owner.address);
+      const partipantsInfo2 = await game.partipants(
+        activeId,
+        otherAccount.address
+      );
       // check
       expect(BigNumber.from("50")).to.eql(partipantsInfo);
       expect(BigNumber.from("51")).to.eql(partipantsInfo2);
@@ -601,8 +604,11 @@ describe("WakuWakuGameV5 test", function () {
         .withArgs(activeId, otherAccount.address);
 
       // get partipants info
-      const partipantsInfo = await game.partipants(owner.address);
-      const partipantsInfo2 = await game.partipants(otherAccount.address);
+      const partipantsInfo = await game.partipants(activeId, owner.address);
+      const partipantsInfo2 = await game.partipants(
+        activeId,
+        otherAccount.address
+      );
       // check
       expect(BigNumber.from("50")).to.eql(partipantsInfo);
       expect(BigNumber.from("51")).to.eql(partipantsInfo2);

@@ -114,6 +114,12 @@ yarn backend scripts:create-game:fuji
   npx hardhat 404mint --to 0x1295BDc0C102EB105dC0198fdC193588fe66A1e4 --network zKatana
   ```
 
+- getGameInfo
+
+  ```bash
+  npx hardhat getGameInfo --network zKyoto
+  ```
+
 ## flatten コントラクトを作成するコマンド
 
 ```bash

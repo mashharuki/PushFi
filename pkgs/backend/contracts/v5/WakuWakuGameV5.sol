@@ -46,7 +46,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
 
   // mapping
   mapping(uint256 => GameInfo) public games;
-  mapping(address => uint256) public partipants;
+  mapping(uint256 => mapping(address => uint256)) public partipants;
 
   // Event
   event GameCreated(
@@ -192,10 +192,10 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
         // pushCount分だけ体力を減らす。(0以下になった場合は強制的に0にしてゲームを終了させる。)
         if (_pushCount >= currentEnemyLife) {
           // プレイヤーがこれまで与えたダメージを取得する。
-          uint256 currentCount = partipants[_player];
+          uint256 currentCount = partipants[activeGameId][_player];
           // プレイヤーが与えたダメージを更新する。
           uint256 newCount = currentCount + _pushCount;
-          partipants[_player] = newCount;
+          partipants[activeGameId][_player] = newCount;
           // call check checkMaxCount メソッド
           checkMaxCount(_player, newCount);
           // maxCount を更新する。
@@ -215,10 +215,10 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
           emit GameFinished(activeGameId, maxAddress);
         } else {
           // プレイヤーがこれまで与えたダメージを取得する。
-          uint256 currentCount = partipants[_player];
+          uint256 currentCount = partipants[activeGameId][_player];
           // プレイヤーが与えたダメージを更新する。
           uint256 newCount = currentCount + _pushCount;
-          partipants[_player] = newCount;
+          partipants[activeGameId][_player] = newCount;
           // call check checkMaxCount メソッド
           checkMaxCount(_player, newCount);
           // 大ボスのHPを更新する。
