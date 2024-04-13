@@ -248,3 +248,5 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 7. [Next.js 環境での PWA(Progressive Web App)の導入手順](https://zenn.dev/tns_00/articles/next-pwa-install)
 8. [Filecoin - faucet](https://faucet.calibnet.chainsafe-fil.io/funds.html)
 9. [OKLINK - verify-proxy-contract](https://www.oklink.com/docs/en/#rpc-api-contract-verify-proxy-contract)
+10. [GitHub - hardhat-oklink-verify](https://github.com/enjinstarter/hardhat-oklink-verify)
+11. [OKLink Docs - verify-with-hardhat](https://www.okx.com/xlayer/docs/developer/smart-contract/verify-with-hardhat)

@@ -1,3 +1,4 @@
+// import "@enjinstarter/hardhat-oklink-verify";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 import fs from "fs";
@@ -122,11 +123,29 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL:
             "https://www.oklink.com/api/explorer/v1/contract/verify/async/api/polygonAmoy",
+          browserURL: "https://www.oklink.com/amoy",
+        },
+      },
+    ],
+  },
+  /*
+  oklink: {
+    apiKey: {
+      amoy: OKLINK_API_KEY!,
+    },
+    customChains: [
+      {
+        network: "amoy",
+        chainId: 80002,
+        urls: {
+          apiURL:
+            "https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/polygonAmoy",
           browserURL: "https://www.oklink.com/polygonAmoy",
         },
       },
     ],
   },
+  */
 };
 
 export default config;
