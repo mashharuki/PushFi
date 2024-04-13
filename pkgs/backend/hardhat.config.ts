@@ -1,8 +1,8 @@
 import "@nomicfoundation/hardhat-toolbox";
-import "@nomiclabs/hardhat-etherscan";
 import * as dotenv from "dotenv";
 import fs from "fs";
-import {HardhatUserConfig} from "hardhat/config";
+import "hardhat-gas-reporter";
+import {HardhatUserConfig} from "hardhat/types";
 import path from "path";
 
 dotenv.config();
@@ -15,6 +15,8 @@ const {
   ARBITRUMSCAN_API_KEY,
   POLYGONSCAN_ZKEVM_API_KEY,
   ASTAR_ZKYOTO_SCAN_API_KEY,
+  POLYGON_AMOY_RPC_URL,
+  OKLINK_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -58,11 +60,18 @@ const config: HardhatUserConfig = {
     },
     mantaSepolia: {
       url: `https://pacific-rpc.testnet.manta.network/http`,
+      accounts: [`${PRIVATE_KEY}`],
       chainId: 3441006,
     },
     polygonZkEvmTestnet: {
       url: `https://rpc.public.zkevm-test.net/`,
+      accounts: [`${PRIVATE_KEY}`],
       chainId: 1442,
+    },
+    amoy: {
+      url: POLYGON_AMOY_RPC_URL,
+      accounts: [`${PRIVATE_KEY}`],
+      chainId: 80002,
     },
   },
   gasReporter: {
@@ -80,6 +89,7 @@ const config: HardhatUserConfig = {
       arbitrumSepolia: ARBITRUMSCAN_API_KEY!,
       polygonZkEvmTestnet: POLYGONSCAN_ZKEVM_API_KEY!,
       zKyoto: ASTAR_ZKYOTO_SCAN_API_KEY!,
+      amoy: OKLINK_API_KEY!,
     },
     customChains: [
       {
@@ -104,6 +114,15 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://rpc.startale.com/zkyoto",
           browserURL: "https://zkyoto.explorer.startale.com/",
+        },
+      },
+      {
+        network: "amoy",
+        chainId: 80002,
+        urls: {
+          apiURL:
+            "https://www.oklink.com/api/explorer/v1/contract/verify/async/api/polygonAmoy",
+          browserURL: "https://www.oklink.com/polygonAmoy",
         },
       },
     ],

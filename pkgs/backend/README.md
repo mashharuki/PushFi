@@ -108,6 +108,12 @@ yarn backend scripts:create-game:fuji
 
 ## task の動かし方
 
+- init
+
+  ```bash
+  npx hardhat resetContractAddressesJson  --network amoy
+  ```
+
 - 404mint
 
   ```bash

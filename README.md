@@ -247,3 +247,4 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 6. [Privy & Biconomy](https://docs.privy.io/guide/frontend/account-abstraction/biconomy)
 7. [Next.js 環境での PWA(Progressive Web App)の導入手順](https://zenn.dev/tns_00/articles/next-pwa-install)
 8. [Filecoin - faucet](https://faucet.calibnet.chainsafe-fil.io/funds.html)
+9. [OKLINK - verify-proxy-contract](https://www.oklink.com/docs/en/#rpc-api-contract-verify-proxy-contract)
