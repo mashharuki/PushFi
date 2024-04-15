@@ -106,6 +106,12 @@ yarn backend scripts:create-game:fuji
 
   [0xD3095061512BCEA8E823063706BB9B15F75b187b](https://zkatana.blockscout.com/address/0xD3095061512BCEA8E823063706BB9B15F75b187b)
 
+## デプロイ済みコントラクトの情報(Polygon Amoy)
+
+- Example
+
+  [0xAa363921A48Eac63F802C57658CdEde768B3DAe1](https://www.oklink.com/amoy/address/0xAa363921A48Eac63F802C57658CdEde768B3DAe1#code)
+
 ## task の動かし方
 
 - init

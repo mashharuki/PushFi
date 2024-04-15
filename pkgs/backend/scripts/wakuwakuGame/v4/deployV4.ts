@@ -1,7 +1,6 @@
 import {ethers, network, run} from "hardhat";
 import {
   loadDeployedContractAddresses,
-  resetContractAddressesJson,
   writeContractAddress,
 } from "../../../helper/contractsJsonHelper";
 
@@ -55,11 +54,13 @@ async function main() {
     ` SuperNFT's ownership transfered from ${signerAddress} to ${game.address}`
   );
 
-  await run(`verify:verify`, {
-    contract: "contracts/v4/WakuWakuGameV4.sol:WakuWakuGameV4",
-    address: game.address,
-    constructorArguments: [signerAddress, sampleVRFAddress],
-  });
+  if (network.name == "fuji") {
+    await run(`verify:verify`, {
+      contract: "contracts/v4/WakuWakuGameV4.sol:WakuWakuGameV4",
+      address: game.address,
+      constructorArguments: [signerAddress, sampleVRFAddress],
+    });
+  }
 
   // write Contract Address
   writeContractAddress({

@@ -60,7 +60,7 @@ const config: HardhatUserConfig = {
       chainId: 6038361,
     },
     mantaSepolia: {
-      url: `https://pacific-rpc.testnet.manta.network/http`,
+      url: `https://pacific-rpc.sepolia-testnet.manta.network/http`,
       accounts: [`${PRIVATE_KEY}`],
       chainId: 3441006,
     },
@@ -90,6 +90,7 @@ const config: HardhatUserConfig = {
       arbitrumSepolia: ARBITRUMSCAN_API_KEY!,
       polygonZkEvmTestnet: POLYGONSCAN_ZKEVM_API_KEY!,
       zKyoto: ASTAR_ZKYOTO_SCAN_API_KEY!,
+      mantaSepolia: ASTAR_ZKYOTO_SCAN_API_KEY!,
       amoy: OKLINK_API_KEY!,
     },
     customChains: [
@@ -115,6 +116,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://rpc.startale.com/zkyoto",
           browserURL: "https://zkyoto.explorer.startale.com/",
+        },
+      },
+      {
+        network: "mantaSepolia",
+        chainId: 3441006,
+        urls: {
+          apiURL: "https://pacific-explorer.sepolia-testnet.manta.network/api/",
+          browserURL: "https://pacific-explorer.sepolia-testnet.manta.network/",
         },
       },
       {
