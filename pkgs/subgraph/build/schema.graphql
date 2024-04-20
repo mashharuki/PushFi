@@ -1,0 +1,120 @@
+type Attack @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  result: String! # string
+  attack: BigInt! # uint256
+  pushCount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ChangeEnemyImgUrl @entity(immutable: true) {
+  id: Bytes!
+  oldEnemyUrl: String! # string
+  newEnemyUrl: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ChangeNormalNftAddress @entity(immutable: true) {
+  id: Bytes!
+  oldNormalNftAddress: Bytes! # address
+  newNormalNftAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ChangeSuperNftAddress @entity(immutable: true) {
+  id: Bytes!
+  oldSuperNftAddress: Bytes! # address
+  newSuperNftAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Deposited @entity(immutable: true) {
+  id: Bytes!
+  payee: Bytes! # address
+  weiAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GameCreated @entity(immutable: true) {
+  id: Bytes!
+  gameName: String! # string
+  gameSeacon: BigInt! # uint256
+  openingStatus: Boolean! # bool
+  normalNftAddress: Bytes! # address
+  superNftAddress: Bytes! # address
+  cardNftAddress: Bytes! # address
+  cardNftSupply: BigInt! # uint256
+  currentSupply: BigInt! # uint256
+  winner: Bytes! # address
+  enemyInfo_enemyImgUrl: String! # string
+  enemyInfo_enemyLife: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GameFinished @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  winner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GameSeasonChanged @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  season: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NftMinted @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  nftAddress: Bytes! # address
+  player: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdraw @entity(immutable: true) {
+  id: Bytes!
+  payee: Bytes! # address
+  weiAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WithdrawToken @entity(immutable: true) {
+  id: Bytes!
+  payee: Bytes! # address
+  prizeToken: Bytes! # address
+  weiAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

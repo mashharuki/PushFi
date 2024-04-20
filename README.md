@@ -55,9 +55,10 @@ TypeScript
 Account Abstraction  
 openzeppelin  
 yarn workspaces  
-Web3Auth  
+Privy  
 BiconomySDK  
-Web3Storage
+Web3Storage  
+TheGraph
 
 ## How we built it
 
@@ -195,6 +196,68 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   ```bash
   npx prettier --write .
+  ```
+
+- サブグラフのデプロイ
+
+  ```bash
+  yarn subgraph codegen
+  ```
+
+  ```bash
+  yarn subgraph build
+  ```
+
+  ```bash
+  yarn subgraph deploy
+  ```
+
+  デプロイしたサブグラフ
+
+  [https://api.studio.thegraph.com/query/44992/pushfi/"v0.0.1"](https://api.studio.thegraph.com/query/44992/pushfi/"v0.0.1")
+
+  ゲームデータを取得するサンプルクエリ
+
+  ```gql
+  query MyQuery {
+    attacks {
+      attack
+      id
+      gameId
+      result
+      pushCount
+    }
+    gameCreateds(orderBy: id, orderDirection: desc) {
+      cardNftAddress
+      cardNftSupply
+      currentSupply
+      enemyInfo_enemyImgUrl
+      enemyInfo_enemyLife
+      gameName
+      gameSeacon
+      id
+      normalNftAddress
+      openingStatus
+      superNftAddress
+      winner
+    }
+    gameFinisheds(orderBy: id, orderDirection: desc) {
+      id
+      gameId
+      winner
+    }
+    gameSeasonChangeds(orderBy: id, orderDirection: desc) {
+      id
+      gameId
+      season
+    }
+    nftMinteds(orderBy: id, orderDirection: desc) {
+      id
+      gameId
+      nftAddress
+      player
+    }
+  }
   ```
 
 ## メタデータ関連

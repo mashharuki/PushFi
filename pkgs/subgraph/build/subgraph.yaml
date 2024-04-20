@@ -1,0 +1,57 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: WakuWakuGameV5
+    network: fuji
+    source:
+      address: "0x8c60BF3aE3FD6520799cDBad2890414CF8fEd1dC"
+      abi: WakuWakuGameV5
+      startBlock: 31878949
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Attack
+        - ChangeEnemyImgUrl
+        - ChangeNormalNftAddress
+        - ChangeSuperNftAddress
+        - Deposited
+        - GameCreated
+        - GameFinished
+        - GameSeasonChanged
+        - NftMinted
+        - OwnershipTransferred
+        - Withdraw
+        - WithdrawToken
+      abis:
+        - name: WakuWakuGameV5
+          file: WakuWakuGameV5/abis/WakuWakuGameV5.json
+      eventHandlers:
+        - event: Attack(uint256,string,uint256,uint256)
+          handler: handleAttack
+        - event: ChangeEnemyImgUrl(string,string)
+          handler: handleChangeEnemyImgUrl
+        - event: ChangeNormalNftAddress(address,address)
+          handler: handleChangeNormalNftAddress
+        - event: ChangeSuperNftAddress(address,address)
+          handler: handleChangeSuperNftAddress
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: GameCreated(string,uint256,bool,address,address,address,uint256,uint256,address,(string,uint256))
+          handler: handleGameCreated
+        - event: GameFinished(uint256,address)
+          handler: handleGameFinished
+        - event: GameSeasonChanged(uint256,uint256)
+          handler: handleGameSeasonChanged
+        - event: NftMinted(uint256,address,address)
+          handler: handleNftMinted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        - event: WithdrawToken(indexed address,address,uint256)
+          handler: handleWithdrawToken
+      file: WakuWakuGameV5/WakuWakuGameV5.wasm
