@@ -12,6 +12,7 @@
   "scripts": {
     "upload": "yarn workspace script upload",
     "frontend": "yarn workspace frontend",
-    "backend": "yarn workspace backend"
+    "backend": "yarn workspace backend",
+    "subgraph": "yarn workspace subgraph"
   }
 }

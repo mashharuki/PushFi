@@ -250,3 +250,6 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 9. [OKLINK - verify-proxy-contract](https://www.oklink.com/docs/en/#rpc-api-contract-verify-proxy-contract)
 10. [GitHub - hardhat-oklink-verify](https://github.com/enjinstarter/hardhat-oklink-verify)
 11. [OKLink Docs - verify-with-hardhat](https://www.okx.com/xlayer/docs/developer/smart-contract/verify-with-hardhat)
+12. [Manta Network - Hardhat](https://docs.manta.network/docs/zkShuffle/Deploy/Hardhat)
+13. [Graph Studio](https://thegraph.com/studio/)
+14. [How to Use the Subgraph Studio](https://thegraph.com/docs/en/deploying/subgraph-studio/)
