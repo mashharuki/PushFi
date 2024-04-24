@@ -399,7 +399,7 @@ describe("WakuWakuGameV5 test", function () {
       // play game (40 pushCount - win)
       await expect(game.connect(owner).playGame(owner.address, 40))
         .to.emit(game, "Attack")
-        .withArgs(activeId, "win", 30, 40);
+        .withArgs(activeId, owner.address, "win", 30, 40);
 
       // get partipants info
       const partipantsInfo = await game.partipants(activeId, owner.address);
@@ -473,7 +473,7 @@ describe("WakuWakuGameV5 test", function () {
       // play game (40 pushCount - lose)
       await expect(game.connect(owner).playGame(owner.address, 20))
         .to.emit(game, "Attack")
-        .withArgs(activeId, "lose", 30, 20);
+        .withArgs(activeId, owner.address, "lose", 30, 20);
 
       // get partipants info
       const partipantsInfo = await game.partipants(activeId, owner.address);
@@ -599,7 +599,7 @@ describe("WakuWakuGameV5 test", function () {
         game.connect(otherAccount).playGame(otherAccount.address, 51)
       )
         .to.emit(game, "Attack")
-        .withArgs(activeId, "win", 30, 51)
+        .withArgs(activeId, otherAccount.address, "win", 30, 51)
         .to.emit(game, "GameFinished")
         .withArgs(activeId, otherAccount.address);
 
