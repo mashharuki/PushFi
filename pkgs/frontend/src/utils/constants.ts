@@ -3,6 +3,7 @@ export const GAMECONTRACT_ADDRESS =
   "0x530b265Ad60C9d7637321cA2B8A660006F28A297"; // Avanache
 export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
 export const GAME_ID = 0;
+export const GRAPHQL_API_ENDPOINT = "";
 
 /**
  * 数字を16進数に変換するためのメソッド

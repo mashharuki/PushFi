@@ -5,6 +5,14 @@ import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { ResponseData } from "./api/env";
+import { Client, Provider, cacheExchange, fetchExchange, useQuery } from "urql";
+import { GRAPHQL_API_ENDPOINT } from "@/utils/constants";
+
+// create client instance for GraphQL
+const client = new Client({
+  url: GRAPHQL_API_ENDPOINT,
+  exchanges: [cacheExchange, fetchExchange],
+});
 
 /**
  * App Component
@@ -52,7 +60,9 @@ export default function App({ Component, pageProps }: AppProps) {
               },
             }}
           >
-            <Component {...pageProps} />
+            <Provider value={client}>
+              <Component {...pageProps} />
+            </Provider>
           </PrivyProvider>
         </GoogleReCaptchaProvider>
       )}
