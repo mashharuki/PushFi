@@ -30,6 +30,7 @@
     "scripts:create-game:amoy": "npx hardhat run scripts/wakuwakuGame/v5/create-gameV5.ts --network amoy",
     "scripts:create-game:zKyoto": "npx hardhat run scripts/wakuwakuGame/v5/create-gameV5.ts --network zKyoto",
     "scripts:create-game:arbitrumSepolia": "npx hardhat run scripts/wakuwakuGame/v5/create-gameV5.ts --network arbitrumSepolia",
+    "scripts:create-game:mantaSepolia": "npx hardhat run scripts/wakuwakuGame/v5/create-gameV5.ts --network mantaSepolia",
     "scripts:mock:getRandamNumber:fuji": "npx hardhat run scripts/mock/getRandamNumber.ts --network fuji",
     "scripts:mock:getRandamNumber:arbitrumSepolia": "npx hardhat run scripts/mock/getRandamNumber.ts --network arbitrumSepolia"
   },
