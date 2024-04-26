@@ -1,4 +1,5 @@
 import Loading from "@/components/Loading";
+import { GlobalContext } from "@/context/GlobalProvider";
 import { createSmartWallet, sendUserOp } from "@/hooks/biconomy";
 import {
   GameInfo,
@@ -8,12 +9,10 @@ import {
   getGameInfo,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
-import { verifyRecaptcha } from "@/utils/verifyRecaptcha";
 import { ChainId } from "@biconomy/core-types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
-import { useState } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import gameContractAbi from "./../../utils/abi.json";
@@ -42,24 +41,22 @@ enum GameStatus {
  */
 const GameBoard = () => {
   const [address, setAddress] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET);
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>();
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
   const [count, setCount] = useState<number>(0);
-  const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
-  // reCAPTCHAからtokenを取得する No.2の処理
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const { wallets } = useWallets();
   const { login, logout } = usePrivy();
+
+  const globalContext = useContext(GlobalContext);
 
   /**
    * logIn method
    */
   const logIn = async () => {
     try {
-      setLoading(true);
+      globalContext.setLoading(true);
 
       // init UseContract instance
       createContract(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
@@ -93,7 +90,7 @@ const GameBoard = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      globalContext.setLoading(false);
     }
   };
 
@@ -102,7 +99,7 @@ const GameBoard = () => {
    */
   const logOut = async () => {
     await logout();
-    setVerifyFlg(false);
+    globalContext.setVerifyFlg(false);
     setAddress("");
   };
 
@@ -132,52 +129,11 @@ const GameBoard = () => {
   };
 
   /**
-   * reCAPTCHA method
-   */
-  const reCaptcha = async () => {
-    if (executeRecaptcha) {
-      try {
-        setLoading(true);
-        const token: string = await executeRecaptcha("login");
-        // ReCaptchaによる検証を実施
-        const responceJson_recaptcha = await verifyRecaptcha(token);
-        console.log("responce_server:", responceJson_recaptcha);
-        setVerifyFlg(responceJson_recaptcha.success);
-
-        toast.success("🦄 Verify Success!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } catch (err) {
-        console.error("error:", err);
-        toast.error("Verify Failed....", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  /**
    * sendTransaction method
    */
   const sendTransaction = async () => {
     try {
-      setLoading(true);
+      globalContext.setLoading(true);
       console.log("==================== start ====================");
 
       console.log("count:", count);
@@ -225,7 +181,7 @@ const GameBoard = () => {
       setCount(() => {
         return 0;
       });
-      setLoading(false);
+      globalContext.setLoading(false);
     }
   };
 
@@ -267,10 +223,10 @@ const GameBoard = () => {
           )}
         </>
       )}
-      {game && (
+      {game && address && (
         <Image src={game.adverUrl} alt="sampleImg" height={300} width={300} />
       )}
-      {loading ? (
+      {globalContext.loading ? (
         <p>
           <Loading />
         </p>
@@ -281,10 +237,10 @@ const GameBoard = () => {
             <>
               {gameStatus == GameStatus.NOT_START && (
                 <>
-                  {!verifyFlg ? (
+                  {!globalContext.verifyFlg ? (
                     <button
                       disabled={!opening}
-                      onClick={reCaptcha}
+                      onClick={globalContext.reCaptcha}
                       className={`${styles.connect} ${styles.playButton}`}
                     >
                       Verify I`m not a bot
