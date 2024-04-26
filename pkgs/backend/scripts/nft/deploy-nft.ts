@@ -25,26 +25,6 @@ async function main() {
   console.log(` WakuWakuSuperNFT deployed to ${superNft.address}`);
   console.log(` BattleCardNFT deployed to ${cardNft.address}`);
 
-  if (network.name == "fuji") {
-    await run(`verify:verify`, {
-      contract: "contracts/WakuWakuNFT.sol:WakuWakuNFT",
-      address: nft.address,
-      constructorArguments: [signerAddress],
-    });
-
-    await run(`verify:verify`, {
-      contract: "contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT",
-      address: superNft.address,
-      constructorArguments: [signerAddress],
-    });
-
-    await run(`verify:verify`, {
-      contract: "contracts/BattleCardNFT.sol:BattleCardNFT",
-      address: cardNft.address,
-      constructorArguments: [signerAddress],
-    });
-  }
-
   // write Contract Address
   writeContractAddress({
     group: "contracts",
@@ -65,6 +45,27 @@ async function main() {
     value: cardNft.address,
     network: network.name,
   });
+
+  if (network.name == "fuji") {
+    await run(`verify:verify`, {
+      contract: "contracts/WakuWakuNFT.sol:WakuWakuNFT",
+      address: nft.address,
+      constructorArguments: [signerAddress],
+    });
+
+    await run(`verify:verify`, {
+      contract: "contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT",
+      address: superNft.address,
+      constructorArguments: [signerAddress],
+    });
+
+    await run(`verify:verify`, {
+      contract: "contracts/BattleCardNFT.sol:BattleCardNFT",
+      address: cardNft.address,
+      constructorArguments: [signerAddress],
+    });
+  }
+
   console.log(` ======================== end  ======================== `);
 }
 

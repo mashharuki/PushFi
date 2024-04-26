@@ -1,8 +1,12 @@
+export const APP_TITLE = "Push Fi";
+export const APP_DESCRIPTION = "This is a onchain game";
 export const RPC_URL = "https://api.avax-test.network/ext/bc/C/rpc";
 export const GAMECONTRACT_ADDRESS =
   "0x530b265Ad60C9d7637321cA2B8A660006F28A297"; // Avanache
 export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
 export const GAME_ID = 0;
+export const GOOGLE_RECAPTCHA_API_BASE_URL =
+  "https://www.google.com/recaptcha/api/siteverify";
 export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi/"v0.0.1"`;
 
 /**
