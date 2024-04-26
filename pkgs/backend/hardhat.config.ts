@@ -1,4 +1,3 @@
-// import "@enjinstarter/hardhat-oklink-verify";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 import fs from "fs";
@@ -17,7 +16,6 @@ const {
   POLYGONSCAN_ZKEVM_API_KEY,
   ASTAR_ZKYOTO_SCAN_API_KEY,
   POLYGON_AMOY_RPC_URL,
-  OKLINK_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
