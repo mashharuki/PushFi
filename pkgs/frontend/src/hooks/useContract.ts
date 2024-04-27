@@ -1,20 +1,5 @@
+import {GameInfo, TxData} from "@/utils/types";
 import {Contract, ContractInterface, ethers} from "ethers";
-
-export type TxData = {
-  to: string;
-  data: any;
-};
-
-export type GameInfo = {
-  gameName: string;
-  currentCount: number;
-  goalCount: number;
-  openingStatus: boolean;
-  superNftAddress: string;
-  nftAddress: string;
-  winner: string;
-  adverUrl: string;
-};
 
 var contractAddress: string;
 var contract: Contract;

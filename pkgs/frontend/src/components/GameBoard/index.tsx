@@ -1,14 +1,12 @@
 import Loading from "@/components/Loading";
 import { GlobalContext } from "@/context/GlobalProvider";
-import { createSmartWallet, sendUserOp } from "@/hooks/biconomy";
 import {
-  GameInfo,
-  TxData,
   createContract,
   createPlayGameTxData,
   getGameInfo,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
+import { GameInfo, TxData } from "@/utils/types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
 import { useContext, useState } from "react";
@@ -39,7 +37,6 @@ enum GameStatus {
  * @returns
  */
 const GameBoard = () => {
-  const [address, setAddress] = useState<string>("");
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>();
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
@@ -77,14 +74,10 @@ const GameBoard = () => {
       console.log("signer:", signer);
 
       // create smartWallet
-      const { smartContractAddress: smartWalletAddress } =
-        await createSmartWallet(globalContext.chainId, signer);
-
-      console.log("smartWalletAddress:", smartWalletAddress);
+      await globalContext.createSmartWallet(globalContext.chainId, signer);
 
       setGame(gameInfo);
       setOpening(gameInfo.openingStatus);
-      setAddress(smartWalletAddress);
     } catch (error) {
       console.error(error);
     } finally {
@@ -98,7 +91,7 @@ const GameBoard = () => {
   const logOut = async () => {
     await logout();
     globalContext.setVerifyFlg(false);
-    setAddress("");
+    globalContext.setSmartAddress("");
   };
 
   /**
@@ -138,12 +131,12 @@ const GameBoard = () => {
       // create txData
       const txData: TxData = await createPlayGameTxData(
         GAME_ID,
-        address,
+        globalContext.smartAddress,
         count
       );
 
-      // call mintNFT method
-      const transactionHash = await sendUserOp(txData);
+      // call playGAme method
+      const transactionHash = await globalContext.sendUserOp(txData);
       console.log("tx Hash:", transactionHash);
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo(GAME_ID);
@@ -186,7 +179,7 @@ const GameBoard = () => {
   return (
     <>
       <h3>
-        {address && (
+        {globalContext.smartAddress && (
           <>
             {opening ? (
               <>🚀🚀🚀 現在、開催中！ 🚀🚀🚀</>
@@ -195,7 +188,10 @@ const GameBoard = () => {
             )}
             <div>
               GetしたNFTは、
-              <a href={TESTNET_OPENSEA_BASE_URL + address} target="_blank">
+              <a
+                href={TESTNET_OPENSEA_BASE_URL + globalContext.smartAddress}
+                target="_blank"
+              >
                 ここ
               </a>
               でみれるよ！！
@@ -205,23 +201,19 @@ const GameBoard = () => {
       </h3>
       {opening && (
         <>
-          {address && (
+          {globalContext.smartAddress && (
             <>
               <h2>
                 15秒間押しまくって
                 <br />
                 Super NFTをゲットせよ！
               </h2>
-            </>
-          )}
-          {!address && (
-            <>
               <h2>ボタンをクリック！</h2>
             </>
           )}
         </>
       )}
-      {game && address && (
+      {game && globalContext.smartAddress && (
         <Image src={game.adverUrl} alt="sampleImg" height={300} width={300} />
       )}
       {globalContext.loading ? (
@@ -231,7 +223,7 @@ const GameBoard = () => {
       ) : (
         <>
           <div></div>
-          {address ? (
+          {globalContext.smartAddress ? (
             <>
               {gameStatus == GameStatus.NOT_START && (
                 <>
