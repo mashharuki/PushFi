@@ -9,7 +9,7 @@ export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
 export const GAME_ID = 0;
 export const GOOGLE_RECAPTCHA_API_BASE_URL =
   "https://www.google.com/recaptcha/api/siteverify";
-export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi/"v0.0.1"`;
+export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi2/v1`;
 
 /**
  * 数字を16進数に変換するためのメソッド

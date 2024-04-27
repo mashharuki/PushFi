@@ -302,7 +302,7 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   デプロイしたサブグラフ
 
-  []()
+  [https://api.studio.thegraph.com/query/44992/pushfi2/v1](https://api.studio.thegraph.com/query/44992/pushfi2/v1)
 
   ゲームデータを取得するサンプルクエリ
 
