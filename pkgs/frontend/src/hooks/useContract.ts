@@ -32,7 +32,7 @@ export const createPlayGameTxData = async (
     playerAddress,
     count
   );
-  console.log("txData :", minTx.data);
+  console.log("minTxData :", minTx.data);
 
   const txData: TxData = {
     to: contractAddress,

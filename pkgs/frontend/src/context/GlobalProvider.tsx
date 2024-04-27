@@ -3,25 +3,15 @@ import { getEnv } from "@/utils/getEnv";
 import { verifyRecaptcha } from "@/utils/verifyRecaptcha";
 import {
   BiconomySmartAccountV2,
-  DEFAULT_ENTRYPOINT_ADDRESS,
-} from "@biconomy/account";
-import { Bundler } from "@biconomy/bundler";
-import { ChainId } from "@biconomy/core-types";
-import {
-  DEFAULT_ECDSA_OWNERSHIP_MODULE,
-  ECDSAOwnershipValidationModule,
-} from "@biconomy/modules";
-import {
-  BiconomyPaymaster,
-  IHybridPaymaster,
   PaymasterMode,
-  SponsorUserOperationDto,
-} from "@biconomy/paymaster";
+  createSmartAccountClient,
+} from "@biconomy/account";
 import { Signer } from "ethers";
 import React, { createContext, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { baseSepolia } from "viem/chains";
 import { TxData } from "./../utils/types";
 
 export const GlobalContext = createContext<any>({});
@@ -37,7 +27,7 @@ export const GlobalProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET);
+  const [chainId, setChainId] = useState<number>(84532);
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2>();
   const [smartAddress, setSmartAddress] = useState<string>();
   const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
@@ -93,40 +83,22 @@ export const GlobalProvider = ({
   const createSmartWallet = async (chainId: number, signer: Signer) => {
     // getEnv info
     const env: ResponseData = await getEnv();
-    // eslint-disable-next-line @next/next/no-assign-module-variable
-    const module = await ECDSAOwnershipValidationModule.create({
-      signer: signer,
-      moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
-    });
-
-    // バンドラーやpaymasterの情報をセット
-    const bundler = new Bundler({
+    // Create Biconomy Smart Account instance
+    const smartWallet = await createSmartAccountClient({
+      signer,
+      chainId: chainId,
+      viemChain: baseSepolia,
+      biconomyPaymasterApiKey: env.BICONOMY_PAYMASTER_KEY,
       bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId.toString()}/${
         env.BICONOMY_BUNDLER_KEY
       }`,
-      chainId: chainId,
-      entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
     });
 
-    const paymaster = new BiconomyPaymaster({
-      paymasterUrl: `https://paymaster.biconomy.io/api/v1/${chainId.toString()}/${
-        env.BICONOMY_PAYMASTER_KEY
-      }`,
-    });
-
-    let biconomySmartAccount = await BiconomySmartAccountV2.create({
-      chainId: chainId,
-      bundler: bundler!,
-      paymaster: paymaster!,
-      entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
-      defaultValidationModule: module,
-      activeValidationModule: module,
-    });
-
-    const smartContractAddress = await biconomySmartAccount.getAccountAddress();
-    setSmartAccount(biconomySmartAccount);
+    const smartContractAddress = await smartWallet.getAccountAddress();
+    setSmartAccount(smartWallet);
     setSmartAddress(smartContractAddress);
 
+    console.log("biconomySmartAccount:", smartWallet);
     console.log("smartWalletAddress:", smartContractAddress);
 
     return {
@@ -141,47 +113,22 @@ export const GlobalProvider = ({
    */
   const sendUserOp = async (txData: TxData) => {
     try {
-      let userOp = await smartAccount!.buildUserOp([txData]);
-      console.log({ userOp });
+      console.log("build userOp:");
 
-      const biconomyPaymaster = smartAccount!
-        .paymaster as IHybridPaymaster<SponsorUserOperationDto>;
+      const userOpResponse = await smartAccount!.sendTransaction(txData, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+      const { transactionHash } = await userOpResponse.waitForTxHash();
+      console.log("Transaction Hash", transactionHash);
 
-      let paymasterServiceData: SponsorUserOperationDto = {
-        mode: PaymasterMode.SPONSORED,
-        smartAccountInfo: {
-          name: "BICONOMY",
-          version: "2.0.0",
-        },
-        calculateGasLimits: true,
-      };
-
-      const paymasterAndDataResponse =
-        await biconomyPaymaster.getPaymasterAndData(
-          userOp,
-          paymasterServiceData
-        );
-
-      userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData;
-
-      if (
-        paymasterAndDataResponse.callGasLimit &&
-        paymasterAndDataResponse.verificationGasLimit &&
-        paymasterAndDataResponse.preVerificationGas
-      ) {
-        userOp.callGasLimit = paymasterAndDataResponse.callGasLimit;
-        userOp.verificationGasLimit =
-          paymasterAndDataResponse.verificationGasLimit;
-        userOp.preVerificationGas = paymasterAndDataResponse.preVerificationGas;
+      const userOpReceipt = await userOpResponse.wait(1);
+      if (userOpReceipt.success == "true") {
+        console.log("UserOp receipt", userOpReceipt);
+        console.log("Transaction receipt", userOpReceipt.receipt);
+        return userOpReceipt.receipt.transactionHash;
+      } else {
+        return transactionHash;
       }
-
-      const userOpResponse = await smartAccount!.sendUserOp(userOp);
-      console.log("userOpHash", userOpResponse);
-
-      const { receipt } = await userOpResponse.wait(1);
-      console.log("txHash", receipt.transactionHash);
-
-      return receipt.transactionHash;
     } catch (err: any) {
       console.error("sending UserOp err... :", err);
       return;
