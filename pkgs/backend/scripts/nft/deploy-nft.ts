@@ -46,7 +46,7 @@ async function main() {
     network: network.name,
   });
 
-  if (network.name == "fuji") {
+  if (network.name == "scrollSepolia") {
     await run(`verify:verify`, {
       contract: "contracts/WakuWakuNFT.sol:WakuWakuNFT",
       address: nft.address,

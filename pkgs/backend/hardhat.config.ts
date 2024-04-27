@@ -16,6 +16,9 @@ const {
   POLYGONSCAN_ZKEVM_API_KEY,
   ASTAR_ZKYOTO_SCAN_API_KEY,
   POLYGON_AMOY_RPC_URL,
+  ETHERSCAN_API_KEY,
+  HOLESKY_RPC_URL,
+  SCROLLSCAN_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -42,6 +45,11 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    holesky: {
+      url: HOLESKY_RPC_URL!,
+      chainId: 17000,
+      accounts: [`${PRIVATE_KEY}`],
+    },
     fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
       chainId: 43113,
@@ -72,15 +80,11 @@ const config: HardhatUserConfig = {
       accounts: [`${PRIVATE_KEY}`],
       chainId: 80002,
     },
-  },
-  gasReporter: {
-    enabled: GAS_REPORT ? true : false,
-    currency: "JPY",
-    gasPrice: 20,
-    token: "ETH",
-    coinmarketcap: COINMARKETCAP_API_KEY,
-    gasPriceApi:
-      "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice",
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io/",
+      chainId: 534351,
+      accounts: [`${PRIVATE_KEY}`],
+    },
   },
   etherscan: {
     apiKey: {
@@ -90,6 +94,8 @@ const config: HardhatUserConfig = {
       zKyoto: ASTAR_ZKYOTO_SCAN_API_KEY!,
       mantaSepolia: ASTAR_ZKYOTO_SCAN_API_KEY!,
       amoy: POLYGONSCAN_ZKEVM_API_KEY!,
+      holesky: ETHERSCAN_API_KEY!,
+      scrollSepolia: SCROLLSCAN_API_KEY!,
     },
     customChains: [
       {
@@ -133,7 +139,32 @@ const config: HardhatUserConfig = {
           browserURL: "https://www.oklink.com/amoy",
         },
       },
+      {
+        network: "holesky",
+        chainId: 17000,
+        urls: {
+          apiURL: "https://api-holesky.etherscan.io/api",
+          browserURL: "https://holesky.etherscan.io/",
+        },
+      },
+      {
+        network: "scrollSepolia",
+        chainId: 534351,
+        urls: {
+          apiURL: "https://api-sepolia.scrollscan.com/api",
+          browserURL: "https://sepolia.scrollscan.com/",
+        },
+      },
     ],
+  },
+  gasReporter: {
+    enabled: GAS_REPORT ? true : false,
+    currency: "JPY",
+    gasPrice: 20,
+    token: "ETH",
+    coinmarketcap: COINMARKETCAP_API_KEY,
+    gasPriceApi:
+      "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice",
   },
 };
 
