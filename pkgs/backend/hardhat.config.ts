@@ -19,6 +19,7 @@ const {
   ETHERSCAN_API_KEY,
   HOLESKY_RPC_URL,
   SCROLLSCAN_API_KEY,
+  BASESCAN_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -85,6 +86,11 @@ const config: HardhatUserConfig = {
       chainId: 534351,
       accounts: [`${PRIVATE_KEY}`],
     },
+    baseSepolia: {
+      url: "https://sepolia.base.org",
+      chainId: 84532,
+      accounts: [`${PRIVATE_KEY}`],
+    },
   },
   etherscan: {
     apiKey: {
@@ -96,6 +102,7 @@ const config: HardhatUserConfig = {
       amoy: POLYGONSCAN_ZKEVM_API_KEY!,
       holesky: ETHERSCAN_API_KEY!,
       scrollSepolia: SCROLLSCAN_API_KEY!,
+      baseSepolia: BASESCAN_API_KEY!,
     },
     customChains: [
       {
@@ -153,6 +160,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api-sepolia.scrollscan.com/api",
           browserURL: "https://sepolia.scrollscan.com/",
+        },
+      },
+      {
+        network: "baseSepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "https://sepolia.basescan.org/",
         },
       },
     ],

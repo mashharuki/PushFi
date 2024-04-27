@@ -283,11 +283,6 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
       // mint
       nft.mint(_player, _gameId, _count, "0x");
       emit NftMinted(_gameId, _nftAddress, _player);
-      // もし指定した数以上のNFTをミントしたらシーズンを2に移行させる。
-      if ((currentSupply + _count) >= wakuWakuGame.cardNftSupply) {
-        wakuWakuGame.gameSeacon = 2;
-        emit GameSeasonChanged(_gameId, 2);
-      }
     }
   }
 
@@ -401,7 +396,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
    * getActiveGameInfo
    */
   function getActiveGameInfo() public view returns (GameInfo memory) {
-    uint256 activeId =  activeGameIdCounter.current();
+    uint256 activeId = activeGameIdCounter.current();
     return games[activeId];
   }
 
