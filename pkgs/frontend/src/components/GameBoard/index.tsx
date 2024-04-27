@@ -9,7 +9,6 @@ import {
   getGameInfo,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
-import { ChainId } from "@biconomy/core-types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
 import { useContext, useState } from "react";
@@ -41,14 +40,13 @@ enum GameStatus {
  */
 const GameBoard = () => {
   const [address, setAddress] = useState<string>("");
-  const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET);
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>();
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
   const [count, setCount] = useState<number>(0);
+
   const { wallets } = useWallets();
   const { login, logout } = usePrivy();
-
   const globalContext = useContext(GlobalContext);
 
   /**
@@ -71,7 +69,7 @@ const GameBoard = () => {
       const embeddedWallet = wallets.find(
         (wallet) => wallet.walletClientType === "privy"
       );
-      await embeddedWallet!.switchChain(chainId);
+      await embeddedWallet!.switchChain(globalContext.chainId);
       // login & create signer
       const provider = await embeddedWallet!.getEthersProvider();
       const signer = provider.getSigner();
@@ -80,7 +78,7 @@ const GameBoard = () => {
 
       // create smartWallet
       const { smartContractAddress: smartWalletAddress } =
-        await createSmartWallet(chainId, signer);
+        await createSmartWallet(globalContext.chainId, signer);
 
       console.log("smartWalletAddress:", smartWalletAddress);
 

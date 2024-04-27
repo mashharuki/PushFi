@@ -1,4 +1,5 @@
 import { verifyRecaptcha } from "@/utils/verifyRecaptcha";
+import { ChainId } from "@biconomy/core-types";
 import React, { createContext, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
@@ -16,6 +17,7 @@ export const GlobalProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET);
   const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
   // reCAPTCHAからtokenを取得する No.2の処理
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -65,6 +67,7 @@ export const GlobalProvider = ({
   const global = {
     loading,
     setLoading,
+    chainId,
     reCaptcha,
     verifyFlg,
     setVerifyFlg,
