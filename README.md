@@ -307,7 +307,60 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
   ゲームデータを取得するサンプルクエリ
 
   ```gql
+  query MyQuery {
+    gameCreateds(orderBy: gameId, orderDirection: desc) {
+      gameId
+      gameName
+      gameSeacon
+      normalNftAddress
+      openingStatus
+      transactionHash
+      superNftAddress
+      winner
+      enemyInfo_enemyLife
+      enemyInfo_enemyImgUrl
+      currentSupply
+      cardNftSupply
+      cardNftAddress
+    }
+  }
+  ```
 
+  Attack の履歴を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    attacks(orderBy: gameId, orderDirection: desc) {
+      gameId
+      player
+      pushCount
+      attack
+      result
+    }
+  }
+  ```
+
+  NFT の発行履歴を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    nftMinteds(orderDirection: desc, orderBy: gameId) {
+      gameId
+      player
+      nftAddress
+    }
+  }
+  ```
+
+  ゲームが終了した履歴を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    gameFinisheds(orderBy: gameId, orderDirection: desc) {
+      gameId
+      winner
+    }
+  }
   ```
 
 ## メタデータ関連
