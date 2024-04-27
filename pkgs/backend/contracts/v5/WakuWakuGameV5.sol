@@ -185,7 +185,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     } else if (currentSeason == 2) {
       // ボスの攻撃力をランダムで取得する。
       uint256 randomIndex = random(_pushCount);
-      // uint256 randomAttack = bossAttacks[0];  // ローカルでテストする時はこれを使うこと
+      // uint256 randomAttack = bossAttacks[0]; // ローカルでテストする時はこれを使うこと
       uint256 randomAttack = bossAttacks[randomIndex];
       // ボスの攻撃力とpushCountを比較する。
       if (_pushCount >= randomAttack) {
