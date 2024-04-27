@@ -19,7 +19,7 @@ task("createGame", "create new game").setAction(
     const gameName = "SampleGame";
     const cardNftSupply = 1000;
     const enemyImgUrl =
-      "https://bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link/gif/sampleGif.gif";
+      "https://bafkreie4o7bbfitr4vmuckphvmf7n3aettzb57necosjf3oo5e5syhcfgq.ipfs.w3s.link/";
     const enemyLife = 250;
 
     try {

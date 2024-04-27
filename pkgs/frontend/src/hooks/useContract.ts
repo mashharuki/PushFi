@@ -24,13 +24,11 @@ export const createContract = (
  * createPlayGameTxData method
  */
 export const createPlayGameTxData = async (
-  gameId: number,
   playerAddress: string,
   count: number
 ): Promise<TxData> => {
   // create NFT Cotntract's method call data
   const minTx = await contract.populateTransaction.playGame(
-    gameId,
     playerAddress,
     count
   );
@@ -59,9 +57,9 @@ export const getGameStatus = async (gameId: number): Promise<boolean> => {
 /**
  * getGameInfo method
  */
-export const getGameInfo = async (gameId: number): Promise<GameInfo> => {
+export const getGameInfo = async (): Promise<GameInfo> => {
   // get gameStatus
-  const result: GameInfo = await contract.games(gameId);
+  const result: GameInfo = await contract.getActiveGameInfo();
 
   console.log("gameInfo:", result);
 

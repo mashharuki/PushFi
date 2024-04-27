@@ -3,13 +3,20 @@ export type TxData = {
   data: any;
 };
 
+export type EnemyInfo = {
+  enemyImgUrl: string;
+  enemyLife: number;
+};
+
 export type GameInfo = {
   gameName: string;
-  currentCount: number;
-  goalCount: number;
+  gameSeacon: number;
   openingStatus: boolean;
+  normalNftAddress: string;
   superNftAddress: string;
-  nftAddress: string;
-  winner: string;
-  adverUrl: string;
+  cardNftAddress: string;
+  cardNftSupply: number;
+  currentSupply: number;
+  winner: number;
+  enemyInfo: EnemyInfo;
 };

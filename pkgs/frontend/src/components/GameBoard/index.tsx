@@ -15,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 import gameContractAbi from "./../../utils/abi.json";
 import {
   GAMECONTRACT_ADDRESS,
-  GAME_ID,
   RPC_URL,
   TESTNET_OPENSEA_BASE_URL,
 } from "./../../utils/constants";
@@ -57,7 +56,7 @@ const GameBoard = () => {
       createContract(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
       // get Status
       // get GameInfo
-      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
+      const gameInfo: GameInfo = await getGameInfo();
       console.log("gameInfo:", gameInfo);
 
       // login
@@ -130,7 +129,6 @@ const GameBoard = () => {
       console.log("count:", count);
       // create txData
       const txData: TxData = await createPlayGameTxData(
-        GAME_ID,
         globalContext.smartAddress,
         count
       );
@@ -139,7 +137,7 @@ const GameBoard = () => {
       const transactionHash = await globalContext.sendUserOp(txData);
       console.log("tx Hash:", transactionHash);
       // get GameInfo
-      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
+      const gameInfo: GameInfo = await getGameInfo();
       // set Status
       setOpening(gameInfo.openingStatus);
       setGameStatus(GameStatus.NOT_START);
@@ -214,7 +212,12 @@ const GameBoard = () => {
         </>
       )}
       {game && globalContext.smartAddress && (
-        <Image src={game.adverUrl} alt="sampleImg" height={300} width={300} />
+        <Image
+          src={game.enemyInfo.enemyImgUrl}
+          alt="sampleImg"
+          height={250}
+          width={250}
+        />
       )}
       {globalContext.loading ? (
         <p>
