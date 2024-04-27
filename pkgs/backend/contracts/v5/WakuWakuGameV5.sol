@@ -50,6 +50,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
 
   // Event
   event GameCreated(
+    uint256 gameId,
     string gameName,
     uint256 gameSeacon,
     bool openingStatus,
@@ -64,6 +65,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
   event GameSeasonChanged(uint256 gameId, uint256 season);
   event Attack(
     uint256 gameId,
+    address player,
     string result,
     uint256 attack,
     uint256 pushCount
@@ -132,6 +134,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     games[currentGameId] = newGame;
 
     emit GameCreated(
+      currentGameId,
       _gameName,
       1,
       true,
@@ -235,11 +238,11 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
           nft.safeTransferFrom(address(this), to, activeGameId, value, "0x");
         }
 
-        emit Attack(activeGameId, "win", randomAttack, _pushCount);
+        emit Attack(activeGameId, _player, "win", randomAttack, _pushCount);
       } else {
         // ボスからダメージを受けるロジック。
         // 預けたNFTは全て没収される。
-        emit Attack(activeGameId, "lose", randomAttack, _pushCount);
+        emit Attack(activeGameId, _player, "lose", randomAttack, _pushCount);
       }
     }
   }
@@ -392,6 +395,14 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
    */
   function getActiveGameId() public view returns (uint256) {
     return activeGameIdCounter.current();
+  }
+
+  /**
+   * getActiveGameInfo
+   */
+  function getActiveGameInfo() public view returns (GameInfo memory) {
+    uint256 activeId =  activeGameIdCounter.current();
+    return games[activeId];
   }
 
   /**
