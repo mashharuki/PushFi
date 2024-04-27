@@ -1,3 +1,4 @@
+import {GOOGLE_RECAPTCHA_API_BASE_URL} from "@/utils/constants";
 import type {NextApiRequest, NextApiResponse} from "next";
 
 export type ReCaptchaType = {
@@ -16,16 +17,13 @@ export default async function handler(
   const serverSecretKey = `secret=${process.env
     .RECAPTCHA_SERVER_SECRET_KEY!}&response=${req.body.token}`;
   // APIリクエスト
-  const responce_recaptcha = await fetch(
-    "https://www.google.com/recaptcha/api/siteverify",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: serverSecretKey,
-    }
-  );
+  const responce_recaptcha = await fetch(GOOGLE_RECAPTCHA_API_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: serverSecretKey,
+  });
   const responceJson_recaptcha: ReCaptchaType = await responce_recaptcha.json();
   console.log("responceJson_recaptcha:", responceJson_recaptcha);
 

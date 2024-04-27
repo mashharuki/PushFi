@@ -1,4 +1,3 @@
-// import "@enjinstarter/hardhat-oklink-verify";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 import fs from "fs";
@@ -17,7 +16,6 @@ const {
   POLYGONSCAN_ZKEVM_API_KEY,
   ASTAR_ZKYOTO_SCAN_API_KEY,
   POLYGON_AMOY_RPC_URL,
-  OKLINK_API_KEY,
 } = process.env;
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -91,7 +89,7 @@ const config: HardhatUserConfig = {
       polygonZkEvmTestnet: POLYGONSCAN_ZKEVM_API_KEY!,
       zKyoto: ASTAR_ZKYOTO_SCAN_API_KEY!,
       mantaSepolia: ASTAR_ZKYOTO_SCAN_API_KEY!,
-      amoy: OKLINK_API_KEY!,
+      amoy: POLYGONSCAN_ZKEVM_API_KEY!,
     },
     customChains: [
       {
@@ -137,24 +135,6 @@ const config: HardhatUserConfig = {
       },
     ],
   },
-  /*
-  oklink: {
-    apiKey: {
-      amoy: OKLINK_API_KEY!,
-    },
-    customChains: [
-      {
-        network: "amoy",
-        chainId: 80002,
-        urls: {
-          apiURL:
-            "https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/polygonAmoy",
-          browserURL: "https://www.oklink.com/polygonAmoy",
-        },
-      },
-    ],
-  },
-  */
 };
 
 export default config;

@@ -63,14 +63,6 @@ async function main() {
     ` BatteleCardNFT's ownership transfered from ${signerAddress} to ${game.address}`
   );
 
-  if (network.name == "fuji") {
-    await run(`verify:verify`, {
-      contract: "contracts/v5/WakuWakuGameV5.sol:WakuWakuGameV5",
-      address: game.address,
-      constructorArguments: [signerAddress],
-    });
-  }
-
   // write Contract Address
   writeContractAddress({
     group: "contracts",
@@ -78,6 +70,14 @@ async function main() {
     value: game.address,
     network: network.name,
   });
+
+  if (network.name == "fuji") {
+    await run(`verify:verify`, {
+      contract: "contracts/v5/WakuWakuGameV5.sol:WakuWakuGameV5",
+      address: game.address,
+      constructorArguments: [signerAddress],
+    });
+  }
 
   console.log(` ======================== end  ======================== `);
 }
