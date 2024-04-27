@@ -17,6 +17,7 @@ import {
 
 export function createAttackEvent(
   gameId: BigInt,
+  player: Address,
   result: string,
   attack: BigInt,
   pushCount: BigInt
@@ -27,6 +28,9 @@ export function createAttackEvent(
 
   attackEvent.parameters.push(
     new ethereum.EventParam("gameId", ethereum.Value.fromUnsignedBigInt(gameId))
+  )
+  attackEvent.parameters.push(
+    new ethereum.EventParam("player", ethereum.Value.fromAddress(player))
   )
   attackEvent.parameters.push(
     new ethereum.EventParam("result", ethereum.Value.fromString(result))
@@ -142,6 +146,7 @@ export function createDepositedEvent(
 }
 
 export function createGameCreatedEvent(
+  gameId: BigInt,
   gameName: string,
   gameSeacon: BigInt,
   openingStatus: boolean,
@@ -157,6 +162,9 @@ export function createGameCreatedEvent(
 
   gameCreatedEvent.parameters = new Array()
 
+  gameCreatedEvent.parameters.push(
+    new ethereum.EventParam("gameId", ethereum.Value.fromUnsignedBigInt(gameId))
+  )
   gameCreatedEvent.parameters.push(
     new ethereum.EventParam("gameName", ethereum.Value.fromString(gameName))
   )

@@ -32,6 +32,7 @@ export function handleAttack(event: AttackEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.gameId = event.params.gameId
+  entity.player = event.params.player
   entity.result = event.params.result
   entity.attack = event.params.attack
   entity.pushCount = event.params.pushCount
@@ -107,6 +108,7 @@ export function handleGameCreated(event: GameCreatedEvent): void {
   let entity = new GameCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  entity.gameId = event.params.gameId
   entity.gameName = event.params.gameName
   entity.gameSeacon = event.params.gameSeacon
   entity.openingStatus = event.params.openingStatus
