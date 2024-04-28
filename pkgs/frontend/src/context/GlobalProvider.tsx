@@ -120,9 +120,10 @@ export const GlobalProvider = ({
       });
       const { transactionHash } = await userOpResponse.waitForTxHash();
       console.log("Transaction Hash", transactionHash);
+
       // get receipt
-      // const userOpReceipt = await userOpResponse.wait(1);
-      // console.log("userOpReceipt", userOpReceipt);
+      const userOpReceipt = await userOpResponse.wait(5);
+      console.log("userOpReceipt", userOpReceipt);
 
       return transactionHash;
     } catch (err: any) {
@@ -131,7 +132,6 @@ export const GlobalProvider = ({
     }
   };
 
-  //
   const global = {
     loading,
     setLoading,

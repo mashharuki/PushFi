@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import gameContractAbi from "./../../utils/abi.json";
 import {
+  BATTLE_CARD_IMAGE_URL,
   GAMECONTRACT_ADDRESS,
   RPC_URL,
   TESTNET_OPENSEA_BASE_URL,
@@ -223,12 +224,23 @@ const GameBoard = () => {
         </>
       )}
       {game && globalContext.smartAddress && (
-        <Image
-          src={game.enemyInfo.enemyImgUrl}
-          alt="sampleImg"
-          height={250}
-          width={250}
-        />
+        <>
+          {game.gameSeacon == 1 ? (
+            <Image
+              src={BATTLE_CARD_IMAGE_URL}
+              alt="battleCardNftImg"
+              height={250}
+              width={250}
+            />
+          ) : (
+            <Image
+              src={game.enemyInfo.enemyImgUrl}
+              alt="sampleImg"
+              height={250}
+              width={250}
+            />
+          )}
+        </>
       )}
       {globalContext.loading ? (
         <p>
