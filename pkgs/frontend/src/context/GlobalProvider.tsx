@@ -1,8 +1,18 @@
+import { ResponseData } from "@/pages/api/env";
+import { getEnv } from "@/utils/getEnv";
 import { verifyRecaptcha } from "@/utils/verifyRecaptcha";
-import { ChainId } from "@biconomy/core-types";
+import {
+  BiconomySmartAccountV2,
+  PaymasterMode,
+  createSmartAccountClient,
+} from "@biconomy/account";
+import { Signer } from "ethers";
 import React, { createContext, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { baseSepolia } from "viem/chains";
+import { TxData } from "./../utils/types";
 
 export const GlobalContext = createContext<any>({});
 
@@ -17,7 +27,9 @@ export const GlobalProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [chainId, setChainId] = useState<number>(ChainId.AVALANCHE_TESTNET);
+  const [chainId, setChainId] = useState<number>(84532);
+  const [smartAccount, setSmartAccount] = useState<BiconomySmartAccountV2>();
+  const [smartAddress, setSmartAddress] = useState<string>();
   const [verifyFlg, setVerifyFlg] = useState<boolean>(false);
   // reCAPTCHAからtokenを取得する No.2の処理
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -63,7 +75,63 @@ export const GlobalProvider = ({
     }
   };
 
-  //
+  /**
+   * createSmartWallet method
+   * @param chainId
+   * @param signer
+   */
+  const createSmartWallet = async (chainId: number, signer: Signer) => {
+    // getEnv info
+    const env: ResponseData = await getEnv();
+    // Create Biconomy Smart Account instance
+    const smartWallet = await createSmartAccountClient({
+      signer,
+      chainId: chainId,
+      viemChain: baseSepolia,
+      biconomyPaymasterApiKey: env.BICONOMY_PAYMASTER_KEY,
+      bundlerUrl: `https://bundler.biconomy.io/api/v2/${chainId.toString()}/${
+        env.BICONOMY_BUNDLER_KEY
+      }`,
+    });
+
+    const smartContractAddress = await smartWallet.getAccountAddress();
+    setSmartAccount(smartWallet);
+    setSmartAddress(smartContractAddress);
+
+    console.log("biconomySmartAccount:", smartWallet);
+    console.log("smartWalletAddress:", smartContractAddress);
+
+    return {
+      smartContractAddress,
+    };
+  };
+
+  /**
+   * sendUserOp method
+   * @param txData
+   * @returns
+   */
+  const sendUserOp = async (txData: TxData) => {
+    try {
+      console.log("build userOp:");
+
+      const userOpResponse = await smartAccount!.sendTransaction(txData, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+      const { transactionHash } = await userOpResponse.waitForTxHash();
+      console.log("Transaction Hash", transactionHash);
+
+      // get receipt
+      const userOpReceipt = await userOpResponse.wait(5);
+      console.log("userOpReceipt", userOpReceipt);
+
+      return transactionHash;
+    } catch (err: any) {
+      console.error("sending UserOp err... :", err);
+      return;
+    }
+  };
+
   const global = {
     loading,
     setLoading,
@@ -71,6 +139,10 @@ export const GlobalProvider = ({
     reCaptcha,
     verifyFlg,
     setVerifyFlg,
+    createSmartWallet,
+    sendUserOp,
+    smartAddress,
+    setSmartAddress,
   };
 
   return (

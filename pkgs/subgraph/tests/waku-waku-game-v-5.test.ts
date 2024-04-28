@@ -18,10 +18,19 @@ import { createAttackEvent } from "./waku-waku-game-v-5-utils"
 describe("Describe entity assertions", () => {
   beforeAll(() => {
     let gameId = BigInt.fromI32(234)
+    let player = Address.fromString(
+      "0x0000000000000000000000000000000000000001"
+    )
     let result = "Example string value"
     let attack = BigInt.fromI32(234)
     let pushCount = BigInt.fromI32(234)
-    let newAttackEvent = createAttackEvent(gameId, result, attack, pushCount)
+    let newAttackEvent = createAttackEvent(
+      gameId,
+      player,
+      result,
+      attack,
+      pushCount
+    )
     handleAttack(newAttackEvent)
   })
 
@@ -41,6 +50,12 @@ describe("Describe entity assertions", () => {
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "gameId",
       "234"
+    )
+    assert.fieldEquals(
+      "Attack",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "player",
+      "0x0000000000000000000000000000000000000001"
     )
     assert.fieldEquals(
       "Attack",

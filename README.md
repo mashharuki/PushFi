@@ -26,7 +26,8 @@
 
 Push Fi は世界一のトランザクションを巻き起こすアプリケーションです。
 
-ユーザーは使い始めるのにパスワードの設定などは不要です。Web3Auth と BiconomySDK によりユーザーフレンドリーな UX を実現させています。
+ユーザーは使い始めるのにパスワードの設定などは不要です。  
+Privy と BiconomySDK によりユーザーフレンドリーな UX を実現させています。
 
 ユーザーがやることはボタンを押すだけ！！
 
@@ -38,7 +39,7 @@ Push Fi は世界一のトランザクションを巻き起こすアプリケー
 
 ## The Value of this product
 
-Web3Auth ✖️ AA ✖️ シンプルな UI により、超手軽に遊べるブロックチェーンゲームとなっています！！
+Privy ✖️ AA ✖️ シンプルな UI により、超手軽に遊べるブロックチェーンゲームとなっています！！
 
 また、連打するという今までブロックチェーンシステムにあまり取り入れられてこなかったような要素も取り入れてユーザーが楽しめるようにしました。
 
@@ -72,7 +73,8 @@ mashharuki
 
 ## What we learned
 
-Web3Auth と BiconomySDK を組み合わせた AA アプリケーションの開発手法を学びました。また、バッチトランザクションを応用してユーザーに連打させただけトランザクションを発火させるという方法を思いつき実装することができました。
+Privy と BiconomySDK を組み合わせた AA アプリケーションの開発手法を学びました。  
+また、バッチトランザクションを応用してユーザーに連打させただけトランザクションを発火させるという方法を思いつき実装することができました。
 
 また、ゲームと広告という AA と比較的相性が良いとされる 3 つのカテゴリを組み合わせたプロダクトを形にする方法を学びました。
 
@@ -84,6 +86,11 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 スーパー NFT を 10 枚集めるとクーポンやポップコーンに交換できるといった現実世界のものとのトレードへの活用
 
 スーパー NFT を NFT プロジェクトプレミント用の AL NFT にして他の Web3 プロジェクトとコラボするなど
+
+以下、WaveHack でやろうとしていること。
+
+- TheGraph など新しいプロトコルの導入。
+- MantaNetwork など別のチェーンへの対応の検討
 
 ## 動かし方
 
@@ -103,6 +110,12 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   ```bash
   yarn upload
+  ```
+
+- セットアップ
+
+  ```bash
+  yarn backend task:createGame --network baseSepolia
   ```
 
 - スマートコントラクトのコンパイル
@@ -148,6 +161,8 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
   実行例
 
   ```bash
+    Compiled 1 Solidity file successfully (evm target: paris).
+
     WakuWakuGame
       init
         ✔ initial owner
@@ -159,35 +174,108 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
       Withdraw ERC20 Token
         ✔ Withdraw ERC20 Token test
 
-  ·--------------------------------------|---------------------------|-------------|-----------------------------·
-  |         Solc version: 0.8.20         ·  Optimizer enabled: true  ·  Runs: 200  ·  Block limit: 30000000 gas  │
-  ·······································|···························|·············|······························
-  |  Methods                             ·               20 gwei/gas               ·      281965.90 jpy/eth      │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  Contract      ·  Method             ·  Min        ·  Max        ·  Avg        ·  # calls      ·  jpy (avg)  │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  USDCToken     ·  faucet             ·          -  ·          -  ·      51295  ·            1  ·     289.27  │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  WakuWakuGame  ·  createGame         ·          -  ·          -  ·     169644  ·            4  ·     956.68  │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  WakuWakuGame  ·  playGame           ·      45828  ·     223694  ·      72751  ·           30  ·     410.27  │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  WakuWakuGame  ·  withdrawToken      ·          -  ·          -  ·      60157  ·            1  ·     339.24  │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  WakuWakuNFT   ·  transferOwnership  ·          -  ·          -  ·      28656  ·            1  ·     161.60  │
-  ·················|·····················|·············|·············|·············|···············|··············
-  |  Deployments                         ·                                         ·  % of limit   ·             │
-  ·······································|·············|·············|·············|···············|··············
-  |  USDCToken                           ·          -  ·          -  ·     574326  ·        1.9 %  ·    3238.81  │
-  ·······································|·············|·············|·············|···············|··············
-  |  WakuWakuGame                        ·          -  ·          -  ·    1391513  ·        4.6 %  ·    7847.18  │
-  ·······································|·············|·············|·············|···············|··············
-  |  WakuWakuNFT                         ·          -  ·          -  ·    1598797  ·        5.3 %  ·    9016.12  │
-  ·--------------------------------------|-------------|-------------|-------------|---------------|-------------·
+    ERC404 Examples
+      init
+        ✔ initial info
+        ✔ check initial whitelist
+      function test
+        ✔ trasfer test
+        ✔ trasfer test2
+        ✔ trasfer & mint NFT test
+        ✔ trasfer & mint NFT (otherAccount → otherAccount2) test
 
-    6 passing (993ms)
+    WakuWakuGameV2
+      init
+        ✔ initial owner
+      Game
+        ✔ create new game test
+        ✔ play game test 【 10 times】
+        ✔ play game test 【 20 times】
 
-  ✨  Done in 2.50s.
+    WakuWakuGameV5 test
+      init
+        ✔ initial owner
+      createNewGame
+        ✔ create new game
+      change game status
+        ✔ change game status
+        ✔ change enemyUrl
+        ✔ change normal NFT
+        ✔ change super NFT
+      playGame
+        ✔ 【Seazon1】play game
+        ✔ play game by multi players
+        ✔ 【Seazon1】emit event test
+        ✔ 【Seazon2】play game - simple attack(win)
+        ✔ 【Seazon2】play game - simple attack(win) - emit event
+        ✔ 【Seazon2】play game - simple attack(lose)
+        ✔ 【Seazon2】play game - simple attack(lose) - emit event
+        ✔ 【Seazon2】play game - GameFinish
+        ✔ 【Seazon2】play game - GameFinish - emit Event
+
+  ·------------------------------------------|---------------------------|-------------|-----------------------------·
+  |           Solc version: 0.8.20           ·  Optimizer enabled: true  ·  Runs: 200  ·  Block limit: 30000000 gas  │
+  ···········································|···························|·············|······························
+  |  Methods                                 ·               20 gwei/gas               ·      493644.15 jpy/eth      │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  Contract          ·  Method             ·  Min        ·  Max        ·  Avg        ·  # calls      ·  jpy (avg)  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  BattleCardNFT     ·  safeTransferFrom   ·      54209  ·      59009  ·      56609  ·            8  ·     558.89  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  BattleCardNFT     ·  transferOwnership  ·          -  ·          -  ·      28656  ·            1  ·     282.92  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  Example           ·  transfer           ·      56716  ·     150236  ·     110140  ·            5  ·    1087.40  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  USDCToken         ·  faucet             ·          -  ·          -  ·      51295  ·            1  ·     506.43  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGame      ·  createGame         ·          -  ·          -  ·     169644  ·            4  ·    1674.88  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGame      ·  playGame           ·      45828  ·     223694  ·      72751  ·           30  ·     718.26  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGame      ·  withdrawToken      ·          -  ·          -  ·      60157  ·            1  ·     593.92  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV2    ·  createGame         ·          -  ·          -  ·     262795  ·            3  ·    2594.54  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV2    ·  playGame           ·      85873  ·     194831  ·     102498  ·           30  ·    1011.95  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5    ·  changeEnemyUrl     ·          -  ·          -  ·      43863  ·            1  ·     433.05  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5    ·  changeNormalNft    ·          -  ·          -  ·      30429  ·            1  ·     300.42  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5    ·  changeSuperNft     ·          -  ·          -  ·      30449  ·            1  ·     300.62  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5    ·  createGame         ·          -  ·          -  ·     309381  ·           14  ·    3054.48  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5    ·  pauseGame          ·          -  ·          -  ·      28735  ·            1  ·     283.70  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5    ·  playGame           ·      63284  ·     219726  ·     154349  ·           25  ·    1523.87  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuNFT       ·  transferOwnership  ·          -  ·          -  ·      28656  ·            4  ·     282.92  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  WakuWakuSuperNFT  ·  transferOwnership  ·          -  ·          -  ·      28656  ·            1  ·     282.92  │
+  ·····················|·····················|·············|·············|·············|···············|··············
+  |  Deployments                             ·                                         ·  % of limit   ·             │
+  ···········································|·············|·············|·············|···············|··············
+  |  BattleCardNFT                           ·          -  ·          -  ·    1598646  ·        5.3 %  ·   15783.24  │
+  ···········································|·············|·············|·············|···············|··············
+  |  Example                                 ·          -  ·          -  ·    1397184  ·        4.7 %  ·   13794.23  │
+  ···········································|·············|·············|·············|···············|··············
+  |  USDCToken                               ·          -  ·          -  ·     574326  ·        1.9 %  ·    5670.25  │
+  ···········································|·············|·············|·············|···············|··············
+  |  WakuWakuGame                            ·          -  ·          -  ·    1391513  ·        4.6 %  ·   13738.25  │
+  ···········································|·············|·············|·············|···············|··············
+  |  WakuWakuGameV2                          ·          -  ·          -  ·    1267612  ·        4.2 %  ·   12514.98  │
+  ···········································|·············|·············|·············|···············|··············
+  |  WakuWakuGameV5                          ·          -  ·          -  ·    2394453  ·          8 %  ·   23640.15  │
+  ···········································|·············|·············|·············|···············|··············
+  |  WakuWakuNFT                             ·          -  ·          -  ·    1598797  ·        5.3 %  ·   15784.74  │
+  ···········································|·············|·············|·············|···············|··············
+  |  WakuWakuSuperNFT                        ·          -  ·          -  ·    1598534  ·        5.3 %  ·   15782.14  │
+  ·------------------------------------------|-------------|-------------|-------------|---------------|-------------·
+
+    31 passing (2s)
+
+  ✨  Done in 8.27s.
   ```
 
 - フォーマットの有効化
@@ -214,48 +302,63 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   デプロイしたサブグラフ
 
-  [https://api.studio.thegraph.com/query/44992/pushfi/"v0.0.1"](https://api.studio.thegraph.com/query/44992/pushfi/"v0.0.1")
+  [https://api.studio.thegraph.com/query/44992/pushfi2/v1](https://api.studio.thegraph.com/query/44992/pushfi2/v1)
 
   ゲームデータを取得するサンプルクエリ
 
   ```gql
   query MyQuery {
-    attacks {
-      attack
-      id
+    gameCreateds(orderBy: gameId, orderDirection: desc) {
       gameId
-      result
-      pushCount
-    }
-    gameCreateds(orderBy: id, orderDirection: desc) {
-      cardNftAddress
-      cardNftSupply
-      currentSupply
-      enemyInfo_enemyImgUrl
-      enemyInfo_enemyLife
       gameName
       gameSeacon
-      id
       normalNftAddress
       openingStatus
+      transactionHash
       superNftAddress
       winner
+      enemyInfo_enemyLife
+      enemyInfo_enemyImgUrl
+      currentSupply
+      cardNftSupply
+      cardNftAddress
     }
-    gameFinisheds(orderBy: id, orderDirection: desc) {
-      id
+  }
+  ```
+
+  Attack の履歴を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    attacks(orderBy: gameId, orderDirection: desc) {
+      gameId
+      player
+      pushCount
+      attack
+      result
+    }
+  }
+  ```
+
+  NFT の発行履歴を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    nftMinteds(orderDirection: desc, orderBy: gameId) {
+      gameId
+      player
+      nftAddress
+    }
+  }
+  ```
+
+  ゲームが終了した履歴を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    gameFinisheds(orderBy: gameId, orderDirection: desc) {
       gameId
       winner
-    }
-    gameSeasonChangeds(orderBy: id, orderDirection: desc) {
-      id
-      gameId
-      season
-    }
-    nftMinteds(orderBy: id, orderDirection: desc) {
-      id
-      gameId
-      nftAddress
-      player
     }
   }
   ```
@@ -278,27 +381,19 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 - [sampleImg2](https://bafkreihnwh275aqcc6sjo2f37yaphhh2rp44tsmdrsv25k72iiozybzluy.ipfs.w3s.link/)
 - [sampleBAYC](https://bafkreie4o7bbfitr4vmuckphvmf7n3aettzb57necosjf3oo5e5syhcfgq.ipfs.w3s.link/)
 
-## アプリのスクリーンショット
+## ピッチスライド
 
-![](./pkgs/docs/img/mock.png)
-![](./pkgs/docs/img/mock2.png)
-![](./pkgs/docs/img/mock3.png)
-![](./pkgs/docs/img/mock4.png)
-![](./pkgs/docs/img/mock5.png)
-![](./pkgs/docs/img/mock6.png)
-![](./pkgs/docs/img/mock7.png)
-![](./pkgs/docs/img/mock8.png)
-![](./pkgs/docs/img/mock9.png)
-![](./pkgs/docs/img/mock10.png)
-![](./pkgs/docs/img/mock11.png)
-![](./pkgs/docs/img/mock12.png)
-![](./pkgs/docs/img/mock13.png)
-![](./pkgs/docs/img/mock14.png)
-![](./pkgs/docs/img/mock15.png)
-![](./pkgs/docs/img/mock16.png)
-![](./pkgs/docs/img/mock17.png)
-![](./pkgs/docs/img/mock18.png)
-![](./pkgs/docs/img/mock19.png)
+![](./pkgs/docs/slide/1.jpg)
+![](./pkgs/docs/slide/2.jpg)
+![](./pkgs/docs/slide/3.jpg)
+![](./pkgs/docs/slide/4.jpg)
+![](./pkgs/docs/slide/5.jpg)
+![](./pkgs/docs/slide/6.jpg)
+![](./pkgs/docs/slide/7.jpg)
+![](./pkgs/docs/slide/8.jpg)
+![](./pkgs/docs/slide/9.jpg)
+![](./pkgs/docs/slide/10.jpg)
+![](./pkgs/docs/slide/11.jpg)
 
 ### 参考文献
 

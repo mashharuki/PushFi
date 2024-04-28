@@ -1,14 +1,16 @@
-specVersion: 0.0.5
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: WakuWakuGameV5
-    network: fuji
+    network: base-sepolia
     source:
-      address: "0x8c60BF3aE3FD6520799cDBad2890414CF8fEd1dC"
+      address: "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b"
       abi: WakuWakuGameV5
-      startBlock: 31878949
+      startBlock: 9219103
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -30,7 +32,7 @@ dataSources:
         - name: WakuWakuGameV5
           file: ./abis/WakuWakuGameV5.json
       eventHandlers:
-        - event: Attack(uint256,string,uint256,uint256)
+        - event: Attack(uint256,address,string,uint256,uint256)
           handler: handleAttack
         - event: ChangeEnemyImgUrl(string,string)
           handler: handleChangeEnemyImgUrl
@@ -40,7 +42,7 @@ dataSources:
           handler: handleChangeSuperNftAddress
         - event: Deposited(indexed address,uint256)
           handler: handleDeposited
-        - event: GameCreated(string,uint256,bool,address,address,address,uint256,uint256,address,(string,uint256))
+        - event: GameCreated(uint256,string,uint256,bool,address,address,address,uint256,uint256,address,(string,uint256))
           handler: handleGameCreated
         - event: GameFinished(uint256,address)
           handler: handleGameFinished

@@ -1,14 +1,12 @@
 import Loading from "@/components/Loading";
 import { GlobalContext } from "@/context/GlobalProvider";
-import { createSmartWallet, sendUserOp } from "@/hooks/biconomy";
 import {
-  GameInfo,
-  TxData,
   createContract,
   createPlayGameTxData,
   getGameInfo,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
+import { GameInfo, TxData } from "@/utils/types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
 import { useContext, useState } from "react";
@@ -16,8 +14,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import gameContractAbi from "./../../utils/abi.json";
 import {
+  BATTLE_CARD_IMAGE_URL,
   GAMECONTRACT_ADDRESS,
-  GAME_ID,
   RPC_URL,
   TESTNET_OPENSEA_BASE_URL,
 } from "./../../utils/constants";
@@ -39,7 +37,6 @@ enum GameStatus {
  * @returns
  */
 const GameBoard = () => {
-  const [address, setAddress] = useState<string>("");
   const [opening, setOpening] = useState<boolean>(true);
   const [game, setGame] = useState<GameInfo>();
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
@@ -60,7 +57,7 @@ const GameBoard = () => {
       createContract(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
       // get Status
       // get GameInfo
-      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
+      const gameInfo: GameInfo = await getGameInfo();
       console.log("gameInfo:", gameInfo);
 
       // login
@@ -77,14 +74,10 @@ const GameBoard = () => {
       console.log("signer:", signer);
 
       // create smartWallet
-      const { smartContractAddress: smartWalletAddress } =
-        await createSmartWallet(globalContext.chainId, signer);
-
-      console.log("smartWalletAddress:", smartWalletAddress);
+      await globalContext.createSmartWallet(globalContext.chainId, signer);
 
       setGame(gameInfo);
       setOpening(gameInfo.openingStatus);
-      setAddress(smartWalletAddress);
     } catch (error) {
       console.error(error);
     } finally {
@@ -98,7 +91,7 @@ const GameBoard = () => {
   const logOut = async () => {
     await logout();
     globalContext.setVerifyFlg(false);
-    setAddress("");
+    globalContext.setSmartAddress("");
   };
 
   /**
@@ -137,16 +130,15 @@ const GameBoard = () => {
       console.log("count:", count);
       // create txData
       const txData: TxData = await createPlayGameTxData(
-        GAME_ID,
-        address,
+        globalContext.smartAddress,
         count
       );
 
-      // call mintNFT method
-      const transactionHash = await sendUserOp(txData);
+      // call playGAme method
+      const transactionHash = await globalContext.sendUserOp(txData);
       console.log("tx Hash:", transactionHash);
       // get GameInfo
-      const gameInfo: GameInfo = await getGameInfo(GAME_ID);
+      const gameInfo: GameInfo = await getGameInfo();
       // set Status
       setOpening(gameInfo.openingStatus);
       setGameStatus(GameStatus.NOT_START);
@@ -186,43 +178,69 @@ const GameBoard = () => {
   return (
     <>
       <h3>
-        {address && (
+        {globalContext.smartAddress && (
           <>
             {opening ? (
-              <>🚀🚀🚀 現在、開催中！ 🚀🚀🚀</>
+              <>🚀🚀🚀 You can play now! 🚀🚀🚀</>
             ) : (
-              <>✨✨ 終了しました！ご参加ありがとうございました! ✨✨</>
+              <>✨✨ Game over ✨✨</>
             )}
             <div>
-              GetしたNFTは、
-              <a href={TESTNET_OPENSEA_BASE_URL + address} target="_blank">
-                ここ
+              You can see NFTs at
+              <a
+                href={TESTNET_OPENSEA_BASE_URL + globalContext.smartAddress}
+                target="_blank"
+              >
+                here
               </a>
-              でみれるよ！！
             </div>
           </>
         )}
       </h3>
       {opening && (
         <>
-          {address && (
+          {globalContext.smartAddress && (
             <>
-              <h2>
-                15秒間押しまくって
-                <br />
-                Super NFTをゲットせよ！
-              </h2>
-            </>
-          )}
-          {!address && (
-            <>
-              <h2>ボタンをクリック！</h2>
+              {game && (
+                <>
+                  {game.gameSeacon == 1 ? (
+                    <h2>
+                      Push button for 15 seconds
+                      <br />
+                      to get BattleCard NFT!
+                    </h2>
+                  ) : (
+                    <h2>
+                      Push button for 15 seconds
+                      <br />
+                      to defeat the enemy!!
+                    </h2>
+                  )}
+                </>
+              )}
+              <h2>Please Click button</h2>
             </>
           )}
         </>
       )}
-      {game && address && (
-        <Image src={game.adverUrl} alt="sampleImg" height={300} width={300} />
+      {game && globalContext.smartAddress && (
+        <>
+          {game.gameSeacon == 1 ? (
+            <Image
+              src={BATTLE_CARD_IMAGE_URL}
+              alt="battleCardNftImg"
+              height={250}
+              width={250}
+            />
+          ) : (
+            <Image
+              src={game.enemyInfo.enemyImgUrl}
+              alt="sampleImg"
+              height={250}
+              width={250}
+            />
+          )}
+        </>
       )}
       {globalContext.loading ? (
         <p>
@@ -231,7 +249,7 @@ const GameBoard = () => {
       ) : (
         <>
           <div></div>
-          {address ? (
+          {globalContext.smartAddress ? (
             <>
               {gameStatus == GameStatus.NOT_START && (
                 <>

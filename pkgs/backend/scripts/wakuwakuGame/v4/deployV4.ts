@@ -54,14 +54,6 @@ async function main() {
     ` SuperNFT's ownership transfered from ${signerAddress} to ${game.address}`
   );
 
-  if (network.name == "fuji") {
-    await run(`verify:verify`, {
-      contract: "contracts/v4/WakuWakuGameV4.sol:WakuWakuGameV4",
-      address: game.address,
-      constructorArguments: [signerAddress, sampleVRFAddress],
-    });
-  }
-
   // write Contract Address
   writeContractAddress({
     group: "contracts",
@@ -69,6 +61,14 @@ async function main() {
     value: game.address,
     network: network.name,
   });
+
+  if (network.name == "scrollSepolia") {
+    await run(`verify:verify`, {
+      contract: "contracts/v4/WakuWakuGameV4.sol:WakuWakuGameV4",
+      address: game.address,
+      constructorArguments: [signerAddress, sampleVRFAddress],
+    });
+  }
 
   console.log(` ======================== end  ======================== `);
 }
