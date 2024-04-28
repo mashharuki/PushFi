@@ -167,83 +167,110 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     uint256 currentSeason = wakuWakuGame.gameSeacon;
     // シーズン1とシーズン2でロジックを切り替える
     if (currentSeason == 1) {
-      // get current supply
-      uint256 currentSupply = wakuWakuGame.currentSupply;
-      uint256 newSupply = currentSupply + _pushCount;
-      // セット
-      wakuWakuGame.currentSupply = newSupply;
-      // cardSupply
-      uint256 cardNftSupply = wakuWakuGame.cardNftSupply;
-      // Battle Card NFTをミントする。
-      mintNft(wakuWakuGame.cardNftAddress, activeGameId, _player, _pushCount);
-      if (newSupply >= cardNftSupply) {
-        wakuWakuGame.gameSeacon = 2;
-        emit GameSeasonChanged(activeGameId, 2);
-      }
-      // 新しくGameInfoをセットし直す
-      games[activeGameId] = wakuWakuGame;
+      playGameSeazon1(wakuWakuGame, _player, _pushCount, activeGameId);
     } else if (currentSeason == 2) {
-      // ボスの攻撃力をランダムで取得する。
-      uint256 randomIndex = random(_pushCount);
-      // uint256 randomAttack = bossAttacks[0]; // ローカルでテストする時はこれを使うこと
-      uint256 randomAttack = bossAttacks[randomIndex];
-      // ボスの攻撃力とpushCountを比較する。
-      if (_pushCount >= randomAttack) {
-        // ボスにダメージを与えるロジック
-        // ボスキャラの体力を取得する。
-        uint256 currentEnemyLife = wakuWakuGame.enemyInfo.enemyLife;
-        // pushCount分だけ体力を減らす。(0以下になった場合は強制的に0にしてゲームを終了させる。)
-        if (_pushCount >= currentEnemyLife) {
-          // プレイヤーがこれまで与えたダメージを取得する。
-          uint256 currentCount = partipants[activeGameId][_player];
-          // プレイヤーが与えたダメージを更新する。
-          uint256 newCount = currentCount + _pushCount;
-          partipants[activeGameId][_player] = newCount;
-          // call check checkMaxCount メソッド
-          checkMaxCount(_player, newCount);
-          // maxCount を更新する。
-          maxCount = 0;
-          // Gameのステータスを更新する。
-          wakuWakuGame.openingStatus = false;
-          // winnerアドレスを設定する。
-          wakuWakuGame.winner = maxAddress;
-          wakuWakuGame.enemyInfo.enemyLife = 0;
-          // NFTをミントする。(winner用)
-          mintNft(wakuWakuGame.superNftAddress, activeGameId, maxAddress, 1);
-          // 新しくGameInfoをセットし直す
-          games[activeGameId] = wakuWakuGame;
-          // acticeGameIdをインクリメントする。
-          activeGameIdCounter.increment();
-          // GameFinish イベントを終了させる。
-          emit GameFinished(activeGameId, maxAddress);
-        } else {
-          // プレイヤーがこれまで与えたダメージを取得する。
-          uint256 currentCount = partipants[activeGameId][_player];
-          // プレイヤーが与えたダメージを更新する。
-          uint256 newCount = currentCount + _pushCount;
-          partipants[activeGameId][_player] = newCount;
-          // call check checkMaxCount メソッド
-          checkMaxCount(_player, newCount);
-          // 大ボスのHPを更新する。
-          uint256 newEnemyLife = currentEnemyLife - _pushCount;
-          wakuWakuGame.enemyInfo.enemyLife = newEnemyLife;
-          // 新しくGameInfoをセットし直す
-          games[activeGameId] = wakuWakuGame;
-          // create NFT
-          BattleCardNFT nft = BattleCardNFT(wakuWakuGame.cardNftAddress);
-          // ローカル変数に詰める
-          address to = _player;
-          uint256 value = _pushCount;
-          // CardNFTをプレイヤーに譲渡する。 (預けたNFTが戻ってくるイメージ)
-          nft.safeTransferFrom(address(this), to, activeGameId, value, "0x");
-        }
+      playGameSeazon2(wakuWakuGame, _player, _pushCount, activeGameId);
+    }
+  }
 
-        emit Attack(activeGameId, _player, "win", randomAttack, _pushCount);
+  /**
+   * シーズン1用のPlayGameロジック
+   */
+  function playGameSeazon1(
+    GameInfo memory wakuWakuGame,
+    address _player,
+    uint256 _pushCount,
+    uint256 activeGameId
+  ) internal {
+    // get current supply
+    uint256 currentSupply = wakuWakuGame.currentSupply;
+    uint256 newSupply = currentSupply + _pushCount;
+    // セット
+    wakuWakuGame.currentSupply = newSupply;
+    // cardSupply
+    uint256 cardNftSupply = wakuWakuGame.cardNftSupply;
+    // card nft address
+    address cardNftAddress = wakuWakuGame.cardNftAddress;
+    // Battle Card NFTをミントする。
+    mintNft(cardNftAddress, activeGameId, _player, _pushCount);
+    if (newSupply >= cardNftSupply) {
+      wakuWakuGame.gameSeacon = 2;
+      emit GameSeasonChanged(activeGameId, 2);
+    }
+    // 新しくGameInfoをセットし直す
+    games[activeGameId] = wakuWakuGame;
+  }
+
+  /**
+   * シーズン2用のPlayGameロジック
+   */
+  function playGameSeazon2(
+    GameInfo memory wakuWakuGame,
+    address _player,
+    uint256 _pushCount,
+    uint256 activeGameId
+  ) internal {
+    // ボスの攻撃力をランダムで取得する。
+    uint256 randomIndex = random(_pushCount);
+    uint256 randomAttack = bossAttacks[randomIndex];
+    // ボスの攻撃力とpushCountを比較する。
+    if (_pushCount >= randomAttack) {
+      // ボスにダメージを与えるロジック
+      // ボスキャラの体力を取得する。
+      uint256 currentEnemyLife = wakuWakuGame.enemyInfo.enemyLife;
+      // pushCount分だけ体力を減らす。(0以下になった場合は強制的に0にしてゲームを終了させる。)
+      if (_pushCount >= currentEnemyLife) {
+        // プレイヤーがこれまで与えたダメージを取得する。
+        uint256 currentCount = partipants[activeGameId][_player];
+        // プレイヤーが与えたダメージを更新する。
+        uint256 newCount = currentCount + _pushCount;
+        partipants[activeGameId][_player] = newCount;
+        // call check checkMaxCount メソッド
+        checkMaxCount(_player, newCount);
+        // maxCount を更新する。
+        maxCount = 0;
+        // Gameのステータスを更新する。
+        wakuWakuGame.openingStatus = false;
+        // winnerアドレスを設定する。
+        wakuWakuGame.winner = maxAddress;
+        wakuWakuGame.enemyInfo.enemyLife = 0;
+        address superNftAddress = wakuWakuGame.superNftAddress;
+        // NFTをミントする。(winner用)
+        mintNft(superNftAddress, activeGameId, maxAddress, 1);
+        // 新しくGameInfoをセットし直す
+        games[activeGameId] = wakuWakuGame;
+        // acticeGameIdをインクリメントする。
+        activeGameIdCounter.increment();
+        // GameFinish イベントを終了させる。
+        emit GameFinished(activeGameId, maxAddress);
       } else {
-        // ボスからダメージを受けるロジック。
-        // 預けたNFTは全て没収される。
-        emit Attack(activeGameId, _player, "lose", randomAttack, _pushCount);
+        // プレイヤーがこれまで与えたダメージを取得する。
+        uint256 currentCount = partipants[activeGameId][_player];
+        // プレイヤーが与えたダメージを更新する。
+        uint256 newCount = currentCount + _pushCount;
+        partipants[activeGameId][_player] = newCount;
+        // call check checkMaxCount メソッド
+        checkMaxCount(_player, newCount);
+        // 大ボスのHPを更新する。
+        uint256 newEnemyLife = currentEnemyLife - _pushCount;
+        wakuWakuGame.enemyInfo.enemyLife = newEnemyLife;
+        // 新しくGameInfoをセットし直す
+        games[activeGameId] = wakuWakuGame;
+        address cardNftAddress = wakuWakuGame.cardNftAddress;
+        // create NFT
+        BattleCardNFT nft = BattleCardNFT(cardNftAddress);
+        // ローカル変数に詰める
+        address to = _player;
+        uint256 value = _pushCount;
+        // CardNFTをプレイヤーに譲渡する。 (預けたNFTが戻ってくるイメージ)
+        nft.safeTransferFrom(address(this), to, activeGameId, value, "0x");
       }
+      // イベント発火
+      emit Attack(activeGameId, _player, "win", randomAttack, _pushCount);
+    } else {
+      // ボスからダメージを受けるロジック。
+      // 預けたNFTは全て没収される。
+      emit Attack(activeGameId, _player, "lose", randomAttack, _pushCount);
     }
   }
 

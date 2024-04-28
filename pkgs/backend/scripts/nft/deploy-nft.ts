@@ -48,19 +48,19 @@ async function main() {
 
   if (network.name == "baseSepolia") {
     await run(`verify:verify`, {
-      contract: "contracts/WakuWakuNFT.sol:WakuWakuNFT",
+      contract: "contracts/nft/WakuWakuNFT.sol:WakuWakuNFT",
       address: nft.address,
       constructorArguments: [signerAddress],
     });
 
     await run(`verify:verify`, {
-      contract: "contracts/WakuWakuSuperNFT.sol:WakuWakuSuperNFT",
+      contract: "contracts/nft/WakuWakuSuperNFT.sol:WakuWakuSuperNFT",
       address: superNft.address,
       constructorArguments: [signerAddress],
     });
 
     await run(`verify:verify`, {
-      contract: "contracts/BattleCardNFT.sol:BattleCardNFT",
+      contract: "contracts/nft/BattleCardNFT.sol:BattleCardNFT",
       address: cardNft.address,
       constructorArguments: [signerAddress],
     });

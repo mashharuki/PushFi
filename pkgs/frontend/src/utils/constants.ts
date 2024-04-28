@@ -4,7 +4,9 @@ export const APP_DESCRIPTION = "This is a onchain game";
 export const RPC_URL = "https://rpc.ankr.com/base_sepolia";
 // export const GAMECONTRACT_ADDRESS = "0x530b265Ad60C9d7637321cA2B8A660006F28A297"; // Avanache fuji
 export const GAMECONTRACT_ADDRESS =
-  "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b"; // Base Sepolia
+  "0x177acf501eF7d2b090d94fd3bd2BE773736598E1"; // Base Sepolia
+export const BATTLE_CARD_NFT_ADDRESS =
+  "0x505869E3B5Ef52a5Db123387fe2d188c44b27b25"; // Base Sepolia
 export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
 export const GOOGLE_RECAPTCHA_API_BASE_URL =
   "https://www.google.com/recaptcha/api/siteverify";

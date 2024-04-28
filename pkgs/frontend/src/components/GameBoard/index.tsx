@@ -3,6 +3,8 @@ import { GlobalContext } from "@/context/GlobalProvider";
 import {
   createContract,
   createPlayGameTxData,
+  createTransferNftTxData,
+  getActiveGameId,
   getGameInfo,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
@@ -12,11 +14,8 @@ import Image from "next/image";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import gameContractAbi from "./../../utils/abi.json";
 import {
   BATTLE_CARD_IMAGE_URL,
-  GAMECONTRACT_ADDRESS,
-  RPC_URL,
   TESTNET_OPENSEA_BASE_URL,
 } from "./../../utils/constants";
 
@@ -54,7 +53,7 @@ const GameBoard = () => {
       globalContext.setLoading(true);
 
       // init UseContract instance
-      createContract(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
+      createContract();
       // get Status
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo();
@@ -128,15 +127,25 @@ const GameBoard = () => {
       console.log("==================== start ====================");
 
       console.log("count:", count);
-      // create txData
-      const txData: TxData = await createPlayGameTxData(
+
+      // create transfer nft txData
+      const txData: TxData = await createTransferNftTxData(
+        globalContext.smartAddress,
+        count,
+        await getActiveGameId()
+      );
+      // create playGame txData
+      const txData2: TxData = await createPlayGameTxData(
         globalContext.smartAddress,
         count
       );
 
-      // call playGAme method
+      // call transfer nft method
       const transactionHash = await globalContext.sendUserOp(txData);
-      console.log("tx Hash:", transactionHash);
+      console.log("playGame tx Hash:", transactionHash);
+      // call playGame method
+      const transactionHash2 = await globalContext.sendUserOp(txData2);
+      console.log("playGame tx Hash:", transactionHash2);
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo();
       // set Status
@@ -223,7 +232,7 @@ const GameBoard = () => {
           )}
         </>
       )}
-      {game && globalContext.smartAddress && (
+      {game && globalContext.smartAddress && game.openingStatus && (
         <>
           {game.gameSeacon == 1 ? (
             <Image
