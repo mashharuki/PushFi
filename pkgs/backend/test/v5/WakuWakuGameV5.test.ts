@@ -6,8 +6,9 @@ import {ethers} from "hardhat";
 import {
   BattleCardNFT,
   BattleCardNFT__factory,
+  MockWakuWakuGameV5,
+  MockWakuWakuGameV5__factory,
   WakuWakuGameV5,
-  WakuWakuGameV5__factory,
   WakuWakuNFT,
   WakuWakuNFT__factory,
   WakuWakuSuperNFT,
@@ -55,9 +56,9 @@ describe("WakuWakuGameV5 test", function () {
       await owner.getAddress()
     );
     // deploy game contract
-    const WakuWakuGameV5: WakuWakuGameV5__factory =
-      await ethers.getContractFactory("WakuWakuGameV5");
-    const game: WakuWakuGameV5 = await WakuWakuGameV5.deploy(
+    const WakuWakuGameV5: MockWakuWakuGameV5__factory =
+      await ethers.getContractFactory("MockWakuWakuGameV5");
+    const game: MockWakuWakuGameV5 = await WakuWakuGameV5.deploy(
       await owner.getAddress()
     );
     // transferownership to game contract

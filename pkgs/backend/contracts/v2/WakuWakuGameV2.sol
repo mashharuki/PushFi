@@ -3,14 +3,13 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./../WakuWakuNFT.sol";
-import "./../WakuWakuSuperNFT.sol";
+import "./../nft/WakuWakuNFT.sol";
+import "./../nft/WakuWakuSuperNFT.sol";
 
 /**
  * WakuWakuGameV2 Contract
  */
 contract WakuWakuGameV2 is Ownable {
-
   // WakuWakuGame Struct
   struct WakuWakuGame {
     string gameName;
@@ -31,12 +30,28 @@ contract WakuWakuGameV2 is Ownable {
   mapping(uint256 => WakuWakuGame) public games;
 
   // Event
-  event GameCreated(uint256 gameId, string gameName, uint256 goalCount, address superNftAddress, address nftAddress, string adverUrl);
+  event GameCreated(
+    uint256 gameId,
+    string gameName,
+    uint256 goalCount,
+    address superNftAddress,
+    address nftAddress,
+    string adverUrl
+  );
   event GameFinished(uint256 gameId, address winner);
-  event PrizeSent(uint256 gameId, address erc20TokenAddress, address receiver, uint256 value);
+  event PrizeSent(
+    uint256 gameId,
+    address erc20TokenAddress,
+    address receiver,
+    uint256 value
+  );
   event NftMinted(uint256 gameId, address nftAddress, address player);
   event Withdrawn(address indexed payee, uint256 weiAmount);
-  event WithdrawnToken(address indexed payee, address prizeToken, uint256 weiAmount);
+  event WithdrawnToken(
+    address indexed payee,
+    address prizeToken,
+    uint256 weiAmount
+  );
   event Deposited(address indexed payee, uint256 weiAmount);
   event ChangeAdverUrl(string oldAdverUrl, string newAdverUrl);
 
@@ -54,7 +69,7 @@ contract WakuWakuGameV2 is Ownable {
     address _superNftAddress,
     address _nftAddress,
     string memory _adverUrl
-  ) onlyOwner public {
+  ) public onlyOwner {
     // get current gameId
     uint256 currentGameIdCounter = gameIdCounter;
     // initial participants
@@ -76,7 +91,14 @@ contract WakuWakuGameV2 is Ownable {
     games[currentGameIdCounter] = newGame;
     gameIdCounter++;
 
-    emit GameCreated(currentGameIdCounter, _gameName, _goalCount, _superNftAddress, _nftAddress, _adverUrl);
+    emit GameCreated(
+      currentGameIdCounter,
+      _gameName,
+      _goalCount,
+      _superNftAddress,
+      _nftAddress,
+      _adverUrl
+    );
   }
 
   /**
@@ -95,19 +117,19 @@ contract WakuWakuGameV2 is Ownable {
 
     // insert player address if not yet
     address[] memory participants = wakuWakuGame.paticipants;
-    
+
     bool alreadyInsertedFlg = false;
     // check registered status
-    for(uint256 i = 0; i < participants.length; i++) {
-      if(participants[i] == _player) {
+    for (uint256 i = 0; i < participants.length; i++) {
+      if (participants[i] == _player) {
         alreadyInsertedFlg = true;
       }
     }
 
-    if(!alreadyInsertedFlg) {
+    if (!alreadyInsertedFlg) {
       address[] memory newParticipants = new address[](participants.length + 1);
       // insert & set
-      for(uint256 i = 0; i < participants.length; i++) {
+      for (uint256 i = 0; i < participants.length; i++) {
         newParticipants[i] = participants[i];
       }
       // push
@@ -116,7 +138,7 @@ contract WakuWakuGameV2 is Ownable {
     }
 
     // goalCountに設定された倍数回目かをチェックする。
-    if(isMultipleOfGoalCount(currentCount, wakuWakuGame.goalCount)) {
+    if (isMultipleOfGoalCount(currentCount, wakuWakuGame.goalCount)) {
       // send Super NFT
       mintNft(wakuWakuGame.supserNftAddress, _gameId, _player);
     } else {
@@ -133,22 +155,22 @@ contract WakuWakuGameV2 is Ownable {
    */
   function mintNft(
     address _nftAddress,
-    uint256 _gameId, 
+    uint256 _gameId,
     address _player
   ) internal {
     // get game info
     WakuWakuGame memory wakuWakuGame = games[_gameId];
-    
-    if(wakuWakuGame.nftAddress == _nftAddress) {
+
+    if (wakuWakuGame.nftAddress == _nftAddress) {
       // create WakuWakuNFT contract instance
       WakuWakuNFT nft = WakuWakuNFT(wakuWakuGame.nftAddress);
-      // mint 
-      nft.mint(_player, _gameId, 1, '0x');
+      // mint
+      nft.mint(_player, _gameId, 1, "0x");
     } else {
       // create WakuWakuSuperNFT contract instance
       WakuWakuSuperNFT nft = WakuWakuSuperNFT(wakuWakuGame.supserNftAddress);
-      // mint 
-      nft.mint(_player, _gameId, 1, '0x');
+      // mint
+      nft.mint(_player, _gameId, 1, "0x");
     }
 
     emit NftMinted(_gameId, wakuWakuGame.nftAddress, _player);
@@ -158,7 +180,7 @@ contract WakuWakuGameV2 is Ownable {
    * withdraw method
    * @param _to receiverAddress
    */
-  function withdraw(address payable _to) onlyOwner public {
+  function withdraw(address payable _to) public onlyOwner {
     uint256 balance = address(this).balance;
     _to.transfer(balance);
     emit Withdrawn(_to, balance);
@@ -168,6 +190,7 @@ contract WakuWakuGameV2 is Ownable {
   receive() external payable {
     emit Deposited(msg.sender, msg.value);
   }
+
   // Fallback function is called when msg.data is not empty
   fallback() external payable {
     emit Deposited(msg.sender, msg.value);
@@ -192,7 +215,10 @@ contract WakuWakuGameV2 is Ownable {
   /**
    * change Adver URL method
    */
-  function changeAdverUrl(uint256 _gameId, string memory _newAdverUrl) public onlyOwner {
+  function changeAdverUrl(
+    uint256 _gameId,
+    string memory _newAdverUrl
+  ) public onlyOwner {
     string memory oldAdverUrl = games[_gameId].adverUrl;
     games[_gameId].adverUrl = _newAdverUrl;
     // emit

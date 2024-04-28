@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./../WakuWakuNFT.sol";
-import "./../WakuWakuSuperNFT.sol";
+import "./../nft/WakuWakuNFT.sol";
+import "./../nft/WakuWakuSuperNFT.sol";
 import "./../mock/SampleVRF.sol";
 
 /**

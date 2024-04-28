@@ -5,16 +5,16 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "./../utils/Counters.sol";
-import "./../nft/WakuWakuNFT.sol";
-import "./../nft/WakuWakuSuperNFT.sol";
-import "./../nft/BattleCardNFT.sol";
-import "./../mock/SampleVRF.sol";
+import "./../../../utils/Counters.sol";
+import "./../../../nft/WakuWakuNFT.sol";
+import "./../../../nft/WakuWakuSuperNFT.sol";
+import "./../../../nft/BattleCardNFT.sol";
+import "./../../SampleVRF.sol";
 
 /**
- * WakuWakuGameV5 Contract
+ * MockWakuWakuGameV5 Contract
  */
-contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
+contract MockWakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
   using Counters for Counters.Counter;
   Counters.Counter public activeGameIdCounter;
 
@@ -185,8 +185,8 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     } else if (currentSeason == 2) {
       // ボスの攻撃力をランダムで取得する。
       uint256 randomIndex = random(_pushCount);
-      // uint256 randomAttack = bossAttacks[0]; // ローカルでテストする時はこれを使うこと
-      uint256 randomAttack = bossAttacks[randomIndex];
+      uint256 randomAttack = bossAttacks[0]; // ローカルでテストする時はこれを使うこと
+      // uint256 randomAttack = bossAttacks[randomIndex];
       // ボスの攻撃力とpushCountを比較する。
       if (_pushCount >= randomAttack) {
         // ボスにダメージを与えるロジック

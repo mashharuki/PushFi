@@ -411,3 +411,5 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 12. [Manta Network - Hardhat](https://docs.manta.network/docs/zkShuffle/Deploy/Hardhat)
 13. [Graph Studio](https://thegraph.com/studio/)
 14. [How to Use the Subgraph Studio](https://thegraph.com/docs/en/deploying/subgraph-studio/)
+15. [MantaSepolia BlockExplorer](https://pacific-explorer.sepolia-testnet.manta.network/)
+16. [Blockscout API Docs](https://docs.blockscout.com/for-users/api/rpc-endpoints)
