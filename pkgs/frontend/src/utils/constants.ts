@@ -6,7 +6,6 @@ export const RPC_URL = "https://rpc.ankr.com/base_sepolia";
 export const GAMECONTRACT_ADDRESS =
   "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b"; // Base Sepolia
 export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
-export const GAME_ID = 0;
 export const GOOGLE_RECAPTCHA_API_BASE_URL =
   "https://www.google.com/recaptcha/api/siteverify";
 export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi2/v1`;

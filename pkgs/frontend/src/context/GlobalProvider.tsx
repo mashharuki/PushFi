@@ -120,15 +120,11 @@ export const GlobalProvider = ({
       });
       const { transactionHash } = await userOpResponse.waitForTxHash();
       console.log("Transaction Hash", transactionHash);
+      // get receipt
+      // const userOpReceipt = await userOpResponse.wait(1);
+      // console.log("userOpReceipt", userOpReceipt);
 
-      const userOpReceipt = await userOpResponse.wait(1);
-      if (userOpReceipt.success == "true") {
-        console.log("UserOp receipt", userOpReceipt);
-        console.log("Transaction receipt", userOpReceipt.receipt);
-        return userOpReceipt.receipt.transactionHash;
-      } else {
-        return transactionHash;
-      }
+      return transactionHash;
     } catch (err: any) {
       console.error("sending UserOp err... :", err);
       return;

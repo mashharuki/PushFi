@@ -180,19 +180,18 @@ const GameBoard = () => {
         {globalContext.smartAddress && (
           <>
             {opening ? (
-              <>🚀🚀🚀 現在、開催中！ 🚀🚀🚀</>
+              <>🚀🚀🚀 You can play now! 🚀🚀🚀</>
             ) : (
-              <>✨✨ 終了しました！ご参加ありがとうございました! ✨✨</>
+              <>✨✨ Game over ✨✨</>
             )}
             <div>
-              GetしたNFTは、
+              You can see NFTs at
               <a
                 href={TESTNET_OPENSEA_BASE_URL + globalContext.smartAddress}
                 target="_blank"
               >
-                ここ
+                here
               </a>
-              でみれるよ！！
             </div>
           </>
         )}
@@ -201,12 +200,24 @@ const GameBoard = () => {
         <>
           {globalContext.smartAddress && (
             <>
-              <h2>
-                15秒間押しまくって
-                <br />
-                Super NFTをゲットせよ！
-              </h2>
-              <h2>ボタンをクリック！</h2>
+              {game && (
+                <>
+                  {game.gameSeacon == 1 ? (
+                    <h2>
+                      Push button for 15 seconds
+                      <br />
+                      to get BattleCard NFT!
+                    </h2>
+                  ) : (
+                    <h2>
+                      Push button for 15 seconds
+                      <br />
+                      to defeat the enemy!!
+                    </h2>
+                  )}
+                </>
+              )}
+              <h2>Please Click button</h2>
             </>
           )}
         </>
