@@ -1,0 +1,8 @@
+{
+  "contracts": {
+    "WakuWakuNFT": "0xB2775012891Ad9b63E389BDE502Faa950346aE9c",
+    "WakuWakuSuperNFT": "0xFcD39aacb3e00D6fAD336DE11802E1e65253A58f",
+    "BattleCardNFT": "0x55ee50fEA0df5822f76e84ae3E16dbDe7292CD5b",
+    "WakuWakuGameV5": "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b"
+  }
+}

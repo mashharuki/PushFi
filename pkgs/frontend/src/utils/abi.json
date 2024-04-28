@@ -5,11 +5,6 @@
         "internalType": "address",
         "name": "initialOwner",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_sampleVRFAddress",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -47,18 +42,55 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "string",
-        "name": "oldAdverUrl",
+        "name": "result",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "attack",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "pushCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Attack",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "oldEnemyUrl",
         "type": "string"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "newAdverUrl",
+        "name": "newEnemyUrl",
         "type": "string"
       }
     ],
-    "name": "ChangeAdverUrl",
+    "name": "ChangeEnemyImgUrl",
     "type": "event"
   },
   {
@@ -136,8 +168,20 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "goalCount",
+        "name": "gameSeacon",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "openingStatus",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "normalNftAddress",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -148,14 +192,44 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "nftAddress",
+        "name": "cardNftAddress",
         "type": "address"
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "adverUrl",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "cardNftSupply",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "currentSupply",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "enemyImgUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "enemyLife",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct WakuWakuGameV5.EnemyInfo",
+        "name": "enemyInfo",
+        "type": "tuple"
       }
     ],
     "name": "GameCreated",
@@ -178,6 +252,25 @@
       }
     ],
     "name": "GameFinished",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "season",
+        "type": "uint256"
+      }
+    ],
+    "name": "GameSeasonChanged",
     "type": "event"
   },
   {
@@ -228,37 +321,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "gameId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "erc20TokenAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "receiver",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "PrizeSent",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "payee",
@@ -271,7 +333,7 @@
         "type": "uint256"
       }
     ],
-    "name": "Withdrawn",
+    "name": "Withdraw",
     "type": "event"
   },
   {
@@ -296,12 +358,25 @@
         "type": "uint256"
       }
     ],
-    "name": "WithdrawnToken",
+    "name": "WithdrawToken",
     "type": "event"
   },
   {
     "stateMutability": "payable",
     "type": "fallback"
+  },
+  {
+    "inputs": [],
+    "name": "activeGameIdCounter",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [
@@ -312,11 +387,11 @@
       },
       {
         "internalType": "string",
-        "name": "_newAdverUrl",
+        "name": "_newEnemyImgUrl",
         "type": "string"
       }
     ],
-    "name": "changeAdverUrl",
+    "name": "changeEnemyUrl",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -365,9 +440,9 @@
         "type": "string"
       },
       {
-        "internalType": "uint256",
-        "name": "_goalCount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_normalNftAddress",
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -376,13 +451,23 @@
       },
       {
         "internalType": "address",
-        "name": "_nftAddress",
+        "name": "_cardNftAddress",
         "type": "address"
       },
       {
+        "internalType": "uint256",
+        "name": "_cardNftSupply",
+        "type": "uint256"
+      },
+      {
         "internalType": "string",
-        "name": "_adverUrl",
+        "name": "_enemyImgUrl",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_enemyLife",
+        "type": "uint256"
       }
     ],
     "name": "createGame",
@@ -407,12 +492,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "currentCount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "goalCount",
+        "name": "gameSeacon",
         "type": "uint256"
       },
       {
@@ -422,13 +502,28 @@
       },
       {
         "internalType": "address",
-        "name": "supserNftAddress",
+        "name": "normalNftAddress",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "nftAddress",
+        "name": "superNftAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "cardNftAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "cardNftSupply",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "currentSupply",
+        "type": "uint256"
       },
       {
         "internalType": "address",
@@ -436,9 +531,111 @@
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "adverUrl",
-        "type": "string"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "enemyImgUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "enemyLife",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WakuWakuGameV5.EnemyInfo",
+        "name": "enemyInfo",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActiveGameId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActiveGameInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "gameName",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "gameSeacon",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "openingStatus",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "normalNftAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "superNftAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "cardNftAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "cardNftSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "enemyImgUrl",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "enemyLife",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct WakuWakuGameV5.EnemyInfo",
+            "name": "enemyInfo",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct WakuWakuGameV5.GameInfo",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -465,7 +662,20 @@
   },
   {
     "inputs": [],
-    "name": "mintProbability",
+    "name": "maxAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxCount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -477,6 +687,84 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "ids",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "values",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC1155BatchReceived",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC1155Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "owner",
     "outputs": [
@@ -484,6 +772,30 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "partipants",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -505,18 +817,13 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_gameId",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "_player",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "pushCount",
+        "name": "_pushCount",
         "type": "uint256"
       }
     ],
@@ -533,29 +840,22 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "sampleVRFAddress",
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "newProbability",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMintProbability",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

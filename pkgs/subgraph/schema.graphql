@@ -1,6 +1,7 @@
 type Attack @entity(immutable: true) {
   id: Bytes!
   gameId: BigInt! # uint256
+  player: Bytes! # address
   result: String! # string
   attack: BigInt! # uint256
   pushCount: BigInt! # uint256
@@ -47,6 +48,7 @@ type Deposited @entity(immutable: true) {
 
 type GameCreated @entity(immutable: true) {
   id: Bytes!
+  gameId: BigInt! # uint256
   gameName: String! # string
   gameSeacon: BigInt! # uint256
   openingStatus: Boolean! # bool

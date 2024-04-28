@@ -71,7 +71,7 @@ async function main() {
     network: network.name,
   });
 
-  if (network.name == "fuji") {
+  if (network.name == "baseSepolia") {
     await run(`verify:verify`, {
       contract: "contracts/v5/WakuWakuGameV5.sol:WakuWakuGameV5",
       address: game.address,

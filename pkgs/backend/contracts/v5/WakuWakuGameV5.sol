@@ -185,7 +185,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     } else if (currentSeason == 2) {
       // ボスの攻撃力をランダムで取得する。
       uint256 randomIndex = random(_pushCount);
-      // uint256 randomAttack = bossAttacks[0];  // ローカルでテストする時はこれを使うこと
+      // uint256 randomAttack = bossAttacks[0]; // ローカルでテストする時はこれを使うこと
       uint256 randomAttack = bossAttacks[randomIndex];
       // ボスの攻撃力とpushCountを比較する。
       if (_pushCount >= randomAttack) {
@@ -283,11 +283,6 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
       // mint
       nft.mint(_player, _gameId, _count, "0x");
       emit NftMinted(_gameId, _nftAddress, _player);
-      // もし指定した数以上のNFTをミントしたらシーズンを2に移行させる。
-      if ((currentSupply + _count) >= wakuWakuGame.cardNftSupply) {
-        wakuWakuGame.gameSeacon = 2;
-        emit GameSeasonChanged(_gameId, 2);
-      }
     }
   }
 
@@ -401,7 +396,7 @@ contract WakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
    * getActiveGameInfo
    */
   function getActiveGameInfo() public view returns (GameInfo memory) {
-    uint256 activeId =  activeGameIdCounter.current();
+    uint256 activeId = activeGameIdCounter.current();
     return games[activeId];
   }
 

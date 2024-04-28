@@ -1,8 +1,8 @@
 {
-  "fuji": {
+  "base-sepolia": {
     "WakuWakuGameV5": {
-      "address": "0x8c60BF3aE3FD6520799cDBad2890414CF8fEd1dC",
-      "startBlock": 31878949
+      "address": "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b",
+      "startBlock": 9219103
     }
   }
 }

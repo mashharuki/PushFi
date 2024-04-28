@@ -32,6 +32,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "string",
         "name": "result",
         "type": "string"
@@ -131,6 +137,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
       {
         "indexed": false,
         "internalType": "string",
@@ -446,6 +458,71 @@
     "inputs": [],
     "name": "getActiveGameId",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActiveGameInfo",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "string", "name": "gameName", "type": "string" },
+          {
+            "internalType": "uint256",
+            "name": "gameSeacon",
+            "type": "uint256"
+          },
+          { "internalType": "bool", "name": "openingStatus", "type": "bool" },
+          {
+            "internalType": "address",
+            "name": "normalNftAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "superNftAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "cardNftAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "cardNftSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentSupply",
+            "type": "uint256"
+          },
+          { "internalType": "address", "name": "winner", "type": "address" },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "enemyImgUrl",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "enemyLife",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct WakuWakuGameV5.EnemyInfo",
+            "name": "enemyInfo",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct WakuWakuGameV5.GameInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },

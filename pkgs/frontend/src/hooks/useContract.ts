@@ -1,20 +1,5 @@
+import {GameInfo, TxData} from "@/utils/types";
 import {Contract, ContractInterface, ethers} from "ethers";
-
-export type TxData = {
-  to: string;
-  data: any;
-};
-
-export type GameInfo = {
-  gameName: string;
-  currentCount: number;
-  goalCount: number;
-  openingStatus: boolean;
-  superNftAddress: string;
-  nftAddress: string;
-  winner: string;
-  adverUrl: string;
-};
 
 var contractAddress: string;
 var contract: Contract;
@@ -39,17 +24,15 @@ export const createContract = (
  * createPlayGameTxData method
  */
 export const createPlayGameTxData = async (
-  gameId: number,
   playerAddress: string,
   count: number
 ): Promise<TxData> => {
   // create NFT Cotntract's method call data
   const minTx = await contract.populateTransaction.playGame(
-    gameId,
     playerAddress,
     count
   );
-  console.log("txData :", minTx.data);
+  console.log("minTxData :", minTx.data);
 
   const txData: TxData = {
     to: contractAddress,
@@ -74,9 +57,9 @@ export const getGameStatus = async (gameId: number): Promise<boolean> => {
 /**
  * getGameInfo method
  */
-export const getGameInfo = async (gameId: number): Promise<GameInfo> => {
+export const getGameInfo = async (): Promise<GameInfo> => {
   // get gameStatus
-  const result: GameInfo = await contract.games(gameId);
+  const result: GameInfo = await contract.getActiveGameInfo();
 
   console.log("gameInfo:", result);
 
