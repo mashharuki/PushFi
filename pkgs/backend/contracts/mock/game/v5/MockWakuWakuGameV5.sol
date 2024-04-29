@@ -88,6 +88,12 @@ contract MockWakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     address oldSuperNftAddress,
     address newSuperNftAddress
   );
+  event CurrentSupplyUpdated(
+    uint256 gameId,
+    address cardNftAddress,
+    uint256 newSupply
+  );
+  event EnemyLifeUpdated(uint256 gameId, uint256 newEnemyLife);
 
   modifier onlyGameOpening(uint256 gameId) {
     require(games[gameId].openingStatus, "Game is not open yet");
@@ -199,6 +205,7 @@ contract MockWakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
     }
     // 新しくGameInfoをセットし直す
     games[activeGameId] = wakuWakuGame;
+    emit CurrentSupplyUpdated(activeGameId, cardNftAddress, newSupply);
   }
 
   /**
@@ -243,6 +250,7 @@ contract MockWakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
         activeGameIdCounter.increment();
         // GameFinish イベントを終了させる。
         emit GameFinished(activeGameId, maxAddress);
+        emit EnemyLifeUpdated(activeGameId, 0);
       } else {
         // プレイヤーがこれまで与えたダメージを取得する。
         uint256 currentCount = partipants[activeGameId][_player];
@@ -256,14 +264,7 @@ contract MockWakuWakuGameV5 is Ownable, ReentrancyGuard, IERC1155Receiver {
         wakuWakuGame.enemyInfo.enemyLife = newEnemyLife;
         // 新しくGameInfoをセットし直す
         games[activeGameId] = wakuWakuGame;
-        address cardNftAddress = wakuWakuGame.cardNftAddress;
-        // create NFT
-        BattleCardNFT nft = BattleCardNFT(cardNftAddress);
-        // ローカル変数に詰める
-        address to = _player;
-        uint256 value = _pushCount;
-        // CardNFTをプレイヤーに譲渡する。 (預けたNFTが戻ってくるイメージ)
-        nft.safeTransferFrom(address(this), to, activeGameId, value, "0x");
+        emit EnemyLifeUpdated(activeGameId, newEnemyLife);
       }
       // イベント発火
       emit Attack(activeGameId, _player, "win", randomAttack, _pushCount);

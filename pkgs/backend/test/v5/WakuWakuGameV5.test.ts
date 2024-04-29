@@ -8,7 +8,6 @@ import {
   BattleCardNFT__factory,
   MockWakuWakuGameV5,
   MockWakuWakuGameV5__factory,
-  WakuWakuGameV5,
   WakuWakuNFT,
   WakuWakuNFT__factory,
   WakuWakuSuperNFT,
@@ -81,7 +80,7 @@ describe("WakuWakuGameV5 test", function () {
    * create NewGame method
    */
   const createNewGame = async (
-    game: WakuWakuGameV5,
+    game: MockWakuWakuGameV5,
     normalNftAddress: string,
     superNftAddress: string,
     battleNftAddress: string
@@ -102,7 +101,7 @@ describe("WakuWakuGameV5 test", function () {
    * playGame method
    */
   const playGame = async (
-    game: WakuWakuGameV5,
+    game: MockWakuWakuGameV5,
     player: SignerWithAddress,
     count: number
   ) => {
@@ -331,7 +330,9 @@ describe("WakuWakuGameV5 test", function () {
       // play game (101 pushCount)
       await expect(game.connect(owner).playGame(owner.address, 101))
         .to.emit(game, "GameSeasonChanged")
-        .withArgs(activeId, 2);
+        .withArgs(activeId, 2)
+        .to.emit(game, "CurrentSupplyUpdated")
+        .withArgs(activeId, battleCardNFT.address, 101);
     });
 
     it("【Seazon2】play game - simple attack(win)", async function () {
@@ -400,7 +401,9 @@ describe("WakuWakuGameV5 test", function () {
       // play game (40 pushCount - win)
       await expect(game.connect(owner).playGame(owner.address, 40))
         .to.emit(game, "Attack")
-        .withArgs(activeId, owner.address, "win", 30, 40);
+        .withArgs(activeId, owner.address, "win", 30, 40)
+        .to.emit(game, "EnemyLifeUpdated")
+        .withArgs(activeId, 60);
 
       // get partipants info
       const partipantsInfo = await game.partipants(activeId, owner.address);
@@ -602,7 +605,9 @@ describe("WakuWakuGameV5 test", function () {
         .to.emit(game, "Attack")
         .withArgs(activeId, otherAccount.address, "win", 30, 51)
         .to.emit(game, "GameFinished")
-        .withArgs(activeId, otherAccount.address);
+        .withArgs(activeId, otherAccount.address)
+        .to.emit(game, "EnemyLifeUpdated")
+        .withArgs(activeId, 0);
 
       // get partipants info
       const partipantsInfo = await game.partipants(activeId, owner.address);
