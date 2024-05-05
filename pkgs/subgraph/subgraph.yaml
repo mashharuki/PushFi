@@ -8,9 +8,9 @@ dataSources:
     name: WakuWakuGameV5
     network: base-sepolia
     source:
-      address: "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b"
+      address: "0x4D75AeeeB9383A815174D3718Ed2B9dDFC9d1a07"
       abi: WakuWakuGameV5
-      startBlock: 9219103
+      startBlock: 9573188
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,7 +20,9 @@ dataSources:
         - ChangeEnemyImgUrl
         - ChangeNormalNftAddress
         - ChangeSuperNftAddress
+        - CurrentSupplyUpdated
         - Deposited
+        - EnemyLifeUpdated
         - GameCreated
         - GameFinished
         - GameSeasonChanged
@@ -40,8 +42,12 @@ dataSources:
           handler: handleChangeNormalNftAddress
         - event: ChangeSuperNftAddress(address,address)
           handler: handleChangeSuperNftAddress
+        - event: CurrentSupplyUpdated(uint256,address,uint256)
+          handler: handleCurrentSupplyUpdated
         - event: Deposited(indexed address,uint256)
           handler: handleDeposited
+        - event: EnemyLifeUpdated(uint256,uint256)
+          handler: handleEnemyLifeUpdated
         - event: GameCreated(uint256,string,uint256,bool,address,address,address,uint256,uint256,address,(string,uint256))
           handler: handleGameCreated
         - event: GameFinished(uint256,address)

@@ -3,7 +3,9 @@ import {
   ChangeEnemyImgUrl as ChangeEnemyImgUrlEvent,
   ChangeNormalNftAddress as ChangeNormalNftAddressEvent,
   ChangeSuperNftAddress as ChangeSuperNftAddressEvent,
+  CurrentSupplyUpdated as CurrentSupplyUpdatedEvent,
   Deposited as DepositedEvent,
+  EnemyLifeUpdated as EnemyLifeUpdatedEvent,
   GameCreated as GameCreatedEvent,
   GameFinished as GameFinishedEvent,
   GameSeasonChanged as GameSeasonChangedEvent,
@@ -17,7 +19,9 @@ import {
   ChangeEnemyImgUrl,
   ChangeNormalNftAddress,
   ChangeSuperNftAddress,
+  CurrentSupplyUpdated,
   Deposited,
+  EnemyLifeUpdated,
   GameCreated,
   GameFinished,
   GameSeasonChanged,
@@ -90,12 +94,43 @@ export function handleChangeSuperNftAddress(
   entity.save()
 }
 
+export function handleCurrentSupplyUpdated(
+  event: CurrentSupplyUpdatedEvent
+): void {
+  let entity = new CurrentSupplyUpdated(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.gameId = event.params.gameId
+  entity.cardNftAddress = event.params.cardNftAddress
+  entity.newSupply = event.params.newSupply
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
 export function handleDeposited(event: DepositedEvent): void {
   let entity = new Deposited(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.payee = event.params.payee
   entity.weiAmount = event.params.weiAmount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleEnemyLifeUpdated(event: EnemyLifeUpdatedEvent): void {
+  let entity = new EnemyLifeUpdated(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.gameId = event.params.gameId
+  entity.newEnemyLife = event.params.newEnemyLife
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
