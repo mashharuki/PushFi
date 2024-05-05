@@ -302,13 +302,13 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   デプロイしたサブグラフ
 
-  [https://api.studio.thegraph.com/query/44992/pushfi2/v1](https://api.studio.thegraph.com/query/44992/pushfi2/v1)
+  [https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1](https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1)
 
   ゲームデータを取得するサンプルクエリ
 
   ```gql
   query MyQuery {
-    gameCreateds(orderBy: gameId, orderDirection: desc) {
+    gameCreateds(orderBy: gameId, orderDirection: desc, first: 1) {
       gameId
       gameName
       gameSeacon
@@ -356,9 +356,32 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   ```gql
   query MyQuery {
-    gameFinisheds(orderBy: gameId, orderDirection: desc) {
+    gameFinisheds(orderBy: gameId, orderDirection: desc, first: 1) {
       gameId
       winner
+    }
+  }
+  ```
+
+  BattleCardNFT の発行数を取得するクエリ
+
+  ```bash
+  query MyQuery {
+    currentSupplyUpdateds(orderBy: blockTimestamp, orderDirection: desc, first: 1) {
+      gameId
+      newSupply
+      cardNftAddress
+    }
+  }
+  ```
+
+  大ボスの体力を取得するクエリ
+
+  ```bash
+  query MyQuery {
+    enemyLifeUpdateds(first: 1, orderBy: blockTimestamp, orderDirection: desc) {
+      gameId
+      newEnemyLife
     }
   }
   ```
