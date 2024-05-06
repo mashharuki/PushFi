@@ -330,7 +330,7 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   ```gql
   query MyQuery {
-    attacks(orderBy: gameId, orderDirection: desc) {
+    attacks(orderBy: gameId, orderDirection: desc, where: { gameId: "0" }) {
       gameId
       player
       pushCount
@@ -365,9 +365,13 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   BattleCardNFT の発行数を取得するクエリ
 
-  ```bash
+  ```gql
   query MyQuery {
-    currentSupplyUpdateds(orderBy: blockTimestamp, orderDirection: desc, first: 1) {
+    currentSupplyUpdateds(
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 1
+    ) {
       gameId
       newSupply
       cardNftAddress
@@ -377,7 +381,7 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   大ボスの体力を取得するクエリ
 
-  ```bash
+  ```gql
   query MyQuery {
     enemyLifeUpdateds(first: 1, orderBy: blockTimestamp, orderDirection: desc) {
       gameId

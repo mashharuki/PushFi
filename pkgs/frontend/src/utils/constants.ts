@@ -10,7 +10,7 @@ export const BATTLE_CARD_NFT_ADDRESS =
 export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
 export const GOOGLE_RECAPTCHA_API_BASE_URL =
   "https://www.google.com/recaptcha/api/siteverify";
-export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi2/v1`;
+export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1`;
 export const BATTLE_CARD_IMAGE_URL =
   "https://bafkreihre2x3wz2wcj4b64bghrynsfz7plmm424qxycunughwf7xwtmqxu.ipfs.nftstorage.link/";
 
