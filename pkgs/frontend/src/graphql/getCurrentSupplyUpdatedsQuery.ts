@@ -1,20 +1,19 @@
 import {gql} from "urql";
 
 // subgraph query
-const getAttackInfoQuery = gql`
+const getCurrentSupplyUpdatedsQuery = gql`
   query MyQuery($gameId: Int!) {
-    attacks(
+    currentSupplyUpdateds(
       orderBy: blockTimestamp
       orderDirection: desc
+      first: 1
       where: {gameId: $gameId}
     ) {
       gameId
-      player
-      pushCount
-      attack
-      result
+      newSupply
+      cardNftAddress
     }
   }
 `;
 
-export default getAttackInfoQuery;
+export default getCurrentSupplyUpdatedsQuery;

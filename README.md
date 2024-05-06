@@ -302,13 +302,13 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   デプロイしたサブグラフ
 
-  [https://api.studio.thegraph.com/query/44992/pushfi2/v1](https://api.studio.thegraph.com/query/44992/pushfi2/v1)
+  [https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1](https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1)
 
   ゲームデータを取得するサンプルクエリ
 
   ```gql
   query MyQuery {
-    gameCreateds(orderBy: gameId, orderDirection: desc) {
+    gameCreateds(orderBy: gameId, orderDirection: desc, first: 1) {
       gameId
       gameName
       gameSeacon
@@ -330,7 +330,7 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   ```gql
   query MyQuery {
-    attacks(orderBy: gameId, orderDirection: desc) {
+    attacks(orderBy: gameId, orderDirection: desc, where: { gameId: "0" }) {
       gameId
       player
       pushCount
@@ -356,9 +356,36 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 
   ```gql
   query MyQuery {
-    gameFinisheds(orderBy: gameId, orderDirection: desc) {
+    gameFinisheds(orderBy: gameId, orderDirection: desc, first: 1) {
       gameId
       winner
+    }
+  }
+  ```
+
+  BattleCardNFT の発行数を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    currentSupplyUpdateds(
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 1
+    ) {
+      gameId
+      newSupply
+      cardNftAddress
+    }
+  }
+  ```
+
+  大ボスの体力を取得するクエリ
+
+  ```gql
+  query MyQuery {
+    enemyLifeUpdateds(first: 1, orderBy: blockTimestamp, orderDirection: desc) {
+      gameId
+      newEnemyLife
     }
   }
   ```
@@ -411,3 +438,5 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 12. [Manta Network - Hardhat](https://docs.manta.network/docs/zkShuffle/Deploy/Hardhat)
 13. [Graph Studio](https://thegraph.com/studio/)
 14. [How to Use the Subgraph Studio](https://thegraph.com/docs/en/deploying/subgraph-studio/)
+15. [MantaSepolia BlockExplorer](https://pacific-explorer.sepolia-testnet.manta.network/)
+16. [Blockscout API Docs](https://docs.blockscout.com/for-users/api/rpc-endpoints)

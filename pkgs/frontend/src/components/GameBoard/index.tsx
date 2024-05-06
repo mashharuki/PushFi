@@ -1,22 +1,35 @@
 import Loading from "@/components/Loading";
 import { GlobalContext } from "@/context/GlobalProvider";
+import getAttackInfoQuery from "@/graphql/getAttackInfoQuery";
+import getCurrentSupplyUpdatedsQuery from "@/graphql/getCurrentSupplyUpdatedsQuery";
+import getEnemyLifeUpdatedsQuery from "@/graphql/getEnemyLifeUpdatedsQuery";
+import getGameFinishedsQuery from "@/graphql/getGameFinishedsQuery";
+import getGameSeasonChangedInfoQuery from "@/graphql/getGameSeasonChangedInfoQuery";
 import {
   createContract,
   createPlayGameTxData,
+  createTransferNftTxData,
+  getActiveGameId,
   getGameInfo,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
-import { GameInfo, TxData } from "@/utils/types";
+import {
+  AttackInfos,
+  CurrentSupplysInfos,
+  EnemyLifeUpdatedInfos,
+  GameFinishedInfos,
+  GameInfo,
+  GameSeasonChangedInfos,
+  TxData,
+} from "@/utils/types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import gameContractAbi from "./../../utils/abi.json";
+import { useQuery } from "urql";
 import {
   BATTLE_CARD_IMAGE_URL,
-  GAMECONTRACT_ADDRESS,
-  RPC_URL,
   TESTNET_OPENSEA_BASE_URL,
 } from "./../../utils/constants";
 
@@ -32,19 +45,96 @@ enum GameStatus {
   PROCESSING = "processing",
 }
 
+type Props = {
+  game: GameInfo;
+};
+
 /**
  * GameBoard Component
  * @returns
  */
-const GameBoard = () => {
-  const [opening, setOpening] = useState<boolean>(true);
-  const [game, setGame] = useState<GameInfo>();
+const GameBoard = (props: Props) => {
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
   const [count, setCount] = useState<number>(0);
 
   const { wallets } = useWallets();
   const { login, logout } = usePrivy();
   const globalContext = useContext(GlobalContext);
+  // get game data from props
+  const { game } = props;
+
+  // ========================================================================
+  // fetch query datas
+  // ========================================================================
+
+  //get attack info
+  const [result] = useQuery({
+    query: getAttackInfoQuery,
+    variables: { gameId: Number(game.gameId) },
+  });
+  const { data: attacks } = result;
+
+  const attacksInfos: AttackInfos = attacks;
+  if (attacksInfos != undefined) {
+    console.log("attacksInfos:", attacksInfos.attacks);
+  }
+
+  //get currentSupply info
+  const [result2] = useQuery({
+    query: getCurrentSupplyUpdatedsQuery,
+    variables: { gameId: Number(game.gameId) },
+  });
+  const { data: currentSupplys } = result2;
+
+  const currentSupplysInfos: CurrentSupplysInfos = currentSupplys;
+  if (currentSupplysInfos != undefined) {
+    console.log(
+      "currentSupplysInfos:",
+      currentSupplysInfos.currentSupplyUpdateds
+    );
+  }
+
+  // get EnemeyLife info
+  const [result3] = useQuery({
+    query: getEnemyLifeUpdatedsQuery,
+    variables: { gameId: Number(game.gameId) },
+  });
+  const { data: enemyLifeUpdateds } = result3;
+
+  const enemyLifeInfos: EnemyLifeUpdatedInfos = enemyLifeUpdateds;
+  if (enemyLifeInfos != undefined) {
+    console.log("enemyLifeInfos:", enemyLifeInfos.enemyLifeUpdateds);
+  }
+
+  // get season change info
+  const [result4] = useQuery({
+    query: getGameSeasonChangedInfoQuery,
+    variables: { gameId: Number(game.gameId) },
+  });
+  const { data: gameSeasonChangeds } = result4;
+
+  const gameSeasonChangedInfos: GameSeasonChangedInfos = gameSeasonChangeds;
+  if (gameSeasonChangedInfos != undefined) {
+    console.log(
+      "gameSeasonChangedInfos:",
+      gameSeasonChangedInfos.gameSeasonChangeds
+    );
+  }
+
+  // get gameFinish info
+  const [result5] = useQuery({
+    query: getGameFinishedsQuery,
+    variables: { gameId: Number(game.gameId) },
+  });
+  const { data: gameFinisheds } = result5;
+
+  const gameFinishedInfos: GameFinishedInfos = gameFinisheds;
+  if (gameFinishedInfos != undefined) {
+    console.log("gameFinishedInfos:", gameFinishedInfos.gameFinisheds);
+  }
+
+  // TODO
+  // get NftMinteds info
 
   /**
    * logIn method
@@ -54,11 +144,7 @@ const GameBoard = () => {
       globalContext.setLoading(true);
 
       // init UseContract instance
-      createContract(GAMECONTRACT_ADDRESS, gameContractAbi, RPC_URL);
-      // get Status
-      // get GameInfo
-      const gameInfo: GameInfo = await getGameInfo();
-      console.log("gameInfo:", gameInfo);
+      createContract();
 
       // login
       login();
@@ -75,9 +161,6 @@ const GameBoard = () => {
 
       // create smartWallet
       await globalContext.createSmartWallet(globalContext.chainId, signer);
-
-      setGame(gameInfo);
-      setOpening(gameInfo.openingStatus);
     } catch (error) {
       console.error(error);
     } finally {
@@ -128,19 +211,28 @@ const GameBoard = () => {
       console.log("==================== start ====================");
 
       console.log("count:", count);
-      // create txData
-      const txData: TxData = await createPlayGameTxData(
+
+      // create transfer nft txData
+      const txData: TxData = await createTransferNftTxData(
+        globalContext.smartAddress,
+        count,
+        await getActiveGameId()
+      );
+      // create playGame txData
+      const txData2: TxData = await createPlayGameTxData(
         globalContext.smartAddress,
         count
       );
 
-      // call playGAme method
+      // call transfer nft method
       const transactionHash = await globalContext.sendUserOp(txData);
-      console.log("tx Hash:", transactionHash);
+      console.log("playGame tx Hash:", transactionHash);
+      // call playGame method
+      const transactionHash2 = await globalContext.sendUserOp(txData2);
+      console.log("playGame tx Hash:", transactionHash2);
       // get GameInfo
       const gameInfo: GameInfo = await getGameInfo();
       // set Status
-      setOpening(gameInfo.openingStatus);
       setGameStatus(GameStatus.NOT_START);
 
       toast.success("🦄 Success!", {
@@ -177,140 +269,189 @@ const GameBoard = () => {
 
   return (
     <>
-      <h3>
-        {globalContext.smartAddress && (
+      {attacksInfos != undefined &&
+        currentSupplysInfos != undefined &&
+        enemyLifeInfos != undefined &&
+        gameSeasonChangedInfos != undefined &&
+        gameFinishedInfos != undefined && (
           <>
-            {opening ? (
-              <>🚀🚀🚀 You can play now! 🚀🚀🚀</>
-            ) : (
-              <>✨✨ Game over ✨✨</>
-            )}
-            <div>
-              You can see NFTs at
-              <a
-                href={TESTNET_OPENSEA_BASE_URL + globalContext.smartAddress}
-                target="_blank"
-              >
-                here
-              </a>
-            </div>
-          </>
-        )}
-      </h3>
-      {opening && (
-        <>
-          {globalContext.smartAddress && (
-            <>
-              {game && (
+            <h3>
+              {globalContext.smartAddress && (
                 <>
-                  {game.gameSeacon == 1 ? (
-                    <h2>
-                      Push button for 15 seconds
-                      <br />
-                      to get BattleCard NFT!
-                    </h2>
-                  ) : (
-                    <h2>
-                      Push button for 15 seconds
-                      <br />
-                      to defeat the enemy!!
-                    </h2>
-                  )}
-                </>
-              )}
-              <h2>Please Click button</h2>
-            </>
-          )}
-        </>
-      )}
-      {game && globalContext.smartAddress && (
-        <>
-          {game.gameSeacon == 1 ? (
-            <Image
-              src={BATTLE_CARD_IMAGE_URL}
-              alt="battleCardNftImg"
-              height={250}
-              width={250}
-            />
-          ) : (
-            <Image
-              src={game.enemyInfo.enemyImgUrl}
-              alt="sampleImg"
-              height={250}
-              width={250}
-            />
-          )}
-        </>
-      )}
-      {globalContext.loading ? (
-        <p>
-          <Loading />
-        </p>
-      ) : (
-        <>
-          <div></div>
-          {globalContext.smartAddress ? (
-            <>
-              {gameStatus == GameStatus.NOT_START && (
-                <>
-                  {!globalContext.verifyFlg ? (
-                    <button
-                      disabled={!opening}
-                      onClick={globalContext.reCaptcha}
-                      className={`${styles.connect} ${styles.playButton}`}
-                    >
-                      Verify I`m not a bot
-                    </button>
+                  {gameFinishedInfos.gameFinisheds.length == 0 ? (
+                    <>🚀🚀🚀 You can play now! 🚀🚀🚀</>
                   ) : (
                     <>
-                      <button
-                        disabled={!opening}
-                        onClick={handlePlay}
-                        className={`${styles.connect} ${styles.playButton}`}
-                      >
-                        Let`s Play
-                      </button>
+                      ✨✨ Game over ✨✨
                       <br />
-                      <button onClick={logOut} className={styles.authButton}>
-                        LogOut
-                      </button>
+                      See you next game!
+                      <br />
+                    </>
+                  )}
+                  <div>
+                    You can see NFTs at
+                    <a
+                      href={
+                        TESTNET_OPENSEA_BASE_URL + globalContext.smartAddress
+                      }
+                      target="_blank"
+                    >
+                      here
+                    </a>
+                  </div>
+                </>
+              )}
+            </h3>
+            <>
+              {globalContext.smartAddress && (
+                <>
+                  {game && (
+                    <>
+                      {gameFinishedInfos.gameFinisheds.length == 0 && (
+                        <>
+                          {gameSeasonChangedInfos.gameSeasonChangeds.length !=
+                          0 ? (
+                            <h2>
+                              Push button for 15 seconds
+                              <br />
+                              to defeat the enemy!!
+                              <br />
+                              Enemy Status
+                              <br />
+                              {
+                                enemyLifeInfos.enemyLifeUpdateds[0].newEnemyLife
+                              }{" "}
+                              / {game.enemyInfo_enemyLife}
+                            </h2>
+                          ) : (
+                            <h2>
+                              Push button for 15 seconds
+                              <br />
+                              to get BattleCard NFT!
+                              <br />
+                              Supply Status
+                              <br />
+                              {
+                                currentSupplysInfos.currentSupplyUpdateds[0]
+                                  .newSupply
+                              }{" "}
+                              / {game.cardNftSupply}
+                            </h2>
+                          )}
+                        </>
+                      )}
                     </>
                   )}
                 </>
               )}
-              {gameStatus == GameStatus.PRE_START && (
-                <h2> Are you ready...?? </h2>
-              )}
-              {gameStatus == GameStatus.START && <h2> Go!! </h2>}
-              {gameStatus == GameStatus.PLAYING && (
-                <button
-                  disabled={!opening}
-                  onClick={incrementCount}
-                  className={`${styles.connect} ${styles.playButton}`}
-                >
-                  Push!!
-                </button>
-              )}
-              {gameStatus == GameStatus.END && (
+            </>
+            {game &&
+              globalContext.smartAddress &&
+              gameFinishedInfos.gameFinisheds.length == 0 && (
                 <>
-                  <h2>It`s over!!</h2>
-                  <button
-                    disabled={!opening}
-                    onClick={sendTransaction}
-                    className={`${styles.connect} ${styles.playButton}`}
-                  >
-                    Submit your result
-                  </button>
+                  {gameSeasonChangedInfos.gameSeasonChangeds.length == 0 ? (
+                    <Image
+                      src={BATTLE_CARD_IMAGE_URL}
+                      alt="battleCardNftImg"
+                      height={250}
+                      width={250}
+                    />
+                  ) : (
+                    <Image
+                      src={game.enemyInfo_enemyImgUrl}
+                      alt="sampleImg"
+                      height={250}
+                      width={250}
+                    />
+                  )}
                 </>
               )}
-            </>
-          ) : (
-            <button onClick={logIn} className={styles.authButton}>
-              Let`s Start
-            </button>
-          )}
-        </>
-      )}
+            {globalContext.loading ? (
+              <p>
+                <Loading />
+              </p>
+            ) : (
+              <>
+                <div></div>
+                {globalContext.smartAddress ? (
+                  <>
+                    {gameFinishedInfos.gameFinisheds.length == 0 && (
+                      <>
+                        {gameStatus == GameStatus.NOT_START && (
+                          <>
+                            {!globalContext.verifyFlg ? (
+                              <button
+                                disabled={
+                                  gameFinishedInfos.gameFinisheds.length != 0
+                                }
+                                onClick={globalContext.reCaptcha}
+                                className={`${styles.connect} ${styles.playButton}`}
+                              >
+                                Verify I`m not a bot
+                              </button>
+                            ) : (
+                              <>
+                                <button
+                                  disabled={
+                                    gameFinishedInfos.gameFinisheds.length != 0
+                                  }
+                                  onClick={handlePlay}
+                                  className={`${styles.connect} ${styles.playButton}`}
+                                >
+                                  Let`s Play
+                                </button>
+                                <br />
+                                <button
+                                  onClick={logOut}
+                                  className={styles.authButton}
+                                >
+                                  LogOut
+                                </button>
+                              </>
+                            )}
+                          </>
+                        )}
+                        {gameStatus == GameStatus.PRE_START && (
+                          <h2> Are you ready...?? </h2>
+                        )}
+                        {gameStatus == GameStatus.START && <h2> Go!! </h2>}
+                        {gameStatus == GameStatus.PLAYING && (
+                          <button
+                            disabled={
+                              gameFinishedInfos.gameFinisheds.length != 0
+                            }
+                            onClick={incrementCount}
+                            className={`${styles.connect} ${styles.playButton}`}
+                          >
+                            Push!!
+                          </button>
+                        )}
+                        {gameStatus == GameStatus.END && (
+                          <>
+                            <h2>It`s over!!</h2>
+                            <button
+                              disabled={
+                                gameFinishedInfos.gameFinisheds.length != 0
+                              }
+                              onClick={sendTransaction}
+                              className={`${styles.connect} ${styles.playButton}`}
+                            >
+                              Submit your result
+                            </button>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <button onClick={logIn} className={styles.authButton}>
+                    Let`s Start
+                  </button>
+                )}
+              </>
+            )}
+          </>
+        )}
     </>
   );
 };

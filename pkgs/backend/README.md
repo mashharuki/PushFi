@@ -126,6 +126,12 @@ yarn backend scripts:create-game:fuji
   npx hardhat 404mint --to 0x1295BDc0C102EB105dC0198fdC193588fe66A1e4 --network zKatana
   ```
 
+- create new game
+
+  ```bash
+  npx hardhat task:createGame --network baseSepolia
+  ```
+
 - getGameInfo
 
   ```bash

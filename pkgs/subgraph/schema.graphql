@@ -37,10 +37,29 @@ type ChangeSuperNftAddress @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type CurrentSupplyUpdated @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  cardNftAddress: Bytes! # address
+  newSupply: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type Deposited @entity(immutable: true) {
   id: Bytes!
   payee: Bytes! # address
   weiAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EnemyLifeUpdated @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  newEnemyLife: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

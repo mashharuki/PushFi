@@ -6,10 +6,10 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ pushfi2",
-    "create-local": "graph create --node http://localhost:8020/ pushfi2",
-    "remove-local": "graph remove --node http://localhost:8020/ pushfi2",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pushfi2",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ pushfi3",
+    "create-local": "graph create --node http://localhost:8020/ pushfi3",
+    "remove-local": "graph remove --node http://localhost:8020/ pushfi3",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pushfi3",
     "test": "graph test"
   },
   "dependencies": {

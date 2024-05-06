@@ -1,8 +1,8 @@
 {
   "base-sepolia": {
     "WakuWakuGameV5": {
-      "address": "0xa9322C8424580E0b38F3E90FdDC73e009609fB4b",
-      "startBlock": 9219103
+      "address": "0x4D75AeeeB9383A815174D3718Ed2B9dDFC9d1a07",
+      "startBlock": 9573188
     }
   }
 }

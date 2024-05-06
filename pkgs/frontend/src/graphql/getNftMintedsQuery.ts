@@ -1,20 +1,18 @@
 import {gql} from "urql";
 
 // subgraph query
-const getAttackInfoQuery = gql`
+const getNftMintedsQuery = gql`
   query MyQuery($gameId: Int!) {
-    attacks(
-      orderBy: blockTimestamp
+    nftMinteds(
       orderDirection: desc
+      orderBy: blockTimestamp
       where: {gameId: $gameId}
     ) {
       gameId
       player
-      pushCount
-      attack
-      result
+      nftAddress
     }
   }
 `;
 
-export default getAttackInfoQuery;
+export default getNftMintedsQuery;

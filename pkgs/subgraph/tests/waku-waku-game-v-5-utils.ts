@@ -5,7 +5,9 @@ import {
   ChangeEnemyImgUrl,
   ChangeNormalNftAddress,
   ChangeSuperNftAddress,
+  CurrentSupplyUpdated,
   Deposited,
+  EnemyLifeUpdated,
   GameCreated,
   GameFinished,
   GameSeasonChanged,
@@ -124,6 +126,36 @@ export function createChangeSuperNftAddressEvent(
   return changeSuperNftAddressEvent
 }
 
+export function createCurrentSupplyUpdatedEvent(
+  gameId: BigInt,
+  cardNftAddress: Address,
+  newSupply: BigInt
+): CurrentSupplyUpdated {
+  let currentSupplyUpdatedEvent = changetype<CurrentSupplyUpdated>(
+    newMockEvent()
+  )
+
+  currentSupplyUpdatedEvent.parameters = new Array()
+
+  currentSupplyUpdatedEvent.parameters.push(
+    new ethereum.EventParam("gameId", ethereum.Value.fromUnsignedBigInt(gameId))
+  )
+  currentSupplyUpdatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "cardNftAddress",
+      ethereum.Value.fromAddress(cardNftAddress)
+    )
+  )
+  currentSupplyUpdatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "newSupply",
+      ethereum.Value.fromUnsignedBigInt(newSupply)
+    )
+  )
+
+  return currentSupplyUpdatedEvent
+}
+
 export function createDepositedEvent(
   payee: Address,
   weiAmount: BigInt
@@ -143,6 +175,27 @@ export function createDepositedEvent(
   )
 
   return depositedEvent
+}
+
+export function createEnemyLifeUpdatedEvent(
+  gameId: BigInt,
+  newEnemyLife: BigInt
+): EnemyLifeUpdated {
+  let enemyLifeUpdatedEvent = changetype<EnemyLifeUpdated>(newMockEvent())
+
+  enemyLifeUpdatedEvent.parameters = new Array()
+
+  enemyLifeUpdatedEvent.parameters.push(
+    new ethereum.EventParam("gameId", ethereum.Value.fromUnsignedBigInt(gameId))
+  )
+  enemyLifeUpdatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "newEnemyLife",
+      ethereum.Value.fromUnsignedBigInt(newEnemyLife)
+    )
+  )
+
+  return enemyLifeUpdatedEvent
 }
 
 export function createGameCreatedEvent(

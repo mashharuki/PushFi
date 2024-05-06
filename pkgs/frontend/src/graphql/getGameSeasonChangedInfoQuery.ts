@@ -1,20 +1,17 @@
 import {gql} from "urql";
 
 // subgraph query
-const getAttackInfoQuery = gql`
+const getGameSeasonChangedInfoQuery = gql`
   query MyQuery($gameId: Int!) {
-    attacks(
-      orderBy: blockTimestamp
+    gameSeasonChangeds(
+      orderBy: gameId
       orderDirection: desc
       where: {gameId: $gameId}
     ) {
       gameId
-      player
-      pushCount
-      attack
-      result
+      season
     }
   }
 `;
 
-export default getAttackInfoQuery;
+export default getGameSeasonChangedInfoQuery;
