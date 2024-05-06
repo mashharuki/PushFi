@@ -80,7 +80,7 @@ const GameBoard = (props: Props) => {
   }
 
   //get currentSupply info
-  const [result2] = useQuery({
+  const [result2, currentSupplyUpdatedsQuery] = useQuery({
     query: getCurrentSupplyUpdatedsQuery,
     variables: { gameId: Number(game.gameId) },
   });
@@ -95,7 +95,7 @@ const GameBoard = (props: Props) => {
   }
 
   // get EnemeyLife info
-  const [result3] = useQuery({
+  const [result3, enemyLifeUpdatedsQuery] = useQuery({
     query: getEnemyLifeUpdatedsQuery,
     variables: { gameId: Number(game.gameId) },
   });
@@ -107,7 +107,7 @@ const GameBoard = (props: Props) => {
   }
 
   // get season change info
-  const [result4] = useQuery({
+  const [result4, gameSeasonChangedInfoQuery] = useQuery({
     query: getGameSeasonChangedInfoQuery,
     variables: { gameId: Number(game.gameId) },
   });
@@ -122,7 +122,7 @@ const GameBoard = (props: Props) => {
   }
 
   // get gameFinish info
-  const [result5] = useQuery({
+  const [result5, gameFinishedsQuery] = useQuery({
     query: getGameFinishedsQuery,
     variables: { gameId: Number(game.gameId) },
   });
@@ -235,6 +235,12 @@ const GameBoard = (props: Props) => {
       // set Status
       setGameStatus(GameStatus.NOT_START);
 
+      // execute query
+      currentSupplyUpdatedsQuery;
+      enemyLifeUpdatedsQuery;
+      gameSeasonChangedInfoQuery;
+      gameFinishedsQuery;
+
       toast.success("🦄 Success!", {
         position: "top-right",
         autoClose: 5000,
@@ -319,7 +325,12 @@ const GameBoard = (props: Props) => {
                               Enemy Status
                               <br />
                               {
-                                enemyLifeInfos.enemyLifeUpdateds[0].newEnemyLife
+                                <>
+                                  {enemyLifeInfos.enemyLifeUpdateds.length == 0
+                                    ? 0
+                                    : enemyLifeInfos.enemyLifeUpdateds[0]
+                                        .newEnemyLife}
+                                </>
                               }{" "}
                               / {game.enemyInfo_enemyLife}
                             </h2>
@@ -332,8 +343,13 @@ const GameBoard = (props: Props) => {
                               Supply Status
                               <br />
                               {
-                                currentSupplysInfos.currentSupplyUpdateds[0]
-                                  .newSupply
+                                <>
+                                  {currentSupplysInfos.currentSupplyUpdateds
+                                    .length == 0
+                                    ? 0
+                                    : currentSupplysInfos
+                                        .currentSupplyUpdateds[0].newSupply}
+                                </>
                               }{" "}
                               / {game.cardNftSupply}
                             </h2>
