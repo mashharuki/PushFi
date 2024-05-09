@@ -129,7 +129,7 @@ yarn backend scripts:create-game:fuji
 - create new game
 
   ```bash
-  npx hardhat task:createGame --network baseSepolia
+  npx hardhat createGame --network baseSepolia
   ```
 
 - getGameInfo

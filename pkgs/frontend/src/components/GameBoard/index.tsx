@@ -235,12 +235,6 @@ const GameBoard = (props: Props) => {
       // set Status
       setGameStatus(GameStatus.NOT_START);
 
-      // execute query
-      currentSupplyUpdatedsQuery;
-      enemyLifeUpdatedsQuery;
-      gameSeasonChangedInfoQuery;
-      gameFinishedsQuery;
-
       toast.success("🦄 Success!", {
         position: "top-right",
         autoClose: 5000,
@@ -327,7 +321,7 @@ const GameBoard = (props: Props) => {
                               {
                                 <>
                                   {enemyLifeInfos.enemyLifeUpdateds.length == 0
-                                    ? 0
+                                    ? game.enemyInfo_enemyLife
                                     : enemyLifeInfos.enemyLifeUpdateds[0]
                                         .newEnemyLife}
                                 </>
@@ -449,7 +443,24 @@ const GameBoard = (props: Props) => {
                               disabled={
                                 gameFinishedInfos.gameFinisheds.length != 0
                               }
-                              onClick={sendTransaction}
+                              onClick={async () => {
+                                // send transaction
+                                await sendTransaction().then(() => {
+                                  // execute query
+                                  currentSupplyUpdatedsQuery({
+                                    requestPolicy: "network-only",
+                                  });
+                                  enemyLifeUpdatedsQuery({
+                                    requestPolicy: "network-only",
+                                  });
+                                  gameSeasonChangedInfoQuery({
+                                    requestPolicy: "network-only",
+                                  });
+                                  gameFinishedsQuery({
+                                    requestPolicy: "network-only",
+                                  });
+                                });
+                              }}
                               className={`${styles.connect} ${styles.playButton}`}
                             >
                               Submit your result
