@@ -17,10 +17,10 @@ task("createGame", "create new game").setAction(
 
     // Game用の変数
     const gameName = "SampleGame";
-    const cardNftSupply = 500;
+    const cardNftSupply = 200;
     const enemyImgUrl =
       "https://bafkreie4o7bbfitr4vmuckphvmf7n3aettzb57necosjf3oo5e5syhcfgq.ipfs.w3s.link/";
-    const enemyLife = 200;
+    const enemyLife = 50;
 
     try {
       // create game
