@@ -12,7 +12,7 @@ const Loading = () => {
         variant="dotted"
         color="#316acc"
         size="large"
-        text=""
+        text="wait..."
         textColor=""
       />
     </div>
