@@ -309,7 +309,9 @@ const GameBoard = (props: Props) => {
                     You can see NFTs at
                     <a
                       href={
-                        TESTNET_OPENSEA_BASE_URL + globalContext.smartAddress
+                        TESTNET_OPENSEA_BASE_URL +
+                        globalContext.smartAddress +
+                        "/owned"
                       }
                       target="_blank"
                     >

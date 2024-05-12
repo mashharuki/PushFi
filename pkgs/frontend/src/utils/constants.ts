@@ -7,7 +7,7 @@ export const GAMECONTRACT_ADDRESS =
   "0x4D75AeeeB9383A815174D3718Ed2B9dDFC9d1a07"; // Base Sepolia
 export const BATTLE_CARD_NFT_ADDRESS =
   "0x808B72a2868D1201FCE18609fC51725DF2eDd845"; // Base Sepolia
-export const TESTNET_OPENSEA_BASE_URL = "https://testnets.opensea.io/ja/";
+export const TESTNET_OPENSEA_BASE_URL = "https://testnet.rarible.com/user/";
 export const GOOGLE_RECAPTCHA_API_BASE_URL =
   "https://www.google.com/recaptcha/api/siteverify";
 export const GRAPHQL_API_ENDPOINT = `https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1`;
