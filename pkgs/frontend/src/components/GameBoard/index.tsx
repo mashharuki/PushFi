@@ -6,6 +6,7 @@ import getEnemyLifeUpdatedsQuery from "@/graphql/getEnemyLifeUpdatedsQuery";
 import getGameFinishedsQuery from "@/graphql/getGameFinishedsQuery";
 import getGameSeasonChangedInfoQuery from "@/graphql/getGameSeasonChangedInfoQuery";
 import {
+  addAttackEventListner,
   createContract,
   createPlayGameTxData,
   createTransferNftTxData,
@@ -24,7 +25,7 @@ import {
 } from "@/utils/types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "urql";
@@ -143,9 +144,6 @@ const GameBoard = (props: Props) => {
     try {
       globalContext.setLoading(true);
 
-      // init UseContract instance
-      createContract();
-
       // login
       login();
       // create embeddedWallet instance
@@ -245,6 +243,19 @@ const GameBoard = (props: Props) => {
         progress: undefined,
         theme: "colored",
       });
+
+      if (gameSeasonChangedInfos.gameSeasonChangeds.length == 0) {
+        toast.info(`Mint ${count} NFTs!`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     } catch (err: any) {
       console.error("error occurred while playing game.. :", err);
       toast.error("Play Game Failed....", {
@@ -266,6 +277,12 @@ const GameBoard = (props: Props) => {
       globalContext.setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // init UseContract instance
+    createContract();
+    addAttackEventListner();
+  }, []);
 
   return (
     <>

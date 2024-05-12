@@ -5,6 +5,7 @@ import {
 } from "@/utils/constants";
 import {GameInfo, TxData} from "@/utils/types";
 import {Contract, ethers} from "ethers";
+import {toast} from "react-toastify";
 import {encodeFunctionData, parseAbi} from "viem";
 import gameContractAbi from "./../utils/abi.json";
 
@@ -77,6 +78,31 @@ export const getGameInfo = async (): Promise<GameInfo> => {
 export const getActiveGameId = async (): Promise<number> => {
   const result: number = await contract.getActiveGameId();
   return result;
+};
+
+/**
+ * addAttackEventLister
+ */
+export const addAttackEventListner = () => {
+  contract.on("Attack", (from, to, value, event) => {
+    let attackEvent = {
+      from: from,
+      to: to,
+      value: value,
+      eventData: event,
+    };
+    console.log(JSON.stringify(attackEvent, null, 4));
+    toast.info(`You ${value}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  });
 };
 
 ////////////////////////////////////////////////////////
