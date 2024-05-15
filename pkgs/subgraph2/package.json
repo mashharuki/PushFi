@@ -1,0 +1,20 @@
+{
+  "name": "subgraph2",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ pushfi-zksync",
+    "create-local": "graph create --node http://localhost:8020/ pushfi-zksync",
+    "remove-local": "graph remove --node http://localhost:8020/ pushfi-zksync",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pushfi-zksync",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-ts": "0.32.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
+}

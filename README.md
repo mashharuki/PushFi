@@ -300,9 +300,13 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
   yarn subgraph deploy
   ```
 
-  デプロイしたサブグラフ
+  デプロイしたサブグラフ(Base Sepolia)
 
   [https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1](https://api.studio.thegraph.com/query/44992/pushfi3/v0.0.1)
+
+  デプロイしたサブグラフ(zkSync Sepolia)
+
+  [https://api.studio.thegraph.com/query/44992/pushfi-zksync/v0.0.1](https://api.studio.thegraph.com/query/44992/pushfi-zksync/v0.0.1)
 
   ゲームデータを取得するサンプルクエリ
 
@@ -440,3 +444,4 @@ UX の改善、スーパー NFT の具体的なユースケースの模索
 14. [How to Use the Subgraph Studio](https://thegraph.com/docs/en/deploying/subgraph-studio/)
 15. [MantaSepolia BlockExplorer](https://pacific-explorer.sepolia-testnet.manta.network/)
 16. [Blockscout API Docs](https://docs.blockscout.com/for-users/api/rpc-endpoints)
+17. [Akindo's WaveHack Page](https://app.akindo.io/communities/VwLa2ozZNcxdR9l6/products/DrKMKJ8WPCZ6pBVgq)

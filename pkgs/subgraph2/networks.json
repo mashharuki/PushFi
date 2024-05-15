@@ -1,0 +1,8 @@
+{
+  "zksync-era-sepolia": {
+    "WakuWakuGameV5": {
+      "address": "0x4daa43F951b1993D2E5dd92F8f98A89017F69280",
+      "startBlock": 2262508
+    }
+  }
+}

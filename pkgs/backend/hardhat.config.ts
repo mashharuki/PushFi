@@ -46,11 +46,6 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    holesky: {
-      url: HOLESKY_RPC_URL!,
-      chainId: 17000,
-      accounts: [`${PRIVATE_KEY}`],
-    },
     fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
       chainId: 43113,

@@ -1,0 +1,41 @@
+{
+  "name": "backend_zksync",
+  "description": "A template for zkSync smart contracts development with Hardhat",
+  "private": true,
+  "version": "0.0.1",
+  "author": "Matter Labs",
+  "license": "MIT",
+  "repository": "https://github.com/matter-labs/zksync-hardhat-template.git",
+  "scripts": {
+    "setup": "npx hardhat resetContractAddressesJson",
+    "deploy": "yarn hardhat deploy-zksync --script deploy.ts",
+    "deployPaymaster": "yarn hardhat deploy-zksync --script deploy-paymaster.ts",
+    "deployGaslessPaymaster": "yarn hardhat deploy-zksync --script deploy-gaslessPaymaster.ts",
+    "deployNft": "yarn hardhat deploy-zksync --script deploy-nft.ts",
+    "deployGame": "yarn hardhat deploy-zksync --script deploy-game.ts",
+    "usePaymaster": "hardhat usePaymaster",
+    "useGaslessPaymaster": "hardhat useGaslessPaymaster",
+    "getGameInfo": "npx hardhat getGameInfo",
+    "playGame": "npx hardhat playGame",
+    "createGame": "npx hardhat createGame",
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "test": "hardhat test --network hardhat"
+  },
+  "devDependencies": {
+    "@matterlabs/hardhat-zksync": "^1.0.0",
+    "@matterlabs/zksync-contracts": "^0.6.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "@openzeppelin/contracts": "5.0.0",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "dotenv": "^16.0.3",
+    "ethers": "^6.9.2",
+    "hardhat": "^2.12.4",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5",
+    "zksync-ethers": "^6.7.0"
+  }
+}

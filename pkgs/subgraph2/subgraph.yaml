@@ -1,0 +1,65 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: WakuWakuGameV5
+    network: zksync-era-sepolia
+    source:
+      address: "0x4daa43F951b1993D2E5dd92F8f98A89017F69280"
+      abi: WakuWakuGameV5
+      startBlock: 2262508
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Attack
+        - ChangeEnemyImgUrl
+        - ChangeNormalNftAddress
+        - ChangeSuperNftAddress
+        - CurrentSupplyUpdated
+        - Deposited
+        - EnemyLifeUpdated
+        - GameCreated
+        - GameFinished
+        - GameSeasonChanged
+        - NftMinted
+        - OwnershipTransferred
+        - Withdraw
+        - WithdrawToken
+      abis:
+        - name: WakuWakuGameV5
+          file: ./abis/WakuWakuGameV5.json
+      eventHandlers:
+        - event: Attack(uint256,address,string,uint256,uint256)
+          handler: handleAttack
+        - event: ChangeEnemyImgUrl(string,string)
+          handler: handleChangeEnemyImgUrl
+        - event: ChangeNormalNftAddress(address,address)
+          handler: handleChangeNormalNftAddress
+        - event: ChangeSuperNftAddress(address,address)
+          handler: handleChangeSuperNftAddress
+        - event: CurrentSupplyUpdated(uint256,address,uint256)
+          handler: handleCurrentSupplyUpdated
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: EnemyLifeUpdated(uint256,uint256)
+          handler: handleEnemyLifeUpdated
+        - event: GameCreated(uint256,string,uint256,bool,address,address,address,uint256,uint256,address,(string,uint256))
+          handler: handleGameCreated
+        - event: GameFinished(uint256,address)
+          handler: handleGameFinished
+        - event: GameSeasonChanged(uint256,uint256)
+          handler: handleGameSeasonChanged
+        - event: NftMinted(uint256,address,address)
+          handler: handleNftMinted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
+        - event: WithdrawToken(indexed address,address,uint256)
+          handler: handleWithdrawToken
+      file: ./src/waku-waku-game-v-5.ts
