@@ -30,7 +30,7 @@ task("playGame", "play game")
 
       let walletBalance = await provider.getBalance(wallet.address);
       console.log(`Wallet ETH balance is ${walletBalance.toString()}`);
-
+      // get gas price
       const gasPrice = await provider.getGasPrice();
 
       // Encoding the "ApprovalBased" paymaster flow's input
