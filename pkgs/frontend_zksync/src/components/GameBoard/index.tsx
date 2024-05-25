@@ -8,10 +8,9 @@ import getGameSeasonChangedInfoQuery from "@/graphql/getGameSeasonChangedInfoQue
 import {
   addAttackEventListner,
   createContract,
-  createPlayGameTxData,
-  createTransferNftTxData,
   getActiveGameId,
-  getGameInfo,
+  playGame,
+  transferNft,
 } from "@/hooks/useContract";
 import styles from "@/styles/Home.module.css";
 import {
@@ -56,6 +55,7 @@ type Props = {
  */
 const GameBoard = (props: Props) => {
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
+  const [smartAddress, setSmartAddress] = useState<string>();
   const [count, setCount] = useState<number>(0);
 
   const { wallets } = useWallets();
@@ -155,7 +155,8 @@ const GameBoard = (props: Props) => {
       const provider = await embeddedWallet!.getEthersProvider();
       const signer = provider.getSigner();
 
-      console.log("signer:", signer);
+      setSmartAddress(await signer.getAddress());
+      console.log("signer Address:", await signer.getAddress());
 
       // create smartWallet
       await globalContext.createSmartWallet(globalContext.chainId, signer);
@@ -210,29 +211,17 @@ const GameBoard = (props: Props) => {
 
       console.log("count:", count);
 
-      // get GameInfo
-      const gameInfo: GameInfo = await getGameInfo();
-
-      if (gameInfo.gameSeacon == "2") {
-        // create transfer nft txData
-        const txData: TxData = await createTransferNftTxData(
+      if (gameSeasonChangedInfos.gameSeasonChangeds.length != 0) {
+        // transfer nft
+        await transferNft(
           globalContext.smartAddress,
           count,
           await getActiveGameId()
         );
-        // call transfer nft method
-        const transactionHash = await globalContext.sendUserOp(txData);
-        console.log("playGame tx Hash:", transactionHash);
       }
+      // playGame
+      await playGame(globalContext.smartAddress, count);
 
-      // create playGame txData
-      const txData2: TxData = await createPlayGameTxData(
-        globalContext.smartAddress,
-        count
-      );
-      // call playGame method
-      const transactionHash2 = await globalContext.sendUserOp(txData2);
-      console.log("playGame tx Hash:", transactionHash2);
       // set Status
       setGameStatus(GameStatus.NOT_START);
 
@@ -296,7 +285,7 @@ const GameBoard = (props: Props) => {
         gameFinishedInfos != undefined && (
           <>
             <h3>
-              {globalContext.smartAddress && (
+              {smartAddress && (
                 <>
                   {gameFinishedInfos.gameFinisheds.length == 0 ? (
                     <>🚀🚀🚀 You can play now! 🚀🚀🚀</>
@@ -311,11 +300,7 @@ const GameBoard = (props: Props) => {
                   <div>
                     You can see NFTs at
                     <a
-                      href={
-                        TESTNET_OPENSEA_BASE_URL +
-                        globalContext.smartAddress +
-                        "/owned"
-                      }
+                      href={TESTNET_OPENSEA_BASE_URL + smartAddress + "/owned"}
                       target="_blank"
                     >
                       here
@@ -325,7 +310,7 @@ const GameBoard = (props: Props) => {
               )}
             </h3>
             <>
-              {globalContext.smartAddress && (
+              {smartAddress && (
                 <>
                   {game && (
                     <>
@@ -378,7 +363,7 @@ const GameBoard = (props: Props) => {
               )}
             </>
             {game &&
-              globalContext.smartAddress &&
+              smartAddress &&
               gameFinishedInfos.gameFinisheds.length == 0 && (
                 <>
                   {gameSeasonChangedInfos.gameSeasonChangeds.length == 0 ? (
@@ -405,7 +390,7 @@ const GameBoard = (props: Props) => {
             ) : (
               <>
                 <div></div>
-                {globalContext.smartAddress ? (
+                {smartAddress ? (
                   <>
                     {gameFinishedInfos.gameFinisheds.length == 0 && (
                       <>

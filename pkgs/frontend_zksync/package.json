@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "frontend_zksync",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@biconomy/account": "^4.1.1",
     "@privy-io/react-auth": "^1.57.0",
     "@walletconnect/client": "^1.8.0",
     "add": "^2.0.6",
@@ -24,7 +23,8 @@
     "react-toastify": "^10.0.4",
     "urql": "4.0.2",
     "viem": "^2.9.28",
-    "yarn": "^1.22.19"
+    "yarn": "^1.22.19",
+    "zksync-ethers": "5"
   },
   "devDependencies": {
     "@types/node": "^20",
