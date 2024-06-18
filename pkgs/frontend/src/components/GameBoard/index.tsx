@@ -179,6 +179,8 @@ const GameBoard = (props: Props) => {
    * Countを1増やすメソッド
    */
   const incrementCount = () => {
+    const audio = new Audio("/maou_se_battle16.mp3");
+    audio.play();
     const new_count = count + 1;
     setCount(new_count);
     console.log(`count：${new_count}`);
