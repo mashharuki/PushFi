@@ -85,3 +85,13 @@ export type GameFinishedInfo = {
 export type GameFinishedInfos = {
   gameFinisheds: GameFinishedInfo[];
 };
+
+export type NftMintedInfo = {
+  gameId: string;
+  nftAddress: string;
+  player: string;
+};
+
+export type NftMintedInfos = {
+  nftMintedInfos: NftMintedInfo[];
+};

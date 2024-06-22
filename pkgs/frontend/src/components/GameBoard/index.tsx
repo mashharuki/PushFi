@@ -1,3 +1,4 @@
+import AttackHistory from "@/components/AttackHistory";
 import Loading from "@/components/Loading";
 import { GlobalContext } from "@/context/GlobalProvider";
 import getAttackInfoQuery from "@/graphql/getAttackInfoQuery";
@@ -5,6 +6,7 @@ import getCurrentSupplyUpdatedsQuery from "@/graphql/getCurrentSupplyUpdatedsQue
 import getEnemyLifeUpdatedsQuery from "@/graphql/getEnemyLifeUpdatedsQuery";
 import getGameFinishedsQuery from "@/graphql/getGameFinishedsQuery";
 import getGameSeasonChangedInfoQuery from "@/graphql/getGameSeasonChangedInfoQuery";
+import getNftMintedsQuery from "@/graphql/getNftMintedsQuery";
 import {
   addAttackEventListner,
   createContract,
@@ -21,6 +23,7 @@ import {
   GameFinishedInfos,
   GameInfo,
   GameSeasonChangedInfos,
+  NftMintedInfos,
   TxData,
 } from "@/utils/types";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
@@ -57,6 +60,7 @@ type Props = {
 const GameBoard = (props: Props) => {
   const [gameStatus, setGameStatus] = useState<string>(GameStatus.NOT_START);
   const [count, setCount] = useState<number>(0);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
 
   const { wallets } = useWallets();
   const { login, logout } = usePrivy();
@@ -69,7 +73,7 @@ const GameBoard = (props: Props) => {
   // ========================================================================
 
   //get attack info
-  const [result] = useQuery({
+  const [result, attckInfoQuery] = useQuery({
     query: getAttackInfoQuery,
     variables: { gameId: Number(game.gameId) },
   });
@@ -134,8 +138,17 @@ const GameBoard = (props: Props) => {
     console.log("gameFinishedInfos:", gameFinishedInfos.gameFinisheds);
   }
 
-  // TODO
   // get NftMinteds info
+  const [result6, nftMintedsQuery] = useQuery({
+    query: getNftMintedsQuery,
+    variables: { gameId: Number(game.gameId) },
+  });
+  const { data: nftMinteds } = result6;
+
+  const nftMintedsInfos: NftMintedInfos = nftMinteds;
+  if (nftMintedsInfos != undefined) {
+    console.log("nftMintedInfos:", nftMintedsInfos);
+  }
 
   /**
    * logIn method
@@ -287,6 +300,13 @@ const GameBoard = (props: Props) => {
     // init UseContract instance
     createContract();
     addAttackEventListner();
+    // NFTmintedInfo & attackInfo
+    nftMintedsQuery({
+      requestPolicy: "network-only",
+    });
+    attckInfoQuery({
+      requestPolicy: "network-only",
+    });
   }, []);
 
   return (
@@ -421,7 +441,7 @@ const GameBoard = (props: Props) => {
                                 onClick={globalContext.reCaptcha}
                                 className={`${styles.connect} ${styles.playButton}`}
                               >
-                                Verify I`m not a bot
+                                Verify you`re not a bot
                               </button>
                             ) : (
                               <>
@@ -440,6 +460,13 @@ const GameBoard = (props: Props) => {
                                   className={styles.authButton}
                                 >
                                   LogOut
+                                </button>
+                                <br />
+                                <button
+                                  onClick={() => setShowHistory(true)}
+                                  className={styles.authButton}
+                                >
+                                  Show Attack History
                                 </button>
                               </>
                             )}
@@ -483,6 +510,9 @@ const GameBoard = (props: Props) => {
                                   gameFinishedsQuery({
                                     requestPolicy: "network-only",
                                   });
+                                  attckInfoQuery({
+                                    requestPolicy: "network-only",
+                                  });
                                 });
                               }}
                               className={`${styles.connect} ${styles.playButton}`}
@@ -500,6 +530,13 @@ const GameBoard = (props: Props) => {
                   </button>
                 )}
               </>
+            )}
+            {/* 攻撃履歴の表示を切り替えるコンポーネントを追加 */}
+            {showHistory && (
+              <AttackHistory
+                attacks={attacksInfos}
+                onClose={() => setShowHistory(false)}
+              />
             )}
           </>
         )}

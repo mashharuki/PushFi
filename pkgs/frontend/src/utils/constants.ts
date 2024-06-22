@@ -31,3 +31,20 @@ export const decimalToHex = (decimalNumber: number): string => {
   const hexString = decimalNumber.toString(16);
   return "0x" + hexString.toUpperCase();
 };
+
+/**
+ * ウォレットアドレスを表示用に変換するメソッド
+ * @param str
+ * @returns
+ */
+export const displayAddress = (str: string) => {
+  // 文字列が5文字未満の場合、そのまま返す
+  if (str.length <= 5) {
+    return str;
+  }
+
+  // 最初の5文字と最後の5文字を取得し、それらを "..." でつなげる
+  const firstFive = str.substring(0, 4);
+  const lastFive = str.substring(str.length - 4);
+  return firstFive + "..." + lastFive;
+};
