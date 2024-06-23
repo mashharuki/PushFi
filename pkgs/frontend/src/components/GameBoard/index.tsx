@@ -192,11 +192,17 @@ const GameBoard = (props: Props) => {
    * Countを1増やすメソッド
    */
   const incrementCount = () => {
+    document.body.style.background =
+      "linear-gradient(-45deg, #FF6347, #4682B4)";
     const audio = new Audio("/maou_se_battle16.mp3");
     audio.play();
     const new_count = count + 1;
     setCount(new_count);
     console.log(`count：${new_count}`);
+    setTimeout(() => {
+      document.body.style.background =
+        "linear-gradient(-45deg, #6440c1, #1f1f1f)";
+    }, 100);
   };
 
   /**
@@ -455,18 +461,21 @@ const GameBoard = (props: Props) => {
                                   Let`s Play
                                 </button>
                                 <br />
+                                {gameSeasonChangedInfos.gameSeasonChangeds
+                                  .length != 0 && (
+                                  <button
+                                    onClick={() => setShowHistory(true)}
+                                    className={styles.historyButton}
+                                  >
+                                    Show Attack History
+                                  </button>
+                                )}
+                                <br />
                                 <button
                                   onClick={logOut}
                                   className={styles.authButton}
                                 >
                                   LogOut
-                                </button>
-                                <br />
-                                <button
-                                  onClick={() => setShowHistory(true)}
-                                  className={styles.authButton}
-                                >
-                                  Show Attack History
                                 </button>
                               </>
                             )}
