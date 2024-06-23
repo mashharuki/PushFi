@@ -17,7 +17,7 @@ const nextConfig = withPWA({
     }
     return config;
   },
-  reactStrinctMode: true,
+  reactStrictMode: true,
   images: {
     domains: [
       "bafybeigmzj3hktgmjpbsl6akvlmucgrwedvajhp4ehjhtvuwdoexjy2hci.ipfs.dweb.link",

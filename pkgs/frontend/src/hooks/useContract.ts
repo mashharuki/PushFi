@@ -7,7 +7,7 @@ import {GameInfo, TxData} from "@/utils/types";
 import {Contract, ethers} from "ethers";
 import {toast} from "react-toastify";
 import {encodeFunctionData, parseAbi} from "viem";
-import gameContractAbi from "./../utils/abi.json";
+import gameContractAbi from "./../utils/abis/abi.json";
 
 const contractAddress = GAMECONTRACT_ADDRESS;
 var contract: Contract;
